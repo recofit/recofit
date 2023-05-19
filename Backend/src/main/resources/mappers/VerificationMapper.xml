@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- name space는 MovieRepo의 fully qualified name으로 설정한다. -->
+<mapper namespace="site.recofit.ssafit.dao.VerificationDao">
+
+    <!-- verification 정보를 저장한다. -->
+    <insert id="save" parameterType="Verification">
+        INSERT INTO verification (id, email, code, state)
+        VALUES(#{id}, #{email}, #{code}, #{state})
+    </insert>
+
+    <!-- verification을 code으로 검색한다. -->
+    <select id="findByCode" parameterType="String" resultType="Verification">
+        SELECT *
+        FROM verification
+        WHERE code = #{code}
+    </select>
+
+    <!-- verification을 email으로 검색한다. -->
+    <select id="findByEmail" parameterType="String" resultType="Verification">
+        SELECT *
+        FROM verification
+        WHERE email = #{email}
+    </select>
+
+    <update id="verify" parameterType="String">
+        UPDATE verification
+        SET state = true
+        WHERE email = #{email}
+    </update>
+
+    <update id="unverify" parameterType="String">
+        UPDATE verification
+        SET state = false
+        WHERE email = #{email}
+    </update>
+
+    <update id="refreshCode" parameterType="String">
+        UPDATE verification
+        SET code = #{code}
+        WHERE email = #{email}
+    </update>
+</mapper>
