@@ -14,5 +14,4 @@ public interface VideoService {
     void unsubscribeVideo(final VideoSubscribeRequestDto requestDto);
 
     List<VideoListResponseDto> selectSubscribeVideo(final VideoListRequestDto requestDto);
-
 }
