@@ -1,20 +1,29 @@
 package site.recofit.ssafit.serviceimpl;
 
+import com.auth0.jwt.exceptions.JWTCreationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.recofit.ssafit.dao.MemberDao;
 import site.recofit.ssafit.dao.VerificationDao;
 import site.recofit.ssafit.domain.Member;
 import site.recofit.ssafit.domain.Verification;
+import site.recofit.ssafit.dto.MemberLoginRequestDto;
+import site.recofit.ssafit.dto.MemberLoginResponseDto;
 import site.recofit.ssafit.dto.MemberSignupRequestDto;
 import site.recofit.ssafit.dto.MemberSignupResponseDto;
+import site.recofit.ssafit.exception.MemberException;
+import site.recofit.ssafit.exception.status.MemberStatus;
 import site.recofit.ssafit.service.MemberService;
+import site.recofit.ssafit.utility.jwt.JwtProvider;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @Transactional(readOnly = true)
@@ -24,6 +33,11 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberDao memberDao;
     private final VerificationDao verificationDao;
+
+    private final JwtProvider accessTokenProvider;
+    private final JwtProvider refreshTokenProvider;
+
+    private final PasswordEncoder passwordEncoder;
 
     private final JavaMailSender mailSender;
 
@@ -57,7 +71,7 @@ public class MemberServiceImpl implements MemberService {
 
         final Member member = Member.builder()
                 .email(requestDto.getEmail())
-                .password(requestDto.getPassword())
+                .password(passwordEncoder.encode(requestDto.getPassword()))
                 .nickname(requestDto.getNickname())
                 .picture(BASIC_PICTURE)
                 .build();
@@ -66,6 +80,30 @@ public class MemberServiceImpl implements MemberService {
 
         return MemberSignupResponseDto.builder()
                 .nickname(member.getNickname())
+                .build();
+    }
+
+    public MemberLoginResponseDto login(final MemberLoginRequestDto requestDto) throws JWTCreationException {
+        final Member member = memberDao.findByEmail(requestDto.getEmail()).orElseThrow(
+                () -> new MemberException(MemberStatus.NOT_EXISTING_EMAIL)
+        );
+
+        if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
+            throw new MemberException(MemberStatus.INCORRECT_PASSWORD);
+        }
+
+        final Map<String, String> payload = new HashMap<>();
+
+        payload.put("nickname", member.getNickname());
+
+        final Map<String, String> refreshPayload = new HashMap<>();
+
+        refreshPayload.put("studentId", member.getNickname());
+
+        return MemberLoginResponseDto.builder()
+                .nickname(member.getNickname())
+                .accessToken(accessTokenProvider.generate(payload))
+                .refreshToken(refreshTokenProvider.generate(refreshPayload))
                 .build();
     }
 

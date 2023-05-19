@@ -1,5 +1,7 @@
 package site.recofit.ssafit.service;
 
+import site.recofit.ssafit.dto.MemberLoginRequestDto;
+import site.recofit.ssafit.dto.MemberLoginResponseDto;
 import site.recofit.ssafit.dto.MemberSignupRequestDto;
 import site.recofit.ssafit.dto.MemberSignupResponseDto;
 
@@ -13,6 +15,8 @@ public interface MemberService {
     boolean checkVerification(final String email);
 
     MemberSignupResponseDto signup(final MemberSignupRequestDto requestDto);
+
+    MemberLoginResponseDto login(final MemberLoginRequestDto requestDto);
 
     String verificationSender(final String email) throws MessagingException;
 

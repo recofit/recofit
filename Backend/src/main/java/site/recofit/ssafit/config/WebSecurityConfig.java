@@ -55,12 +55,10 @@ public class WebSecurityConfig {
                 .httpBasic().disable()
                 .rememberMe().disable();
 
+        // 권한 설정
         http.authorizeRequests()
-                .antMatchers(HttpMethod.HEAD, "/api/member/email/**", "/api/member/nickname/**").anonymous()
-                .antMatchers(HttpMethod.GET, "/", "/register", "/login", "/detail/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/member/mailSender", "/api/member/verify",
-                        "/api/member/register", "/api/member/login").anonymous()
-                .anyRequest().authenticated();
+                .antMatchers(HttpMethod.GET, "/").permitAll()
+                .anyRequest().permitAll();
 
         http.exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint)
@@ -69,14 +67,6 @@ public class WebSecurityConfig {
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-    }
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring()
-                .requestMatchers(CorsUtils::isPreFlightRequest)
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                .requestMatchers(PathRequest.toH2Console()); // H2 콘솔에 대한 Security 무시
     }
 
     @Bean
@@ -96,6 +86,7 @@ public class WebSecurityConfig {
         return corsConfigurationSource;
     }
 
+    // spring security customize
     @Bean
     public AuthenticationFilter authenticationFilter(final AuthenticationManager authenticationManager,
                                                      final AuthenticationConverter authenticationConverter,
@@ -153,6 +144,7 @@ public class WebSecurityConfig {
         return new AccessDeniedExceptionHandler(objectMapper);
     }
 
+    // token provider
     @Bean(name = "accessTokenProvider")
     public JwtProvider accessTokenProvider(final AccessTokenProperties properties) {
         return new JwtProvider(properties);

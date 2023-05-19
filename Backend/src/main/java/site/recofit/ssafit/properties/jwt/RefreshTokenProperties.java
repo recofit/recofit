@@ -3,8 +3,10 @@ package site.recofit.ssafit.properties.jwt;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
 
 @ConfigurationProperties(prefix = "jwt.refresh-token")
+@ConstructorBinding
 public class RefreshTokenProperties extends JwtProperties {
     public static final String COOKIE_NAME = "refresh_token";
 
@@ -15,7 +17,7 @@ public class RefreshTokenProperties extends JwtProperties {
     @RequiredArgsConstructor
     @Getter
     public enum RefreshTokenClaim {
-        STUDENT_ID("studentId");
+        NICKNAME("nickname");
 
         private final String claim;
     }

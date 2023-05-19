@@ -3,10 +3,12 @@ package site.recofit.ssafit.properties.security;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
 
 import java.util.List;
 
 @ConfigurationProperties(prefix = "security.cors")
+@ConstructorBinding
 @RequiredArgsConstructor
 @Getter
 public class SecurityCorsProperties {

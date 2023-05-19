@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import site.recofit.ssafit.properties.GmailProperties;
 import site.recofit.ssafit.properties.jwt.AccessTokenProperties;
-import site.recofit.ssafit.properties.jwt.JwtProperties;
 import site.recofit.ssafit.properties.jwt.RefreshTokenProperties;
 import site.recofit.ssafit.properties.security.SecurityCorsProperties;
 
@@ -14,7 +13,6 @@ import site.recofit.ssafit.properties.security.SecurityCorsProperties;
 		GmailProperties.class,
 		AccessTokenProperties.class,
 		RefreshTokenProperties.class,
-		JwtProperties.class,
 		SecurityCorsProperties.class
 })
 public class SsafitApplication {
