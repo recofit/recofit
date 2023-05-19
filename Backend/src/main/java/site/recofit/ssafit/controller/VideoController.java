@@ -17,14 +17,14 @@ import java.util.List;
 public class VideoController {
     private final VideoService videoServiceImpl;
 
-    @PostMapping("/{videoId}")
+    @PostMapping()
     public ResponseEntity<?> subscribeVideo(@RequestBody final VideoSubscribeRequestDto requestDto) {
         videoServiceImpl.registVideo(requestDto);
         videoServiceImpl.subscribeVideo(requestDto);
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{videoId}")
+    @DeleteMapping()
     public ResponseEntity<?> unsubscribeVideo(@RequestBody final VideoSubscribeRequestDto requestDto) {
         videoServiceImpl.unsubscribeVideo(requestDto);
         return new ResponseEntity<Void>(HttpStatus.OK);
