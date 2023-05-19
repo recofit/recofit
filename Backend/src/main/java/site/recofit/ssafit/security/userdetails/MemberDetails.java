@@ -10,14 +10,20 @@ import java.util.Collection;
 
 @RequiredArgsConstructor
 public class MemberDetails implements UserDetails {
+    private final int id;
     private final String nickname;
 
     private final Collection<? extends GrantedAuthority> authorities;
 
     @Builder
-    public MemberDetails(final String nickname, final String... authorities) {
+    public MemberDetails(final int id, final String nickname, final String... authorities) {
+        this.id = id;
         this.nickname = nickname;
         this.authorities = null;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getNickname() {

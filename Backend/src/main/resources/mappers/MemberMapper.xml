@@ -4,24 +4,63 @@
 <!-- name space는 MovieRepo의 fully qualified name으로 설정한다. -->
 <mapper namespace="site.recofit.ssafit.dao.MemberDao">
 
-    <!-- member 정보를 저장한다. -->
+    <!-- member 저장 -->
     <insert id="save" parameterType="Member">
         INSERT INTO member (id, email, nickname, password, picture)
         VALUES(#{id}, #{email}, #{nickname}, #{password}, #{picture})
     </insert>
 
-    <!-- member를 email으로 검색한다. -->
+    <!-- email로 조회 -->
     <select id="findByEmail" parameterType="String" resultType="Member">
         SELECT *
         FROM member
         WHERE email = #{email}
     </select>
 
-    <!-- Movie를 nickname으로 검색한다. -->
+    <!-- nickname으로 조회 -->
     <select id="findByNickname" parameterType="String" resultType="Member">
         SELECT *
         FROM member
         WHERE nickname = #{nickname}
     </select>
 
+    <!-- id로 조회 -->
+    <select id="findById" parameterType="Integer" resultType="Member">
+        SELECT *
+        FROM member
+        WHERE id = #{id}
+    </select>
+
+    <!-- 팔로우 -->
+    <insert id="follow" parameterType="Integer">
+        INSERT INTO follow (follower_id, following_id)
+        VALUES (#{followerId}, #{followingId})
+    </insert>
+
+    <!-- 팔로우 취소 -->
+    <delete id="unfollow" parameterType="Integer">
+        DELETE FROM follow
+        WHERE follower_id = #{followerId} and following_id = #{followingId}
+    </delete>
+
+    <!-- 팔로우 확인 -->
+    <select id="findByFollowerIdAndFollowingId" parameterType="Integer" resultType="boolean">
+        SELECT IF (COUNT(*) = 1, 1, 0)
+        FROM follow
+        WHERE follower_id = #{followerId} and following_id = #{followingId}
+    </select>
+
+    <!-- 유저의 팔로잉 조회 -->
+    <select id="findByFollowingId" parameterType="Integer" resultType="Integer">
+        SELECT follower_id
+        FROM follow join member on follow.following_id = member.id
+        WHERE following_id = #{followingId}
+    </select>
+
+    <!-- 유저의 팔로워 조회 -->
+    <select id="findByFollowerId" parameterType="Integer" resultType="Integer">
+        SELECT following_id
+        FROM follow join member on follow.follower_id = member.id
+        WHERE follower_id = #{followerId}
+    </select>
 </mapper>

@@ -24,11 +24,13 @@ public class MemberDetailsService implements AuthenticationUserDetailsService<Pr
             final String accessToken = (String) token.getCredentials();
             final DecodedJWT decodedAccessToken = accessTokenProvider.verify(accessToken);
 
+            final int id = decodedAccessToken.getClaim(AccessTokenClaim.ID.getClaim()).asInt();
             final String nickname = decodedAccessToken.getClaim(AccessTokenClaim.NICKNAME.getClaim()).asString();
 
             log.info("Member authentication request: {}", nickname);
 
             return MemberDetails.builder()
+                    .id(id)
                     .nickname(nickname)
                     .build();
         } catch (final JWTVerificationException ex) {

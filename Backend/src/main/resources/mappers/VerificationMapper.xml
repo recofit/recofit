@@ -4,38 +4,41 @@
 <!-- name space는 MovieRepo의 fully qualified name으로 설정한다. -->
 <mapper namespace="site.recofit.ssafit.dao.VerificationDao">
 
-    <!-- verification 정보를 저장한다. -->
+    <!-- verification 정보 저장 -->
     <insert id="save" parameterType="Verification">
         INSERT INTO verification (id, email, code, state)
         VALUES(#{id}, #{email}, #{code}, #{state})
     </insert>
 
-    <!-- verification을 code으로 검색한다. -->
+    <!-- code로 조회 -->
     <select id="findByCode" parameterType="String" resultType="Verification">
         SELECT *
         FROM verification
         WHERE code = #{code}
     </select>
 
-    <!-- verification을 email으로 검색한다. -->
+    <!-- email으로 조회 -->
     <select id="findByEmail" parameterType="String" resultType="Verification">
         SELECT *
         FROM verification
         WHERE email = #{email}
     </select>
 
+    <!-- 인증 상태 true -->
     <update id="verify" parameterType="String">
         UPDATE verification
         SET state = true
         WHERE email = #{email}
     </update>
 
+    <!-- 인증 상태 true -->
     <update id="unverify" parameterType="String">
         UPDATE verification
         SET state = false
         WHERE email = #{email}
     </update>
 
+    <!-- 인증 코드 저장 -->
     <update id="refreshCode" parameterType="String">
         UPDATE verification
         SET code = #{code}
