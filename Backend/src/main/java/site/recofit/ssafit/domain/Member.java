@@ -1,26 +1,19 @@
 package site.recofit.ssafit.domain;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
-@NoArgsConstructor
-@RequiredArgsConstructor
+import java.time.LocalDateTime;
+
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
+@AllArgsConstructor
+@Builder
 public class Member {
     private int id;
     private String email;
     private String password;
     private String nickname;
     private String picture;
-
-    @Builder
-    public Member(int id, String email, String password, String nickname, String picture) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
-        this.picture = picture;
-    }
+    private LocalDateTime createdDate;
+    private LocalDateTime lastModifiedDate;
 }
