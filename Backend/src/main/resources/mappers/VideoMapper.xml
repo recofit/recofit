@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.recofit.ssafit.dao.VideoDao">
+
+    <!-- 영상 등록 -->
+    <insert id="save" parameterType="Video">
+        INSERT INTO video (id, title, url, channel_name)
+        VALUES (#{id}, #{title}, #{url}, #{channelName})
+    </insert>
+
+    <!-- 영상 조회 -->
+    <select id="findById" parameterType="String" resultType="Video">
+        SELECT *
+        FROM video
+        WHERE id = #{videoId}
+    </select>
+
+    <!-- 유저의 구독 영상 조회 -->
+    <select id="findByMemberId" parameterType="String" resultType="Video">
+        SELECT title, url, channel_name AS channelName
+        FROM video_subscribe join video on video_subscribe.video_id = video.id
+        WHERE member_id = #{memberId}
+    </select>
+
+    <!-- 영상 구독 등록 -->
+    <insert id="subscribe" parameterType="String">
+        INSERT INTO video_subscribe (member_id, video_id)
+        VALUES (#{memberId}, #{videoId})
+    </insert>
+
+    <!-- 영상 구독 취소 -->
+    <delete id="unsubscribe" parameterType="String">
+        DELETE FROM video_subscribe
+        WHERE member_id = #{memberId} and video_id = #{videoId}
+    </delete>
+</mapper>
