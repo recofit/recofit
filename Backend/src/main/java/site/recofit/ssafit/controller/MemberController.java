@@ -1,8 +1,8 @@
 package site.recofit.ssafit.controller;
 
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberController {
     private MemberService memberService;
-
+    
     @Autowired
     public void setMemberService(MemberServiceImpl memberServiceImpl) {
         this.memberService = memberServiceImpl;

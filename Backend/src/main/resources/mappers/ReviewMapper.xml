@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.recofit.ssafit.dao.ReviewDao">
+
+    <insert id="saveReview" parameterType="Review">
+        INSERT INTO review (member_id, place_id, title, content, picture, rate)
+        VALUES (#{memberId}, #{placeId}, #{title}, #{content}, #{picture}, #{rate})
+    </insert>
+
+    <select id="findAll" parameterType="Integer" resultType="Review">
+        SELECT member_id as memberId, place_id as placeId, title, content, picture, rate, like_cnt as likeCnt, created_date as createDate, last_modified_date as lastModifiedDate
+        FROM review
+        WHERE place_id = #{placeId}
+    </select>
+
+    <select id="findThree" parameterType="Integer" resultType="Review">
+        SELECT member_id as memberId, place_id as placeId, title, content, picture, rate, like_cnt as likeCnt, created_date as createDate, last_modified_date as lastModifiedDate
+        FROM review
+        WHERE place_id = #{placeId}
+        ORDER BY like_cnt DESC
+        LIMIT 3
+    </select>
+
+    <select id="findById" parameterType="Integer" resultType="Review">
+        SELECT member_id as memberId, place_id as placeId, title, content, picture, rate, like_cnt as likeCnt, created_date as createDate, last_modified_date as lastModifiedDate
+        FROM review
+        WHERE id = #{reviewId}
+    </select>
+
+    <update id="updateReview" parameterType="Review">
+        UPDATE review
+        SET title = #{title}, content=#{content}, picture=#{picture}, rate=#{rate}, last_modified_date = now()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="removeReview" parameterType="Integer">
+        DELETE FROM review
+        WHERE id = #{reviewId}
+    </delete>
+
+    <insert id="saveReviewLike" parameterType="Integer">
+        INSERT INTO review_subscribe (member_id, review_id)
+        VALUES (#{memberId}, #{reviewId})
+    </insert>
+
+    <delete id="removeAllReviewLike" parameterType="Integer">
+        DELETE FROM review_subscribe
+        WHERE review_id = #{reviewId}
+    </delete>
+
+    <delete id="removeReviewLike" parameterType="Integer">
+        DELETE FROM review_subscribe
+        WHERE member_id = #{memberId} AND review_id = #{reviewId}
+    </delete>
+
+    <update id="updateReviewLike" parameterType="Integer">
+        UPDATE review
+        SET like_cnt = like_cnt + 1
+        WHERE id = #{reviewId}
+    </update>
+
+    <update id="updateReviewDislike" parameterType="Integer">
+        UPDATE review
+        SET like_cnt = like_cnt - 1
+        WHERE id = #{reviewId}
+    </update>
+
+</mapper>

@@ -61,7 +61,7 @@ public class VideoServiceImpl implements VideoService {
         List<Video> videoList = videoDao.findByMemberId(memberId);
         List<VideoListResponseDto> dtoList = new ArrayList<>();
 
-        for(Video video : videoList) {
+        for (Video video : videoList) {
             VideoListResponseDto responseDto = VideoListResponseDto.builder()
                     .title(video.getTitle())
                     .url(video.getUrl())
