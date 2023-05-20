@@ -11,10 +11,7 @@ import site.recofit.ssafit.dao.MemberDao;
 import site.recofit.ssafit.dao.VerificationDao;
 import site.recofit.ssafit.domain.Member;
 import site.recofit.ssafit.domain.Verification;
-import site.recofit.ssafit.dto.MemberLoginRequestDto;
-import site.recofit.ssafit.dto.MemberLoginResponseDto;
-import site.recofit.ssafit.dto.MemberSignupRequestDto;
-import site.recofit.ssafit.dto.MemberSignupResponseDto;
+import site.recofit.ssafit.dto.*;
 import site.recofit.ssafit.exception.MemberException;
 import site.recofit.ssafit.exception.status.MemberStatus;
 import site.recofit.ssafit.service.MemberService;
@@ -22,7 +19,9 @@ import site.recofit.ssafit.utility.jwt.JwtProvider;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -136,7 +135,7 @@ public class MemberServiceImpl implements MemberService {
 
         mailSender.send(message);
 
-        return verification.getCode();
+        return code;
     }
 
     @Transactional
@@ -183,5 +182,52 @@ public class MemberServiceImpl implements MemberService {
             throw new IllegalArgumentException("다시 시도해주세요.");
 
         verificationDao.refreshCode(code, email);
+    }
+
+    @Transactional
+    public void follow(final int followerId, final int followingId) {
+        if (memberDao.findByFollowerIdAndFollowingId(followerId, followingId))
+            throw new IllegalArgumentException("이미 팔로잉하는 회원입니다.");
+
+        memberDao.follow(followerId, followingId);
+    }
+
+    @Transactional
+    public void unfollow(final int followerId, final int followingId) {
+        if (!memberDao.findByFollowerIdAndFollowingId(followerId, followingId))
+            throw new IllegalArgumentException("이미 팔로우하지 않는 회원입니다.");
+
+        memberDao.unfollow(followerId, followingId);
+    }
+
+    public List<MemberFollowListResponseDto> selectFollower(final int followingId) {
+        List<Integer> followerList = memberDao.findByFollowingId(followingId);
+
+        return convertFollowListToDtoList(followerList);
+    }
+
+    public List<MemberFollowListResponseDto> selectFollowing(final int followerId) {
+        List<Integer> followingList = memberDao.findByFollowerId(followerId);
+
+        return convertFollowListToDtoList(followingList);
+    }
+
+    private List<MemberFollowListResponseDto> convertFollowListToDtoList(final List<Integer> list) {
+        List<MemberFollowListResponseDto> dtoList = new ArrayList<>();
+
+        for(int idx : list) {
+            Member member = memberDao.findById(idx).orElseThrow(
+                    () -> new IllegalArgumentException("정보를 불러오지 못했습니다.")
+            );
+
+            MemberFollowListResponseDto responseDto = MemberFollowListResponseDto.builder()
+                    .id(member.getId())
+                    .nickname(member.getNickname())
+                    .build();
+
+            dtoList.add(responseDto);
+        }
+
+        return dtoList;
     }
 }
