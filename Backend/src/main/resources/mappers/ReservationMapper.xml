@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- name space는 MovieRepo의 fully qualified name으로 설정한다. -->
+<mapper namespace="site.recofit.ssafit.dao.ReservationDao">
+    <!-- 예약하기 -->
+    <insert id="save" parameterType="Reservation">
+        INSERT INTO member (id, member_id, place_id, start_date, end_date)
+        VALUES(#{id}, #{memberId}, #{placeId}, #{startDate}, #{endDate})
+    </insert>
+
+    <!-- 멤버 id로 조회 -->
+    <select id="findByMemberId" parameterType="Integer" resultType="Reservation">
+        SELECT *
+        FROM reservation
+        WHERE member_id = #{memberId}
+    </select>
+
+    <!-- 장소 id로 조회 -->
+    <select id="findByPlaceId" parameterType="Integer" resultType="Reservation">
+        SELECT *
+        FROM reservation
+        WHERE place_id = #{placeId}
+    </select>
+
+    <!-- 일정 삭제 -->
+    <delete id="deleteByMemberIdAndPlaceId" parameterType="Integer">
+        DELETE FROM reservation
+        WHERE member_id = #{memberId} and place_id = #{placeId}
+    </delete>
+</mapper>
