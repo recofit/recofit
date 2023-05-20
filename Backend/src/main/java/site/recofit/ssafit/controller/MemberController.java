@@ -2,6 +2,7 @@ package site.recofit.ssafit.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -91,8 +92,6 @@ public class MemberController {
 
         memberService.follow(followerId, followingId);
 
-        
-
         return ResponseEntity.ok().build();
     }
 
@@ -118,5 +117,17 @@ public class MemberController {
         List<MemberFollowListResponseDto> responseDtos = memberService.selectFollowing(followerId);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDtos);
+    }
+
+    @PostMapping("/example/{pathVariableId}")
+    public ResponseEntity<Void> example(
+//            @AuthenticationPrincipal final MemberDetails memberDetails,
+            @PathVariable int pathVariableId) {
+//        final int exampleId2 = memberDetails.getId();
+        final int exampleId = 1;
+
+        memberService.follow(exampleId, pathVariableId);
+
+        return ResponseEntity.ok().build();
     }
 }
