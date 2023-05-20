@@ -15,6 +15,7 @@ import java.util.List;
 @RequestMapping("/video")
 @RequiredArgsConstructor
 public class VideoController {
+
     private final VideoService videoServiceImpl;
 
     @PostMapping()
