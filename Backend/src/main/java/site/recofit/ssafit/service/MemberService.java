@@ -1,11 +1,9 @@
 package site.recofit.ssafit.service;
 
-import site.recofit.ssafit.dto.MemberLoginRequestDto;
-import site.recofit.ssafit.dto.MemberLoginResponseDto;
-import site.recofit.ssafit.dto.MemberSignupRequestDto;
-import site.recofit.ssafit.dto.MemberSignupResponseDto;
+import site.recofit.ssafit.dto.*;
 
 import javax.mail.MessagingException;
+import java.util.List;
 
 public interface MemberService {
     boolean checkEmailDuplication(final String email);
@@ -23,4 +21,16 @@ public interface MemberService {
     void createBasicVerification(final String email);
 
     void verification(final String code);
+
+    void follow(final int followerId, final int followingId);
+
+    void unfollow(final int followerId, final int followingId);
+
+    List<MemberFollowListResponseDto> selectFollower(final int followingId);
+
+    List<MemberFollowListResponseDto> selectFollowing(final int followerId);
+
+    MemberPictureUploadResponseDto uploadPicture(final int id, final MemberPictureUploadRequestDto requestDto);
+
+    MemberUpdateResponseDto updateProfile(final int id, final MemberUpdateRequestDto requestDto);
 }

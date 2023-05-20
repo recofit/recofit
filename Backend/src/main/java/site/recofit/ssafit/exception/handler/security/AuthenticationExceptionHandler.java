@@ -50,13 +50,11 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint 
 
                 final DecodedJWT decodedRefreshToken = verifyRefreshToken(refreshToken);
 
-                String nickname = decodedRefreshToken.getClaim(RefreshTokenClaim.NICKNAME.getClaim()).toString();
+                int id = decodedRefreshToken.getClaim(RefreshTokenClaim.ID.getClaim()).asInt();
 
-                nickname = nickname.substring(1, nickname.length() - 1);
+                final Map<String, Integer> payload = new HashMap<>();
 
-                final Map<String, String> payload = new HashMap<>();
-
-                payload.put("nickname", nickname);
+                payload.put("id", id);
 
                 CookieUtility.addCookie(
                         response,
@@ -67,7 +65,7 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint 
                 CookieUtility.addCookie(
                         response,
                         RefreshTokenProperties.COOKIE_NAME,
-                        refreshTokenProvider.generate(Map.of(RefreshTokenClaim.NICKNAME.getClaim(), nickname)),
+                        refreshTokenProvider.generate(Map.of(RefreshTokenClaim.ID.getClaim(), id)),
                         refreshTokenProvider.getValidSeconds()
                 );
 

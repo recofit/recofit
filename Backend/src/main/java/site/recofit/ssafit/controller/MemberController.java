@@ -1,28 +1,33 @@
 package site.recofit.ssafit.controller;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import site.recofit.ssafit.dto.MemberLoginRequestDto;
-import site.recofit.ssafit.dto.MemberLoginResponseDto;
-import site.recofit.ssafit.dto.MemberSignupRequestDto;
-import site.recofit.ssafit.dto.MemberSignupResponseDto;
+import site.recofit.ssafit.dto.*;
 import site.recofit.ssafit.properties.jwt.AccessTokenProperties;
 import site.recofit.ssafit.properties.jwt.RefreshTokenProperties;
+import site.recofit.ssafit.security.userdetails.MemberDetails;
 import site.recofit.ssafit.service.MemberService;
 import site.recofit.ssafit.serviceimpl.MemberServiceImpl;
 import site.recofit.ssafit.utility.common.CookieUtility;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
     private MemberService memberService;
-
+    
+    @Autowired
     public void setMemberService(MemberServiceImpl memberServiceImpl) {
         this.memberService = memberServiceImpl;
     }
@@ -69,12 +74,86 @@ public class MemberController {
     }
 
     @PostMapping("/mailsender")
-    public String verificationSender(@RequestParam final String email) throws MessagingException {
-        return memberService.verificationSender(email);
+    public ResponseEntity<String> verificationSender(@RequestParam final String email) throws MessagingException {
+        final String code = memberService.verificationSender(email);
+
+        return ResponseEntity.status(HttpStatus.OK).body(code);
     }
 
     @PostMapping("/verification")
-    public void verify(@RequestParam final String code) {
+    public ResponseEntity<Void> verify(@RequestParam final String code) {
         memberService.verification(code);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/follow/{followingId}")
+    public ResponseEntity<Void> follow(@AuthenticationPrincipal final MemberDetails memberDetails,
+                                       @PathVariable int followingId) {
+        final int followerId = memberDetails.getId();
+
+        memberService.follow(followerId, followingId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/unfollow/{followingId}")
+    public ResponseEntity<Void> unfollow(@AuthenticationPrincipal final MemberDetails memberDetails,
+                                         @PathVariable int followingId) {
+        final int followerId = memberDetails.getId();
+
+        memberService.unfollow(followerId, followingId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/follower")
+    public ResponseEntity<List<MemberFollowListResponseDto>> findFollower(@AuthenticationPrincipal final MemberDetails memberDetails) {
+        final int id = memberDetails.getId();
+
+        List<MemberFollowListResponseDto> responseDtos = memberService.selectFollower(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDtos);
+    }
+
+    @GetMapping("/following")
+    public ResponseEntity<List<MemberFollowListResponseDto>> findFollowing(@AuthenticationPrincipal final MemberDetails memberDetails) {
+        final int id = memberDetails.getId();
+
+        List<MemberFollowListResponseDto> responseDtos = memberService.selectFollowing(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDtos);
+    }
+
+    @PatchMapping(value = "")
+    public ResponseEntity<MemberUpdateResponseDto> updateProfile(@AuthenticationPrincipal final MemberDetails memberDetails,
+                                                                 @RequestBody final MemberUpdateRequestDto requestDto) {
+        final int id = memberDetails.getId();
+
+        final MemberUpdateResponseDto responseDto = memberService.updateProfile(id, requestDto);
+
+        return ResponseEntity.ok().body(responseDto);
+    }
+
+    @PatchMapping(value = "/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<MemberPictureUploadResponseDto> uploadPicture(@AuthenticationPrincipal final MemberDetails memberDetails,
+                                                                         @ModelAttribute final MemberPictureUploadRequestDto requestDto) {
+        final int id = memberDetails.getId();
+
+        final MemberPictureUploadResponseDto responseDto = memberService.uploadPicture(id, requestDto);
+
+        return ResponseEntity.ok().body(responseDto);
+    }
+
+    @PostMapping("/example/{pathVariableId}")
+    public ResponseEntity<Void> example(
+//            @AuthenticationPrincipal final MemberDetails memberDetails,
+            @PathVariable int pathVariableId) {
+//        final int exampleId2 = memberDetails.getId();
+        final int exampleId = 1;
+
+        memberService.follow(exampleId, pathVariableId);
+
+        return ResponseEntity.ok().build();
     }
 }
