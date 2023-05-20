@@ -63,4 +63,16 @@
         FROM follow join member on follow.follower_id = member.id
         WHERE follower_id = #{followerId}
     </select>
+
+    <update id="updatePicture" parameterType="String">
+        UPDATE member
+        SET picture = #{url}
+        WHERE email = #{email}
+    </update>
+
+    <update id="updateNickname" parameterType="String">
+        UPDATE member
+        SET nickname = #{nickname}
+        WHERE email = #{email}
+    </update>
 </mapper>
