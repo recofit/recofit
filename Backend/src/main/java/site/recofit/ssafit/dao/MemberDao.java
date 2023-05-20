@@ -25,4 +25,8 @@ public interface MemberDao {
     List<Integer> findByFollowingId(final int followingId);
 
     List<Integer> findByFollowerId(final int followerId);
+
+    void updatePicture(final String url, final String email);
+
+    void updateNickname(final String nickname, final String email);
 }

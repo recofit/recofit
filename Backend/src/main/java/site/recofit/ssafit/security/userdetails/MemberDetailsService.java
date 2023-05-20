@@ -9,7 +9,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
-import site.recofit.ssafit.properties.jwt.AccessTokenProperties;
 import site.recofit.ssafit.properties.jwt.AccessTokenProperties.AccessTokenClaim;
 import site.recofit.ssafit.utility.jwt.JwtProvider;
 
@@ -25,13 +24,11 @@ public class MemberDetailsService implements AuthenticationUserDetailsService<Pr
             final DecodedJWT decodedAccessToken = accessTokenProvider.verify(accessToken);
 
             final int id = decodedAccessToken.getClaim(AccessTokenClaim.ID.getClaim()).asInt();
-            final String nickname = decodedAccessToken.getClaim(AccessTokenClaim.NICKNAME.getClaim()).asString();
 
-            log.info("Member authentication request: {}", nickname);
+            log.info("Member authentication request: {}", id);
 
             return MemberDetails.builder()
                     .id(id)
-                    .nickname(nickname)
                     .build();
         } catch (final JWTVerificationException ex) {
             throw new BadCredentialsException(ex.getMessage());

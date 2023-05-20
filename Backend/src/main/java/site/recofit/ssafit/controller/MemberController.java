@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import site.recofit.ssafit.utility.common.CookieUtility;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -105,18 +107,42 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/follower/{followingId}")
-    public ResponseEntity<List<MemberFollowListResponseDto>> findFollower(@PathVariable final int followingId) {
-        List<MemberFollowListResponseDto> responseDtos = memberService.selectFollower(followingId);
+    @GetMapping("/follower")
+    public ResponseEntity<List<MemberFollowListResponseDto>> findFollower(@AuthenticationPrincipal final MemberDetails memberDetails) {
+        final int id = memberDetails.getId();
+
+        List<MemberFollowListResponseDto> responseDtos = memberService.selectFollower(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDtos);
     }
 
-    @GetMapping("/following/{followerId}")
-    public ResponseEntity<List<MemberFollowListResponseDto>> findFollowing(@PathVariable final int followerId) {
-        List<MemberFollowListResponseDto> responseDtos = memberService.selectFollowing(followerId);
+    @GetMapping("/following")
+    public ResponseEntity<List<MemberFollowListResponseDto>> findFollowing(@AuthenticationPrincipal final MemberDetails memberDetails) {
+        final int id = memberDetails.getId();
+
+        List<MemberFollowListResponseDto> responseDtos = memberService.selectFollowing(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDtos);
+    }
+
+    @PatchMapping(value = "")
+    public ResponseEntity<MemberUpdateResponseDto> updateProfile(@AuthenticationPrincipal final MemberDetails memberDetails,
+                                                                 @RequestBody final MemberUpdateRequestDto requestDto) {
+        final int id = memberDetails.getId();
+
+        final MemberUpdateResponseDto responseDto = memberService.updateProfile(id, requestDto);
+
+        return ResponseEntity.ok().body(responseDto);
+    }
+
+    @PatchMapping(value = "/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<MemberPictureUploadResponseDto> uploadPicture(@AuthenticationPrincipal final MemberDetails memberDetails,
+                                                                         @ModelAttribute final MemberPictureUploadRequestDto requestDto) {
+        final int id = memberDetails.getId();
+
+        final MemberPictureUploadResponseDto responseDto = memberService.uploadPicture(id, requestDto);
+
+        return ResponseEntity.ok().body(responseDto);
     }
 
     @PostMapping("/example/{pathVariableId}")

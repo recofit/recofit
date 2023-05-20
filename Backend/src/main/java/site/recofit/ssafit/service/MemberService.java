@@ -29,4 +29,8 @@ public interface MemberService {
     List<MemberFollowListResponseDto> selectFollower(final int followingId);
 
     List<MemberFollowListResponseDto> selectFollowing(final int followerId);
+
+    MemberPictureUploadResponseDto uploadPicture(final int id, final MemberPictureUploadRequestDto requestDto);
+
+    MemberUpdateResponseDto updateProfile(final int id, final MemberUpdateRequestDto requestDto);
 }
