@@ -99,13 +99,13 @@ public class MemberServiceImpl implements MemberService {
             throw new MemberException(MemberStatus.INCORRECT_PASSWORD);
         }
 
-        final Map<String, String> payload = new HashMap<>();
+        final Map<String, Integer> payload = new HashMap<>();
 
-        payload.put("nickname", member.getNickname());
+        payload.put("id", member.getId());
 
-        final Map<String, String> refreshPayload = new HashMap<>();
+        final Map<String, Integer> refreshPayload = new HashMap<>();
 
-        refreshPayload.put("studentId", member.getNickname());
+        refreshPayload.put("id", member.getId());
 
         return MemberLoginResponseDto.builder()
                 .nickname(member.getNickname())
@@ -139,7 +139,7 @@ public class MemberServiceImpl implements MemberService {
 
         helper.setTo(email);
         helper.setSubject("SSAFIT verification code");
-        helper.setText("This is your verification code: " + verification.getCode());
+        helper.setText("This is your verification code: " + code);
 
         mailSender.send(message);
 
