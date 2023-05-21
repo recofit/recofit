@@ -1,7 +1,6 @@
 package site.recofit.ssafit.controller;
 
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,7 +17,6 @@ import site.recofit.ssafit.utility.common.CookieUtility;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -34,14 +32,14 @@ public class MemberController {
 
     @RequestMapping(value = "/emailcheck/{email}", method = RequestMethod.HEAD)
     public ResponseEntity<Void> checkEmailDuplication(@PathVariable final String email) {
-        return (memberService.checkEmailDuplication(email)) ?
+        return (!memberService.checkEmailDuplication(email)) ?
                 (ResponseEntity.ok().build()) :
                 (ResponseEntity.notFound().build());
     }
 
     @RequestMapping(value = "/nicknamecheck/{nickname}", method = RequestMethod.HEAD)
     public ResponseEntity<Void> checkNicknameDuplication(@PathVariable final String nickname) {
-        return (memberService.checkNicknameDuplication(nickname)) ?
+        return (!memberService.checkNicknameDuplication(nickname)) ?
                 (ResponseEntity.ok().build()) :
                 (ResponseEntity.notFound().build());
     }
@@ -61,7 +59,7 @@ public class MemberController {
         CookieUtility.addCookie(response, AccessTokenProperties.COOKIE_NAME, result.getAccessToken());
         CookieUtility.addCookie(response, RefreshTokenProperties.COOKIE_NAME, result.getRefreshToken(), 6480000);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @PostMapping("/logout")
