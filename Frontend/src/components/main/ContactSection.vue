@@ -13,7 +13,7 @@
 
             <div class="row">
                 <div class="contact-form">
-                    <form class="form" action="sellerMessage.jsp" method="post">
+                    <div class="form">
                         <div class="row">
                             <div class="left input-group">
                                 <label>Name</label>
@@ -27,13 +27,13 @@
                         <div class="row">
                             <div class="input-group">
                                 <label>Message</label>
-                                <textarea class="input-control" name="message" placeholder="당신의 의견을 적어주세요"></textarea>
+                                <textarea class="input-control" name="message" placeholder="메시지를 적어주세요"></textarea>
                             </div>
                         </div>
                         <div class="form-btn">
                             <button class="btn-style">Send Message</button>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
 
