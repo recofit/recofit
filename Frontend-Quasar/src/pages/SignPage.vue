@@ -35,7 +35,7 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'IndexPage',
+  name: 'SignPage',
   methods: {
 
     toggle () {
@@ -188,7 +188,7 @@ body {
   font-size: 34px;
   font-weight: 700;
   line-height: 3;
-  color: #181818;
+  color: #285c4d;
 }
 
 .description {
@@ -196,6 +196,7 @@ body {
   letter-spacing: 0.25px;
   text-align: center;
   line-height: 1.6;
+  color: #285c4d;
 }
 
 .button {
@@ -206,7 +207,7 @@ body {
   font-weight: 700;
   font-size: 14px;
   letter-spacing: 1.15px;
-  background-color: #4B70E2;
+  background-color: #285c4d;
   color: #f9f9f9;
   box-shadow: 8px 8px 16px #d1d9e6, -8px -8px 16px #f9f9f9;
   border: none;
