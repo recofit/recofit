@@ -146,18 +146,19 @@
 }
 
 .information-section .section-title {
+  font-size: 1.5rem;
   margin-bottom: 30px;
   padding: 0;
 }
 .information-section .section-title p {
-  font-size: 16px;
+  font-size: 1rem;
   color: #555555;
   line-height: 26px;
   margin: 0;
 }
 
 .information-content p {
-  font-size: 16px;
+  font-size: 1rem;
 }
 
 /* Page Section */
