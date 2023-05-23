@@ -1,12 +1,12 @@
-package site.recofit.ssafit.dto;
+package site.recofit.ssafit.domain;
 
 import lombok.*;
 
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @AllArgsConstructor
 @Builder
-public class MemberSignupResponseDto {
-    private String nickname;
+public class OAuth {
+    private int id;
+    private String email;
 }

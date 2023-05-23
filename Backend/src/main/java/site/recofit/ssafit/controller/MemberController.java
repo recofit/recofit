@@ -1,34 +1,31 @@
 package site.recofit.ssafit.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import site.recofit.ssafit.dto.*;
+import site.recofit.ssafit.dto.member.*;
 import site.recofit.ssafit.properties.jwt.AccessTokenProperties;
 import site.recofit.ssafit.properties.jwt.RefreshTokenProperties;
+import site.recofit.ssafit.security.oauth2.kakao.KakaoService;
 import site.recofit.ssafit.security.userdetails.MemberDetails;
 import site.recofit.ssafit.service.MemberService;
-import site.recofit.ssafit.serviceimpl.MemberServiceImpl;
 import site.recofit.ssafit.utility.common.CookieUtility;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
-    private MemberService memberService;
-    
-    @Autowired
-    public void setMemberService(MemberServiceImpl memberServiceImpl) {
-        this.memberService = memberServiceImpl;
-    }
+    private final MemberService memberService;
+    private final KakaoService kakaoService;
 
     @RequestMapping(value = "/emailcheck/{email}", method = RequestMethod.HEAD)
     public ResponseEntity<Void> checkEmailDuplication(@PathVariable final String email) {
@@ -123,6 +120,15 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDtos);
     }
 
+    @GetMapping("")
+    public ResponseEntity<MemberReadResponseDto> findMember(@AuthenticationPrincipal final MemberDetails memberDetails) {
+        final int id = memberDetails.getId();
+
+        final MemberReadResponseDto responseDto = memberService.findMember(id);
+
+        return ResponseEntity.ok().body(responseDto);
+    }
+
     @PatchMapping(value = "")
     public ResponseEntity<MemberUpdateResponseDto> updateProfile(@AuthenticationPrincipal final MemberDetails memberDetails,
                                                                  @RequestBody final MemberUpdateRequestDto requestDto) {
@@ -135,12 +141,24 @@ public class MemberController {
 
     @PatchMapping(value = "/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<MemberPictureUploadResponseDto> uploadPicture(@AuthenticationPrincipal final MemberDetails memberDetails,
-                                                                         @ModelAttribute final MemberPictureUploadRequestDto requestDto) {
+                                                                        @ModelAttribute final MemberPictureUploadRequestDto requestDto) {
         final int id = memberDetails.getId();
 
         final MemberPictureUploadResponseDto responseDto = memberService.uploadPicture(id, requestDto);
 
         return ResponseEntity.ok().body(responseDto);
+    }
+
+    @GetMapping("/kakao/callback")
+    public ResponseEntity<?> getKakaoRequest(@RequestParam final String code, final HttpServletResponse response) throws JSONException, IOException {
+        final MemberLoginResponseDto result = kakaoService.kakaoLogin(code);
+
+        CookieUtility.addCookie(response, AccessTokenProperties.COOKIE_NAME, result.getAccessToken());
+        CookieUtility.addCookie(response, RefreshTokenProperties.COOKIE_NAME, result.getRefreshToken(), 6480000);
+
+        response.sendRedirect("http://localhost:8081");
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @PostMapping("/example/{pathVariableId}")

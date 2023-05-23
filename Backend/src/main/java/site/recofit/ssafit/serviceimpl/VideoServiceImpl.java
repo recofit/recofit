@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.recofit.ssafit.domain.Video;
-import site.recofit.ssafit.dto.VideoListRequestDto;
-import site.recofit.ssafit.dto.VideoListResponseDto;
-import site.recofit.ssafit.dto.VideoSubscribeRequestDto;
+import site.recofit.ssafit.dto.video.VideoListRequestDto;
+import site.recofit.ssafit.dto.video.VideoListResponseDto;
+import site.recofit.ssafit.dto.video.VideoSubscribeRequestDto;
 import site.recofit.ssafit.dao.VideoDao;
 import site.recofit.ssafit.service.VideoService;
 

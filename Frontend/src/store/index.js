@@ -6,12 +6,25 @@ export default createStore({
   state: {
     member: {},
     members: [],
+    followers: [], 
+    followings: [],
     loginUser: null,
     video: null,
     videos1: [],
     videos2: [],
+    place: {},
+    places: []
   },
   getters: {
+    followerCnt: function (state) {
+      return state.followers.length;
+    },
+    followingCnt: function (state) {
+      return state.followings.length;
+    },
+    placeCnt: function (state) {
+      return state.places.length;
+    }
   },
   mutations: {
     SIGN_UP: function (state, member) {
@@ -31,6 +44,18 @@ export default createStore({
     CLICK_VIDEO(state, video) {
       state.video = video;
     },
+    MY_INFORMAITON: function (state, member) {
+      state.member = member;
+    },
+    GET_FOLLOWERS: function (state, followers) {
+      state.followers = followers
+    },
+    GET_FOLLOWINGS: function (state, followings) {
+      state.followings = followings;
+    },
+    SET_PLACES: function (state, places) {
+      state.places = places;
+    }
   },
   actions: {
     signup: function ({ commit }, member) {
@@ -130,7 +155,7 @@ export default createStore({
     },
     searchPopularYoutube({commit}, payload) {
       const URL = "https://www.googleapis.com/youtube/v3/search";
-      const API_KEY = "AIzaSyBH872nJMrMtQ1WkEI-dwrg6Zz0sty1Krs";
+      const API_KEY = "";
       axios({
         url: URL,
         method: "GET",
@@ -151,7 +176,7 @@ export default createStore({
     },
     searchLikeYoutube({commit}, payload) {
       const URL = "https://www.googleapis.com/youtube/v3/search";
-      const API_KEY = "AIzaSyBH872nJMrMtQ1WkEI-dwrg6Zz0sty1Krs";
+      const API_KEY = "";
       axios({
         url: URL,
         method: "GET",
@@ -172,6 +197,90 @@ export default createStore({
     clickVideo({commit}, payload) {
       commit("CLICK_VIDEO", payload);
     }
+    logout: function ({ commit }) {
+      const API_URL = '/member/logout';
+      axios({
+        url: API_URL,
+        method: 'POST'
+      })
+        .then(() => {
+          commit;
+          alert('안녕히가세요!')
+          router.push('/')
+        })
+        .catch(() => {
+          alert('나가지마!')
+        })
+    },
+    myInformation: function ({ commit }) {
+      const API_URL = '/member';
+      axios({
+        url: API_URL,
+        method: 'GET'
+      })
+        .then((res) => {
+          let member = res.data;
+          commit('MY_INFORMAITON', member);
+        })
+        .catch(() => {
+          alert('내 정보가 이상해')
+        })
+    },
+    getFollowers: function ({ commit }) {
+      const API_URL = '/member/follower';
+      axios({
+        url: API_URL,
+        method: 'GET'
+      })
+        .then((res) => {
+          let followers = res.data;
+          commit('GET_FOLLOWERS', followers);
+        })
+        .catch(() => {
+          alert('내 팔로워가 이상해')
+        })
+    },
+    getFollowings: function ({ commit }) {
+      const API_URL = '/member/following';
+      axios({
+        url: API_URL,
+        method: 'GET'
+      })
+        .then((res) => {
+          let followings = res.data;
+          commit('GET_FOLLOWINGS', followings);
+        })
+        .catch(() => {
+          alert('내 팔로잉이 이상해')
+        })
+    },
+    unfollow: function ({ commit }, id) {
+      const API_URL = '/member/unfollow/' + id;
+      axios({
+        url: API_URL,
+        method: 'DELETE'
+      })
+        .then(() => {
+          commit;
+          router.go(0) 
+        })
+        .catch(() => {
+          alert('넌 내꺼라 언팔 안돼')
+        })
+    },
+    getPlaces: function ({ commit }) {
+      const API_URL = '/place/list';
+      axios({
+        url: API_URL,
+        method: 'GET'
+      })
+        .then((res) => {
+          commit('SET_PLACES', res.data);
+        })
+        .catch(() => {
+          alert('장소 안줘 안돼')
+        })
+    },
   },
   modules: {},
 });

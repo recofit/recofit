@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import site.recofit.ssafit.dto.VideoListRequestDto;
-import site.recofit.ssafit.dto.VideoListResponseDto;
-import site.recofit.ssafit.dto.VideoSubscribeRequestDto;
+import site.recofit.ssafit.dto.video.VideoListRequestDto;
+import site.recofit.ssafit.dto.video.VideoListResponseDto;
+import site.recofit.ssafit.dto.video.VideoSubscribeRequestDto;
 import site.recofit.ssafit.service.VideoService;
 
 import java.util.List;

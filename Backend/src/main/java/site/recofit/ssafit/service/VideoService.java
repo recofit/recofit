@@ -1,8 +1,8 @@
 package site.recofit.ssafit.service;
 
-import site.recofit.ssafit.dto.VideoListRequestDto;
-import site.recofit.ssafit.dto.VideoListResponseDto;
-import site.recofit.ssafit.dto.VideoSubscribeRequestDto;
+import site.recofit.ssafit.dto.video.VideoListRequestDto;
+import site.recofit.ssafit.dto.video.VideoListResponseDto;
+import site.recofit.ssafit.dto.video.VideoSubscribeRequestDto;
 
 import java.util.List;
 

@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.recofit.ssafit.dao.ReservationDao;
 import site.recofit.ssafit.domain.Reservation;
-import site.recofit.ssafit.dto.ReservationRegistRequestDto;
-import site.recofit.ssafit.dto.ReservationRegistResponseDto;
+import site.recofit.ssafit.dto.reservation.ReservationRegistRequestDto;
+import site.recofit.ssafit.dto.reservation.ReservationRegistResponseDto;
 import site.recofit.ssafit.service.ReservationService;
 
 import java.util.List;

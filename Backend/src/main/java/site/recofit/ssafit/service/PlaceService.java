@@ -1,7 +1,7 @@
 package site.recofit.ssafit.service;
 
-import site.recofit.ssafit.dto.PlaceListResponseDto;
-import site.recofit.ssafit.dto.PlaceRegistRequestDto;
+import site.recofit.ssafit.dto.place.PlaceListResponseDto;
+import site.recofit.ssafit.dto.place.PlaceRegistRequestDto;
 
 import java.util.List;
 
