@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex">
-        <select name="region" class="region-select" v-model="region">
-            <option value="">전국</option>
+        <select name="region" class="region-select" v-model="info.region">
+            <option value="" selected>전국</option>
             <option value="서울">서울</option>
             <option value="인천">인천</option>
             <option value="대전">대전</option>
@@ -11,7 +11,7 @@
             <option value="광주">광주</option>
             <option value="제주">제주</option>
         </select>
-        <input class="form-control me-2" type="text" aria-label="Search" size="40" v-model="keyword"/>
+        <input class="form-control me-2" type="text" aria-label="Search" size="40" v-model="info.keyword"/>
         <button class="btn" type="button" @click="search"><a href="#result"><i class="bi bi-search"></i></a></button>
     </div>
     <video :src="require(`@/assets/video/landscape.mp4`)" muted autoplay loop/>
@@ -22,16 +22,18 @@ export default {
     name: "SearchSection",
     data() {
         return {
-            region: "",
-            keyword: "",
+            info : [
+                { region: "" },
+                { keyword: "" },
+            ]
         };
     },
     methods: {
         search() {
-            // this.$store.dispatch("searchLikeYoutube", this.keyword);
-            // this.$store.dispatch("searchPopularYoutube", this.keyword);
+            // this.$store.dispatch("searchLikeYoutube", this.info.keyword);
+            // this.$store.dispatch("searchPopularYoutube", this.info.keyword);
 
-            // this.$store.dispatch("searchPlace", this.keyword)
+            this.$store.dispatch("searchPlace", this.info);
         }
     },
 }
@@ -56,7 +58,7 @@ video {
 }
 
 select option {
-    background-color: rgb(225, 253, 225);
+    background-color: #ecf0f3;
     font-weight: 600;
 }
 

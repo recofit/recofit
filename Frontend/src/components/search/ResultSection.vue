@@ -1,36 +1,40 @@
 <template>
+<div v-if="results.length > 0">
     <div class="section-title" id="result"><h1> 검색 결과 </h1></div>
-
     <table class="table">
         <thead>
             <tr>
             <th scope="col">번호</th>
             <th scope="col">이름</th>
             <th scope="col">위치</th>
-            <th scope="col">평점</th>
             </tr>
         </thead>
         
         <tbody>
-            <tr>
-                <td>더미1</td>
-                <td>더미2</td>
-                <td>더미3</td>
-                <td>더미4</td>
-            </tr>
-            <!-- <tr v-for="(review, index) in reviews" :key="index" data-bs-toggle="modal" data-bs-target="#detailModal" @click="detailReview(review)">
+            <tr v-for="(result, index) in results" :key="index" @click="detailPlace(result)">
                 <td>{{index + 1}}</td>
-                <td>{{review.title}}</td>
-                <td>{{review.name}}</td>
-                <td>{{review.regDate}}</td>
-            </tr> -->
+                <td>{{result.title}}</td>
+                <td>{{result.venue}}</td>
+            </tr>
         </tbody>
     </table>
+</div>
 </template>
 
 <script>
-export default {
+import { mapState } from "vuex"
 
+export default {
+  name: "ResultSection",
+  computed: {
+    ...mapState(["results"])
+  },
+  methods: {
+        detailPlace(place) {
+            this.$store.dispatch('searchLocation', place.venue);
+            setTimeout(() =>this.$store.dispatch('detailPlace', place), 500);
+        },
+    },
 }
 </script>
 
@@ -46,7 +50,7 @@ export default {
 }
 
 .table {
-    width: 80%; 
+    width: 78%; 
     margin: 0 auto;
     margin-bottom: 100px;
 }
