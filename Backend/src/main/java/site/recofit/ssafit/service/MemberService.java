@@ -1,6 +1,6 @@
 package site.recofit.ssafit.service;
 
-import site.recofit.ssafit.dto.*;
+import site.recofit.ssafit.dto.member.*;
 
 import javax.mail.MessagingException;
 import java.util.List;
@@ -29,6 +29,8 @@ public interface MemberService {
     List<MemberFollowListResponseDto> selectFollower(final int followingId);
 
     List<MemberFollowListResponseDto> selectFollowing(final int followerId);
+
+    MemberReadResponseDto findMember(final int memberId);
 
     MemberPictureUploadResponseDto uploadPicture(final int id, final MemberPictureUploadRequestDto requestDto);
 

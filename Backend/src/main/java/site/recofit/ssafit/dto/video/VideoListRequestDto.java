@@ -1,4 +1,4 @@
-package site.recofit.ssafit.dto;
+package site.recofit.ssafit.dto.video;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

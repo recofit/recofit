@@ -1,8 +1,8 @@
 package site.recofit.ssafit.service;
 
 import site.recofit.ssafit.domain.Reservation;
-import site.recofit.ssafit.dto.ReservationRegistRequestDto;
-import site.recofit.ssafit.dto.ReservationRegistResponseDto;
+import site.recofit.ssafit.dto.reservation.ReservationRegistRequestDto;
+import site.recofit.ssafit.dto.reservation.ReservationRegistResponseDto;
 
 import java.util.List;
 

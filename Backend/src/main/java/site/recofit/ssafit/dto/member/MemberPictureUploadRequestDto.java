@@ -1,4 +1,4 @@
-package site.recofit.ssafit.dto;
+package site.recofit.ssafit.dto.member;
 
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;

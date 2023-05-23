@@ -1,4 +1,4 @@
-package site.recofit.ssafit.dto;
+package site.recofit.ssafit.dto.reservation;
 
 import lombok.*;
 
