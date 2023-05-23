@@ -196,7 +196,7 @@ export default createStore({
     },
     clickVideo({commit}, payload) {
       commit("CLICK_VIDEO", payload);
-    }
+    },
     logout: function ({ commit }) {
       const API_URL = '/member/logout';
       axios({

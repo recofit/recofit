@@ -259,6 +259,8 @@ export default defineComponent({
   font-family: "Montserrat", sans-serif;
   font-size: 12px;
   background-image: url("../assets/img/carousel1.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
   /* background-color: #ecf0f3;
     color: #a0a5a8; */
 }
