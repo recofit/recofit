@@ -4,18 +4,18 @@
       <div class="modal-content">
       
         <div class="modal-header">
-          <h1 class="modal-title fs-5"><strong>운동영상 리뷰</strong></h1>
+          <h1 class="modal-title fs-5"><strong>{{result.title}} 리뷰 수정</strong></h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
         </div>
 
         <div class="modal-body">
           <div class="d-grid gap-2 d-md-block">
-            <div class="mb-3">
-              <input type="text" class="form-control" placeholder="제목" v-model="review.title">
+            <!-- <div class="mb-3">
+              <input type="text" class="form-control" placeholder="제목" v-model="result.title">
             </div>
             <div class="mb-3">
-              <textarea class="form-control" rows="3" placeholder="수정 내용 작성" v-model="review.content"></textarea>
-            </div>
+              <textarea class="form-control" rows="3" placeholder="수정 내용 작성" v-model="result.content"></textarea>
+            </div> -->
           </div>
         </div>
         
@@ -44,7 +44,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["review"])
+    ...mapState(["result"])
   },
 }
 </script>

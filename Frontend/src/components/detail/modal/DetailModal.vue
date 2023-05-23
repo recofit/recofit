@@ -4,27 +4,34 @@
       <div class="modal-content">
       
       <div class="modal-header">
-        <h1 class="modal-title fs-5"><strong>운동영상 리뷰</strong></h1>
+        <h1 class="modal-title fs-5"><strong>{{result.title}} 리뷰</strong></h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
   
       <div class="modal-body">
         <div class="d-grid gap-2 d-md-block">
           <div class="box">
-            <h2 class="title"><strong>{{review.title}}</strong></h2>
-            <p>{{review.name}}</p>
-            <p>{{review.regDate}}</p>
-            <p>{{review.viewCnt}}</p>
+            <h2 class="title"><strong>title</strong></h2>
+            <p>작성자</p>
+            <p>평점</p>
+            <p>추천수</p>
             <br><hr>
-            <p>{{review.content}}</p>
+            <p>내용</p>
           </div>
         </div>
       </div>
 
-      <div class="modal-footer" v-if="review.name === user.name">
+      <!-- <div class="modal-footer" v-if="review.name === user.name">
         <div class="d-grid gap-2 d-md-block">
           <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modifyModal">수정</button>
           <button type="submit" class="btn btn-outline-danger" @click="deleteReview(review.id)">삭제</button>
+        </div>
+      </div> -->
+
+      <div class="modal-footer">
+        <div class="d-grid gap-2 d-md-block">
+          <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modifyModal">수정</button>
+          <button type="submit" class="btn btn-outline-danger" @click="deleteReview()">삭제</button>
         </div>
       </div>
         
@@ -34,20 +41,23 @@
 </template>
 
 <script>
-import {mapState, mapGetters} from "vuex"
+// import {mapState, mapGetters} from "vuex"
+import {mapState} from "vuex"
 
 export default {
   name: "DetailModal",
   methods: {
-    deleteReview(id) {
-      this.$store.dispatch("deleteReview", id);
-      this.$router.go(0);
+    deleteReview() {
+      // this.$store.dispatch("deleteReview", id);
+      // this.$router.go(0);
     }
   },
   computed: {
-    ...mapState(["review"]),
-    ...mapGetters(["user"])
+    // ...mapState(["review"]),
+    // ...mapGetters(["user"])
+    ...mapState(['result']),
   },
+  
 }
 </script>
 

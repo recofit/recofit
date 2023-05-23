@@ -26,7 +26,7 @@ export default {
     computed: {
         ...mapState(['video']),
         videoURL() {
-            // const videoId = this.video.id.videoId;
+            // const videoId = this.video.id;
             // return `https://www.youtube.com/embed/${videoId}`;
             return `https://www.youtube.com/embed/7TLk7pscICk`;
         }

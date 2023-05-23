@@ -15,16 +15,16 @@
     </nav>
     <hr>
 
-    <!-- <write-modal /> -->
+    <write-modal />
   </div>
 </template>
 
 <script>
-// import WriteModal from './modal/WriteModal.vue'
+import WriteModal from './modal/WriteModal.vue'
 
 export default {
   components: { 
-    // WriteModal 
+    WriteModal 
   },
 }
 </script>

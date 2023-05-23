@@ -6,6 +6,7 @@ import DetailPage from '../views/DetailPage.vue'
 import MyPage from '../views/MyPage.vue'
 
 
+
 const routes = [
   {
     path: '/',

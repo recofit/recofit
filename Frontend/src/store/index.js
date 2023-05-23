@@ -17,6 +17,8 @@ export default createStore({
     result: {},
     results: [],
     location: { lat: 0, lng: 0 },
+    review: {},
+    reviews: [],
   },
   getters: {
     followerCnt: function (state) {
@@ -49,10 +51,10 @@ export default createStore({
       state.places = places;
     },
     SEARCH_POPULAR_YOUTUBE(state, videos) {
-      state.videos2 = videos;
+      state.videos1 = videos;
     },
     SEARCH_LIKE_YOUTUBE(state, videos) {
-      state.videos1 = videos;
+      state.videos2 = videos;
     },
     CLICK_VIDEO(state, video) {
       state.video = video;
@@ -67,7 +69,19 @@ export default createStore({
     SEARCH_LOCATION(state, location) {
       state.location.lat = location.lat;
       state.location.lng = location.lng;
-    }
+    },
+    SET_REVIEW: function(state, review) {
+      state.review = review;
+    },
+    SET_REVIEWS: function(state, reviews) {
+      state.reviews = reviews;
+    },
+    WRITE_REVIEW: function(state, review) {
+      state.reviews.push(review);
+    },
+    DELETE_REVIEW: function(state) {
+      state.reviews
+    },
   },
   actions: {
     signup: function ({ commit }, member) {
@@ -252,7 +266,7 @@ export default createStore({
     },
     searchPopularYoutube({commit}, payload) {
       const URL = "https://www.googleapis.com/youtube/v3/search";
-      const API_KEY = "";
+      const API_KEY = "AIzaSyBH872nJMrMtQ1WkEI-dwrg6Zz0sty1Krs";
       axios({
         url: URL,
         method: "GET",
@@ -267,7 +281,22 @@ export default createStore({
         },
       })
       .then((res) => {
-        commit("SEARCH_POPULAR_YOUTUBE", res.data.items);
+        for (const item of res.data.items) {
+          axios({
+            url: "https://www.googleapis.com/youtube/v3/videos",
+            method: "GET",
+            params: {
+              key: API_KEY,
+              part: "statistics",
+              id: item.id.videoId,
+            },
+          })
+          .then((res) => {
+            console.log(res.data.items)
+            commit("SEARCH_POPULAR_YOUTUBE", res.data.items);
+          })
+          .catch((err) => console.log(err))
+        }
       })
       .catch((err) => console.log(err));
     },
@@ -287,7 +316,22 @@ export default createStore({
         },
       })
       .then((res) => {
-        commit("SEARCH_LIKE_YOUTUBE", res.data.items);
+        for (const item of res.data.items) {
+          axios({
+            url: "https://www.googleapis.com/youtube/v3/videos",
+            method: "GET",
+            params: {
+              key: API_KEY,
+              part: "statistics",
+              id: item.id.videoId,
+            },
+          })
+          .then((res) => {
+            console.log(res.data.items)
+            commit("SEARCH_LIKE_YOUTUBE", res.data.items);
+          })
+          .catch((err) => console.log(err))
+        }
       })
       .catch((err) => console.log(err));
     },
@@ -305,7 +349,6 @@ export default createStore({
       })
       .then((res) => {
         commit("SEARCH_PLACE", res.data.response.body.items.item);
-        console.log(res.data.response.body.items.item);
       })
       .catch((err) => console.log(err));
     },
@@ -339,6 +382,100 @@ export default createStore({
           commit("SEARCH_LOCATION", res.data.results[0].geometry.location);
         })
         .catch((err) => console.log(err));
+    },
+    getReview: function({commit}, reviewId) {
+      const API_URL = `http://localhost:9999/api/review/detail/` + reviewId;
+
+      return axios({
+        url: API_URL,
+        method: "GET",
+        headers: {
+          "access-token": sessionStorage.getItem("access-token"),
+        },
+      })
+        .then(res => {
+          commit("SET_REVIEW", res.data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    getReviews: function({commit}, exerciseId) {
+      const API_URL = `http://localhost:9999/api/review/list/` + exerciseId;
+
+      return axios({
+        url: API_URL,
+        method: "GET",
+        headers: {
+          "access-token": sessionStorage.getItem("access-token"),
+        },
+      })
+        .then(res => {
+          commit("SET_REVIEWS", res.data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    writeReview: function({commit}, review) {
+      const API_URL = `http://localhost:8080/review/write`;
+      
+      
+      axios({
+        url: API_URL,
+        method: "POST",
+        data: review,
+        headers: {},
+      })
+        .then(() => {
+          commit("WRITE_REVIEW", review);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    deleteReview: function({state}, reviewId) {
+      const API_URL = `http://localhost:8080/review/delete/` + reviewId;
+      
+      axios({
+        url: API_URL,
+        method: "DELETE",
+        headers: {
+          "access-token": sessionStorage.getItem("access-token"),
+        },
+      })
+        .then(() => {
+          alert("삭제 완료!");
+          let index;
+          for (let i = 0; i < state.reviews.length; i++) {
+            if (state.reviews[i].id === reviewId) {
+              index = i;
+            }
+          }
+          state.reviews.splice(index, 1);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    modifyReview: function({commit}, review) {
+      const API_URL = `http://localhost:9999/api/review/update`;
+
+      axios({
+        url: API_URL,
+        method: "PUT",
+        data: review,
+        headers: {
+          "access-token": sessionStorage.getItem("access-token"),
+        },
+      })
+        .then(() => {
+          alert("수정 완료!");
+          commit;
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
   },
   modules: {},
