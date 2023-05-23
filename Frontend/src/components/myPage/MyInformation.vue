@@ -99,6 +99,10 @@ export default defineComponent({
   flex-wrap: wrap;
 }
 
+.information-img {
+  width: 30%;
+}
+
 .img-box {
   border-radius: 70%;
   width: 250px;
@@ -112,6 +116,7 @@ export default defineComponent({
 }
 
 .information-content {
+  width: 60%;
   display: flex;
   justify-content: space-around;
   align-items: center;

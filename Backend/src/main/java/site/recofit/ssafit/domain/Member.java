@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class Member {
-    public static final String BASIC_PICTURE = "basic_picture";
+    public static final String BASIC_PICTURE = "basic_picture.png";
 
     private int id;
     private String email;
