@@ -19,6 +19,7 @@ import ServiceSection from '@/components/main/ServiceSection.vue'
 import IntroductionSection from '@/components/main/IntroductionSection.vue'
 import ContactSection from '@/components/main/ContactSection.vue'
 import FooterSection from '@/components/common/FooterSection.vue'
+
 export default {
   components: { 
     HeaderSection,
@@ -31,8 +32,3 @@ export default {
   },
 }
 </script>
-
-<style scoped la,
-    IntroductionSectionng="css">
-@import "../css/mainPageStyle.css";
-</style>

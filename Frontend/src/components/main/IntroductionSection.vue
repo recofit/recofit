@@ -35,6 +35,63 @@ export default {
 }
 </script>
 
-<style scoped lang="css">
+<style scoped>
 @import "@/css/mainPageStyle.css";
+.page-section {
+  padding: 5rem 0;
+  background-color: #f3f2f1;
+}
+
+.page-section .section-title h2 {
+  font-family: "Raleway", sans-serif;
+  font-size: 50px;
+  font-weight: 400;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.page-section h3.section-subheading, .page-section .section-subheading.h3 {
+  font-size: 1rem;
+  margin-bottom: 4rem;
+  line-height: 1.5rem;
+}
+
+.bg-light {
+  --bs-bg-opacity: 1;
+}
+
+.team-member {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.team-member img {
+  width: 16rem;
+  height: 16rem;
+  border: 0.5rem solid rgba(0, 0, 0, 0.1);
+}
+
+.team-member h4, .team-member .h4 {
+  margin-top: 1.5rem;
+  margin-bottom: 0;
+  font-size: 1.8rem;  
+}
+
+.mx-auto {
+  margin-right: auto !important; 
+  margin-left: auto !important;
+}
+
+.rounded-circle {
+  border-radius: 50% !important;
+}
+
+.text-muted {
+  --bs-text-opacity: 1;
+  color: #6c757d !important;
+}
+
+.icon i {
+  font-size: 120px;
+}
 </style>

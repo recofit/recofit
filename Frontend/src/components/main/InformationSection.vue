@@ -41,4 +41,46 @@ export default {
 
 <style scoped lang="css">
 @import "@/css/mainPageStyle.css";
+
+.information-section {
+  padding: 80px 0 0;
+}
+
+.information-section .information-img {
+  flex: 0 0 30%;
+  max-width: 30%;
+  margin-left: 6%;
+  padding: 0 15px;
+}
+
+.information-section .information-img .img-box {
+  position: relative;
+}
+.information-section .information-img .img-box img{
+  width: 100%;
+  display: block;
+}
+
+.information-section .information-content {
+  flex: 0 0 58%;
+  max-width: 58%;
+  padding: 15px 15px;
+  margin-left: 6%;
+}
+
+.information-section .section-title {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+  padding: 0;
+}
+.information-section .section-title p {
+  font-size: 1rem;
+  color: #555555;
+  line-height: 26px;
+  margin: 0;
+}
+
+.information-content p {
+  font-size: 1rem;
+}
 </style>
