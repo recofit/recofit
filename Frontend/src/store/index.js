@@ -6,7 +6,10 @@ export default createStore({
   state: {
     member: {},
     members: [],
-    loginUser: null
+    loginUser: null,
+    video: null,
+    videos1: [],
+    videos2: [],
   },
   getters: {
   },
@@ -16,6 +19,17 @@ export default createStore({
     },
     LOG_IN: function (state, member) {
       state.loginUser = member
+    },
+    SEARCH_POPULAR_YOUTUBE(state, videos) {
+      state.videos2 = videos;
+      console.log(state.videos1);
+    },
+    SEARCH_LIKE_YOUTUBE(state, videos) {
+      state.videos1 = videos;
+      console.log(state.videos2);
+    },
+    CLICK_VIDEO(state, video) {
+      state.video = video;
     },
   },
   actions: {
@@ -114,6 +128,50 @@ export default createStore({
           alert('너 누구야!')
         })
     },
+    searchPopularYoutube({commit}, payload) {
+      const URL = "https://www.googleapis.com/youtube/v3/search";
+      const API_KEY = "AIzaSyBH872nJMrMtQ1WkEI-dwrg6Zz0sty1Krs";
+      axios({
+        url: URL,
+        method: "GET",
+        params: {
+          key: API_KEY,
+          part: "snippet",
+          order: "viewCount",
+          videoCategoryId: 17,
+          q: payload,
+          type: "video",
+          maxResults: 3,
+        },
+      })
+      .then((res) => {
+        commit("SEARCH_POPULAR_YOUTUBE", res.data.items);
+      })
+      .catch((err) => console.log(err));
+    },
+    searchLikeYoutube({commit}, payload) {
+      const URL = "https://www.googleapis.com/youtube/v3/search";
+      const API_KEY = "AIzaSyBH872nJMrMtQ1WkEI-dwrg6Zz0sty1Krs";
+      axios({
+        url: URL,
+        method: "GET",
+        params: {
+          key: API_KEY,
+          part: "snippet",
+          videoCategoryId: 17,
+          q: payload,
+          type: "video",
+          maxResults: 3,
+        },
+      })
+      .then((res) => {
+        commit("SEARCH_LIKE_YOUTUBE", res.data.items);
+      })
+      .catch((err) => console.log(err));
+    },
+    clickVideo({commit}, payload) {
+      commit("CLICK_VIDEO", payload);
+    }
   },
   modules: {},
 });

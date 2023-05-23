@@ -1,5 +1,5 @@
 <template>
-    <div id="carouselExample" class="carousel carousel-dark slide">
+    <div id="carouselExample" class="carousel slide carousel-dark" data-bs-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
                 <img :src="require(`@/assets/img/carousel1.jpg`)" class="d-block w-100" alt="..." />

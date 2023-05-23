@@ -8,6 +8,14 @@ export default {
 }
 </script>
 
-<style scoped lang="css">
+<style scoped>
 @import "@/css/mainPageStyle.css";
+
+.copyright {
+  border-top: 1px solid #c5c5c5;
+  padding: 25px 15px;
+  text-align: center;
+  color: #555555;
+  font-size: 16
+}
 </style>
