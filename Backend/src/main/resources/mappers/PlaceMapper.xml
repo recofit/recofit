@@ -23,7 +23,7 @@
     <select id="findByPlaceId" parameterType="Integer" resultType="Place">
         SELECT name, address, open_time AS openTime, close_time AS closeTime, longitude, latitude
         FROM place
-        WHERE place_id = #{placeId}
+        WHERE id = #{placeId}
     </select>
 
     <insert id="unsubscribePlace" parameterType="Integer">

@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import site.recofit.ssafit.domain.Reservation;
+import site.recofit.ssafit.dto.reservation.ReservationReadResponseDto;
 import site.recofit.ssafit.dto.reservation.ReservationRegistRequestDto;
 import site.recofit.ssafit.dto.reservation.ReservationRegistResponseDto;
 import site.recofit.ssafit.security.userdetails.MemberDetails;
@@ -30,17 +31,17 @@ public class ReservationController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<Reservation>> findMemberUnavailableDate(@AuthenticationPrincipal final MemberDetails memberDetails) {
+    public ResponseEntity<List<ReservationReadResponseDto>> findMemberUnavailableDate(@AuthenticationPrincipal final MemberDetails memberDetails) {
         final int memberId = memberDetails.getId();
 
-        List<Reservation> list = reservationService.findMemberUnavailableDate(memberId);
+        List<ReservationReadResponseDto> list = reservationService.findMemberUnavailableDate(memberId);
 
         return ResponseEntity.ok().body(list);
     }
 
     @GetMapping("/{placeId}")
-    public ResponseEntity<List<Reservation>> findMemberUnavailableDate(@PathVariable final int placeId) {
-        List<Reservation> list = reservationService.findPlaceUnavailableDate(placeId);
+    public ResponseEntity<List<ReservationReadResponseDto>> findPlaceUnavailableDate(@PathVariable final int placeId) {
+        List<ReservationReadResponseDto> list = reservationService.findPlaceUnavailableDate(placeId);
 
         return ResponseEntity.ok().body(list);
     }
