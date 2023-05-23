@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class Member {
+    public static final String BASIC_PICTURE = "basic_picture";
+
     private int id;
     private String email;
     private String password;

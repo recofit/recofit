@@ -78,7 +78,7 @@ public class MemberServiceImpl implements MemberService {
                 .email(requestDto.getEmail())
                 .password(passwordEncoder.encode(requestDto.getPassword()))
                 .nickname(requestDto.getNickname())
-                .picture(Member.BASIC_PICTURE)
+                .picture(awsStorageProperties.getUrl() + Member.BASIC_PICTURE)
                 .build();
 
         memberDao.save(member);
