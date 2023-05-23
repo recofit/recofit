@@ -80,6 +80,7 @@ export default createStore({
         .then(() => {
           commit;
           alert(member.nickname + '님 회원가입을 축하드립니다!');
+          router.go(0);
         })
         .catch(() => {
           alert('회원 가입에 실패했습니다.');
