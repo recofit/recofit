@@ -6,5 +6,7 @@ import router from './router'
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
+import VCalendar from 'v-calendar';
+import 'v-calendar/style.css';
 
-createApp(App).use(router).use(store).mount('#app')
+createApp(App).use(router).use(store).use(VCalendar, {}).mount('#app')

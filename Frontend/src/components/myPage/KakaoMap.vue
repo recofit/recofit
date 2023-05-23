@@ -35,7 +35,7 @@ export default {
   },
   mounted() {
     this.loadMap();
-    this.loadMarkers();
+    setTimeout(() => this.loadMarkers(), 500);
   },
   methods: {
     loadMap() {

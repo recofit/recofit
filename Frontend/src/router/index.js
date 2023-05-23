@@ -4,6 +4,7 @@ import SignPage from '../views/SignPage.vue'
 import SearchPage from '../views/SearchPage.vue'
 import DetailPage from '../views/DetailPage.vue'
 import MyPage from '../views/MyPage.vue'
+import CalendarPage from '../views/CalendarPage.vue'
 
 
 const routes = [
@@ -31,6 +32,11 @@ const routes = [
     path: '/mypage',
     name: 'mypage',
     component: MyPage
+  },
+  {
+    path: '/calendar',
+    name: 'calendar',
+    component: CalendarPage
   },
 ]
 

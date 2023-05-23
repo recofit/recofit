@@ -17,6 +17,8 @@ export default createStore({
     result: {},
     results: [],
     location: { lat: 0, lng: 0 },
+    reservation: {},
+    reservations: [],
   },
   getters: {
     followerCnt: function (state) {
@@ -67,6 +69,9 @@ export default createStore({
     SEARCH_LOCATION(state, location) {
       state.location.lat = location.lat;
       state.location.lng = location.lng;
+    },
+    SET_DATES: function (state, reservations) {
+      state.reservations = reservations;
     }
   },
   actions: {
@@ -166,6 +171,50 @@ export default createStore({
           alert('너 누구야!')
         })
     },
+    searchPopularYoutube({commit}, payload) {
+      const URL = "https://www.googleapis.com/youtube/v3/search";
+      const API_KEY = "AIzaSyDFor2GS0t1ZNfh4EDaWgyJKgl6A13K7qI";
+      axios({
+        url: URL,
+        method: "GET",
+        params: {
+          key: API_KEY,
+          part: "snippet",
+          order: "viewCount",
+          videoCategoryId: 17,
+          q: payload,
+          type: "video",
+          maxResults: 3,
+        },
+      })
+      .then((res) => {
+        commit("SEARCH_POPULAR_YOUTUBE", res.data.items);
+      })
+      .catch((err) => console.log(err));
+    },
+    searchLikeYoutube({commit}, payload) {
+      const URL = "https://www.googleapis.com/youtube/v3/search";
+      const API_KEY = "AIzaSyDFor2GS0t1ZNfh4EDaWgyJKgl6A13K7qI";
+      axios({
+        url: URL,
+        method: "GET",
+        params: {
+          key: API_KEY,
+          part: "snippet",
+          videoCategoryId: 17,
+          q: payload,
+          type: "video",
+          maxResults: 3,
+        },
+      })
+      .then((res) => {
+        commit("SEARCH_LIKE_YOUTUBE", res.data.items);
+      })
+      .catch((err) => console.log(err));
+    },
+    clickVideo({commit}, payload) {
+      commit("CLICK_VIDEO", payload);
+    },
     logout: function ({ commit }) {
       const API_URL = '/member/logout';
       axios({
@@ -250,47 +299,6 @@ export default createStore({
           alert('장소 안줘 안돼')
         })
     },
-    searchPopularYoutube({commit}, payload) {
-      const URL = "https://www.googleapis.com/youtube/v3/search";
-      const API_KEY = "";
-      axios({
-        url: URL,
-        method: "GET",
-        params: {
-          key: API_KEY,
-          part: "snippet",
-          order: "viewCount",
-          videoCategoryId: 17,
-          q: payload,
-          type: "video",
-          maxResults: 3,
-        },
-      })
-      .then((res) => {
-        commit("SEARCH_POPULAR_YOUTUBE", res.data.items);
-      })
-      .catch((err) => console.log(err));
-    },
-    searchLikeYoutube({commit}, payload) {
-      const URL = "https://www.googleapis.com/youtube/v3/search";
-      const API_KEY = "";
-      axios({
-        url: URL,
-        method: "GET",
-        params: {
-          key: API_KEY,
-          part: "snippet",
-          videoCategoryId: 17,
-          q: payload,
-          type: "video",
-          maxResults: 3,
-        },
-      })
-      .then((res) => {
-        commit("SEARCH_LIKE_YOUTUBE", res.data.items);
-      })
-      .catch((err) => console.log(err));
-    },
     searchPlace({commit}, payload) {
       const URL = "http://api.kcisa.kr/openapi/service/rest/convergence2019/getConver09";
       const API_KEY = "55ca8ff9-ef34-47b2-a379-3c10775354e8";
@@ -340,6 +348,30 @@ export default createStore({
         })
         .catch((err) => console.log(err));
     },
+    setDays: function ({ commit }) {
+      const API_URL = '/reservation';
+      axios({
+        url: API_URL,
+        method: 'GET'
+      })
+        .then((res) => {
+          let reservations = [];
+
+          let i;
+          for (i = 0; i < res.data.length; i++) {
+            const start_date = res.data[i].startDate.split('-');
+            const end_date = res.data[i].endDate.split('-');
+            console.log(new Date(start_date[0], start_date[1], start_date[2]))
+            console.log(new Date(end_date[0], end_date[1], end_date[2]))
+            reservations.push({ start: new Date(start_date[0], start_date[1]-1, start_date[2]), end: new Date(end_date[0], end_date[1]-1, end_date[2]) });
+          }
+
+          commit('SET_DATES', reservations);
+        })
+        .catch(() => {
+          alert('일정 가져오기 실패')
+        })
+    }
   },
   modules: {},
 });
