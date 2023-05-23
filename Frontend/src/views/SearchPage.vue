@@ -7,7 +7,6 @@
         <like-video-section />
         <footer-section/>
     </div>
-
 </template>
 
 <script>

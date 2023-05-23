@@ -13,7 +13,10 @@ export default createStore({
     videos1: [],
     videos2: [],
     place: {},
-    places: []
+    places: [],
+    result: {},
+    results: [],
+    location: { lat: 0, lng: 0 },
   },
   getters: {
     followerCnt: function (state) {
@@ -33,17 +36,6 @@ export default createStore({
     LOG_IN: function (state, member) {
       state.loginUser = member
     },
-    SEARCH_POPULAR_YOUTUBE(state, videos) {
-      state.videos2 = videos;
-      console.log(state.videos1);
-    },
-    SEARCH_LIKE_YOUTUBE(state, videos) {
-      state.videos1 = videos;
-      console.log(state.videos2);
-    },
-    CLICK_VIDEO(state, video) {
-      state.video = video;
-    },
     MY_INFORMAITON: function (state, member) {
       state.member = member;
     },
@@ -55,6 +47,26 @@ export default createStore({
     },
     SET_PLACES: function (state, places) {
       state.places = places;
+    },
+    SEARCH_POPULAR_YOUTUBE(state, videos) {
+      state.videos2 = videos;
+    },
+    SEARCH_LIKE_YOUTUBE(state, videos) {
+      state.videos1 = videos;
+    },
+    CLICK_VIDEO(state, video) {
+      state.video = video;
+    },
+    SEARCH_PLACE(state, results) {
+      state.results = results;
+    },
+    DETAIL_PLACE(state, result) {
+      state.result = result;
+      router.push(`/detail`);
+    },
+    SEARCH_LOCATION(state, location) {
+      state.location.lat = location.lat;
+      state.location.lng = location.lng;
     }
   },
   actions: {
@@ -154,50 +166,6 @@ export default createStore({
           alert('너 누구야!')
         })
     },
-    searchPopularYoutube({commit}, payload) {
-      const URL = "https://www.googleapis.com/youtube/v3/search";
-      const API_KEY = "";
-      axios({
-        url: URL,
-        method: "GET",
-        params: {
-          key: API_KEY,
-          part: "snippet",
-          order: "viewCount",
-          videoCategoryId: 17,
-          q: payload,
-          type: "video",
-          maxResults: 3,
-        },
-      })
-      .then((res) => {
-        commit("SEARCH_POPULAR_YOUTUBE", res.data.items);
-      })
-      .catch((err) => console.log(err));
-    },
-    searchLikeYoutube({commit}, payload) {
-      const URL = "https://www.googleapis.com/youtube/v3/search";
-      const API_KEY = "";
-      axios({
-        url: URL,
-        method: "GET",
-        params: {
-          key: API_KEY,
-          part: "snippet",
-          videoCategoryId: 17,
-          q: payload,
-          type: "video",
-          maxResults: 3,
-        },
-      })
-      .then((res) => {
-        commit("SEARCH_LIKE_YOUTUBE", res.data.items);
-      })
-      .catch((err) => console.log(err));
-    },
-    clickVideo({commit}, payload) {
-      commit("CLICK_VIDEO", payload);
-    }, 
     logout: function ({ commit }) {
       const API_URL = '/member/logout';
       axios({
@@ -281,6 +249,96 @@ export default createStore({
         .catch(() => {
           alert('장소 안줘 안돼')
         })
+    },
+    searchPopularYoutube({commit}, payload) {
+      const URL = "https://www.googleapis.com/youtube/v3/search";
+      const API_KEY = "";
+      axios({
+        url: URL,
+        method: "GET",
+        params: {
+          key: API_KEY,
+          part: "snippet",
+          order: "viewCount",
+          videoCategoryId: 17,
+          q: payload,
+          type: "video",
+          maxResults: 3,
+        },
+      })
+      .then((res) => {
+        commit("SEARCH_POPULAR_YOUTUBE", res.data.items);
+      })
+      .catch((err) => console.log(err));
+    },
+    searchLikeYoutube({commit}, payload) {
+      const URL = "https://www.googleapis.com/youtube/v3/search";
+      const API_KEY = "";
+      axios({
+        url: URL,
+        method: "GET",
+        params: {
+          key: API_KEY,
+          part: "snippet",
+          videoCategoryId: 17,
+          q: payload,
+          type: "video",
+          maxResults: 3,
+        },
+      })
+      .then((res) => {
+        commit("SEARCH_LIKE_YOUTUBE", res.data.items);
+      })
+      .catch((err) => console.log(err));
+    },
+    searchPlace({commit}, payload) {
+      const URL = "http://api.kcisa.kr/openapi/service/rest/convergence2019/getConver09";
+      const API_KEY = "55ca8ff9-ef34-47b2-a379-3c10775354e8";
+      axios({
+        url: URL,
+        method: "GET",
+        params: {
+          serviceKey: API_KEY,
+          keyword: payload.keyword,
+          where: payload.region,
+        },
+      })
+      .then((res) => {
+        commit("SEARCH_PLACE", res.data.response.body.items.item);
+        console.log(res.data.response.body.items.item);
+      })
+      .catch((err) => console.log(err));
+    },
+    detailPlace({commit}, payload) {
+      commit("DETAIL_PLACE", payload);
+    },
+    searchLocation({ commit }, address) {
+      let temp = address.split("").reverse().join("").toString();
+      let reverse = temp;
+      
+      while(isNaN(temp.charAt(0))) {
+        temp = temp.substr(temp.indexOf(" ") + 1)
+      }
+      
+      temp = temp.split("").reverse().join("");
+
+      if (temp.length > 0) {
+        address = temp;
+      } else {
+        address = reverse.split("").reverse().join("");
+      }
+
+      axios({
+        url:
+          "https://maps.googleapis.com/maps/api/geocode/json?address=" +
+          address +
+          "&key=AIzaSyArzJTlqNuBRUSFM45tn5D-wAkj1499F2U",
+        method: "GET",
+      })
+        .then((res) => {
+          commit("SEARCH_LOCATION", res.data.results[0].geometry.location);
+        })
+        .catch((err) => console.log(err));
     },
   },
   modules: {},
