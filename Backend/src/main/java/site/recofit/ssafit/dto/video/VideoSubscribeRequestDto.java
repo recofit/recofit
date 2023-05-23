@@ -1,4 +1,4 @@
-package site.recofit.ssafit.dto;
+package site.recofit.ssafit.dto.video;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +9,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ReviewUpdateRequestDto {
+public class VideoSubscribeRequestDto {
+    private String memberId;
+    private String videoId;
     private String title;
-    private String content;
-    private String picture;
-    private int rate;
+    private String url;
+    private String channelName;
 }

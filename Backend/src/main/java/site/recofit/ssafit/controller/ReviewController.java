@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import site.recofit.ssafit.dto.ReviewListResponseDto;
-import site.recofit.ssafit.dto.ReviewRegistRequestDto;
-import site.recofit.ssafit.dto.ReviewUpdateRequestDto;
+import site.recofit.ssafit.dto.review.ReviewListResponseDto;
+import site.recofit.ssafit.dto.review.ReviewRegistRequestDto;
+import site.recofit.ssafit.dto.review.ReviewUpdateRequestDto;
 import site.recofit.ssafit.service.ReviewService;
 
 import java.util.List;

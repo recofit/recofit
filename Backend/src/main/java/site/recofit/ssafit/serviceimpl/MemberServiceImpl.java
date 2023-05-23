@@ -12,7 +12,7 @@ import site.recofit.ssafit.dao.MemberDao;
 import site.recofit.ssafit.dao.VerificationDao;
 import site.recofit.ssafit.domain.Member;
 import site.recofit.ssafit.domain.Verification;
-import site.recofit.ssafit.dto.*;
+import site.recofit.ssafit.dto.member.*;
 import site.recofit.ssafit.exception.MemberException;
 import site.recofit.ssafit.exception.status.MemberStatus;
 import site.recofit.ssafit.properties.aws.AwsStorageProperties;
@@ -33,8 +33,6 @@ import java.util.function.UnaryOperator;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
-    public static final String BASIC_PICTURE = "https://play-lh.googleusercontent.com/38AGKCqmbjZ9OuWx4YjssAz3Y0DTWbiM5HB0ove1pNBq_o9mtWfGszjZNxZdwt_vgHo=w240-h480-rw";
-
     private final MemberDao memberDao;
     private final VerificationDao verificationDao;
 
@@ -80,7 +78,7 @@ public class MemberServiceImpl implements MemberService {
                 .email(requestDto.getEmail())
                 .password(passwordEncoder.encode(requestDto.getPassword()))
                 .nickname(requestDto.getNickname())
-                .picture(BASIC_PICTURE)
+                .picture(awsStorageProperties.getUrl() + Member.BASIC_PICTURE)
                 .build();
 
         memberDao.save(member);
@@ -237,6 +235,17 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return dtoList;
+    }
+
+    public MemberReadResponseDto findMember(final int id) {
+        Member member = memberDao.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("당신은 당신이 아닙니다.")
+        );
+
+        return MemberReadResponseDto.builder()
+                .nickname(member.getNickname())
+                .picture(member.getPicture())
+                .build();
     }
 
     @Transactional

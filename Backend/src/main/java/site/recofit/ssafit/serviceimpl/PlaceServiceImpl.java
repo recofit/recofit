@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.recofit.ssafit.dao.PlaceDao;
 import site.recofit.ssafit.domain.Place;
-import site.recofit.ssafit.dto.PlaceListResponseDto;
-import site.recofit.ssafit.dto.PlaceRegistRequestDto;
+import site.recofit.ssafit.dto.place.PlaceListResponseDto;
+import site.recofit.ssafit.dto.place.PlaceRegistRequestDto;
 import site.recofit.ssafit.service.PlaceService;
 
 import java.util.ArrayList;

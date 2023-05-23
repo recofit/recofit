@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import site.recofit.ssafit.dto.PlaceListResponseDto;
-import site.recofit.ssafit.dto.PlaceRegistRequestDto;
+import site.recofit.ssafit.dto.place.PlaceListResponseDto;
+import site.recofit.ssafit.dto.place.PlaceRegistRequestDto;
 import site.recofit.ssafit.security.userdetails.MemberDetails;
 import site.recofit.ssafit.service.PlaceService;
 

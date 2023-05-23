@@ -12,6 +12,8 @@
                             <li><a href="#">Search</a></li>
                             <li><a href="#"></a></li>
                             <li><a href="/sign">Login</a></li>
+                            <li><a href="/mypage">myPage</a></li>
+                            <li><a href="/" @click="logout">Logout</a></li>
                         </ul>
                     </nav>
                 </span>
@@ -22,7 +24,11 @@
 
 <script>
 export default {
-
+    methods: {
+        logout() {
+            this.$store.dispatch('logout');
+        },
+    }
 }
 </script>
 

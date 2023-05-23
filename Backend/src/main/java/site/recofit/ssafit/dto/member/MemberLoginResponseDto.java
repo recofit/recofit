@@ -1,4 +1,4 @@
-package site.recofit.ssafit.dto;
+package site.recofit.ssafit.dto.member;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Builder
 @Getter
-public class MemberFollowListResponseDto {
-    private final int id;
+public class MemberLoginResponseDto {
     private final String nickname;
+    private final String accessToken;
+    private final String refreshToken;
 }
