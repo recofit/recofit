@@ -4,8 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import site.recofit.ssafit.dto.place.PlaceListResponseDto;
-import site.recofit.ssafit.dto.place.PlaceRegistRequestDto;
+import site.recofit.ssafit.domain.Place;
 import site.recofit.ssafit.service.PlaceService;
 
 import java.util.List;
@@ -18,17 +17,19 @@ public class PlaceController {
 
     private final PlaceService service;
 
-    @PostMapping("/{latitude}/{longitude}")
-    public ResponseEntity<?> registPlace(@RequestBody final PlaceRegistRequestDto requestDto) {
-        service.registPlace(requestDto);
+    @PostMapping("")
+    public ResponseEntity<?> registPlace(@RequestBody final Place place) {
+        if (service.findByPlaceName(place.getTitle()) != null)
+            return new ResponseEntity<Void>(HttpStatus.ALREADY_REPORTED);
+
+        service.registPlace(place);
+
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/{placeId}")
-    public ResponseEntity<?> subscribePlace(
-            @RequestParam int id,
-                                             @PathVariable final int placeId) {
-        service.subscribePlace(id, placeId);
+    @PostMapping("/{placeName}")
+    public ResponseEntity<?> subscribePlace(@RequestParam final int id, @PathVariable final String placeName) {
+        service.subscribePlace(id, placeName);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -38,16 +39,16 @@ public class PlaceController {
         return new ResponseEntity<>(responseDtos, HttpStatus.OK);
     }
 
-    @GetMapping("/{placeId}")
-    public ResponseEntity<?> findByPlaceId(@PathVariable final int placeId) {
-        PlaceListResponseDto responseDto = service.findByPlaceId(placeId);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    @GetMapping("/{placeName}")
+    public ResponseEntity<?> findByPlaceId(@PathVariable final String placeName) {
+        Place place = service.findByPlaceName(placeName);
+        return new ResponseEntity<>(place, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{placeId}")
-    public ResponseEntity<?> unsubscribePlace(@RequestParam int id,
-                                              @PathVariable final int placeId) {
-        service.unsubscribePlace(id, placeId);
+    @DeleteMapping("/{placeName}")
+    public ResponseEntity<?> unsubscribePlace(@RequestParam final int id,
+                                              @PathVariable final String placeName) {
+        service.unsubscribePlace(id, placeName);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

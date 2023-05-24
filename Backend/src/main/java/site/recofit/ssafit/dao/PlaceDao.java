@@ -11,14 +11,14 @@ public interface PlaceDao {
     void savePlace(final Place place);
 
     // 장소 찜
-    void subscribePlace(final int memberId, final int placeId);
+    void subscribePlace(final int memberId, final String placeName);
 
     // 장소 찜 목록 확인
     List<Place> findByMemberId(final int memberId);
 
     // 장소 상세 확인
-    Place findByPlaceId(final int placeId);
+    Place findByPlaceName(final String placeName);
 
     // 장소 찜 해제
-    void unsubscribePlace(final int memberId, final int placeId);
+    void unsubscribePlace(final int memberId, final String placeName);
 }

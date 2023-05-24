@@ -44,8 +44,11 @@ export default {
   computed: {
     ...mapState(['result', 'location']),
   },
+  created() {
+    this.$store.dispatch("getResult", this.$route.params.title);
+  },
   mounted() {
-    this.loadMap();
+    setTimeout(() =>this.loadMap(), 500);
   },
   methods: {
     loadMap() {

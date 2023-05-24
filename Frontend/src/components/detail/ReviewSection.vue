@@ -12,12 +12,12 @@
       </thead>
     
       <tbody>
-        <tr data-bs-toggle="modal" data-bs-target="#detailModal">
-          <td>더미</td>
-          <td>더미</td>
-          <td> </td>
-          <td> / 5</td>
-          <td> 누구세요</td>
+        <tr v-for="(review, index) in reviews" :key="index" data-bs-toggle="modal" data-bs-target="#detailModal" @click="detailReview(review)">
+          <td>{{index + 1}}</td>
+          <td>{{review.title}}</td>
+          <td>{{review.name}}</td>
+          <td>{{review.rate}}</td>
+          <td>{{review.likeCnt}}</td>
         </tr>
       </tbody>
     </table>
@@ -32,7 +32,7 @@
 <script>
 import DetailModal from './modal/DetailModal.vue'
 import ModifyModal from './modal/ModifyModal.vue'
-// import { mapGetters } from "vuex"
+import { mapState } from "vuex"
 
 export default {
   name: "ReviewSection",
@@ -40,6 +40,17 @@ export default {
     DetailModal,
     ModifyModal 
   },
+  methods: {
+    detailReview(review) {
+      this.$store.dispatch("getReview", review.id);
+    },
+  },
+  computed: {
+    ...mapState(["reviews"])
+  },
+  created() {
+    this.$store.dispatch("getReviews", this.$route.params.title);
+  }
 }
 </script>
 

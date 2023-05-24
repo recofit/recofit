@@ -11,10 +11,10 @@ public interface ReviewDao {
     void saveReview(final Review review);
 
     // 리뷰 목록 확인
-    List<Review> findAll(final int placeId);
+    List<Review> findAll(final String placeName);
 
     // 리뷰 추천 top 3 확인
-    List<Review> findThree(final int placeId);
+    List<Review> findThree(final String placeName);
 
     // 리뷰 확인
     Review findById(final int reviewId);

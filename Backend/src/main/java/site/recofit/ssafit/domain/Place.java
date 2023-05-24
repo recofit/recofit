@@ -8,13 +8,11 @@ import lombok.*;
 @Setter
 @Builder
 public class Place {
-    private int id;
-    private String name;
-    private String address;
-    private String openTime;
-    private String closeTime;
-    private String longitude;
-    private String latitude;
-    private String createdDate;
-    private String lastModifiedDate;
+    private String title;
+    private String venue;
+    private String subjectCategory;
+    private String description;
+    private String subDescription;
+    private String reference;
+    private String source;
 }

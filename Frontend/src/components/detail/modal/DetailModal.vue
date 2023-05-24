@@ -11,12 +11,12 @@
       <div class="modal-body">
         <div class="d-grid gap-2 d-md-block">
           <div class="box">
-            <h2 class="title"><strong>title</strong></h2>
-            <p>작성자</p>
-            <p>평점</p>
-            <p>추천수</p>
+            <h2 class="title"><strong>{{review.title}}</strong></h2>
+            <p>{{review.name}}</p>
+            <p>{{review.rate}}</p>
+            <p>{{review.likeCnt}}</p>
             <br><hr>
-            <p>내용</p>
+            <p>{{review.content}}</p>
           </div>
         </div>
       </div>
@@ -31,7 +31,7 @@
       <div class="modal-footer">
         <div class="d-grid gap-2 d-md-block">
           <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modifyModal">수정</button>
-          <button type="submit" class="btn btn-outline-danger" @click="deleteReview()">삭제</button>
+          <button type="submit" class="btn btn-outline-danger" @click="deleteReview(review.id)">삭제</button>
         </div>
       </div>
         
@@ -41,21 +41,20 @@
 </template>
 
 <script>
-// import {mapState, mapGetters} from "vuex"
 import {mapState} from "vuex"
 
 export default {
   name: "DetailModal",
   methods: {
-    deleteReview() {
-      // this.$store.dispatch("deleteReview", id);
-      // this.$router.go(0);
+    deleteReview(id) {
+      console.log(id);
+      this.$store.dispatch("deleteReview", id);
+      this.$router.go(0);
     }
   },
   computed: {
-    // ...mapState(["review"]),
     // ...mapGetters(["user"])
-    ...mapState(['result']),
+    ...mapState(["review", "result"]),
   },
   
 }

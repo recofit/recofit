@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class ReviewRegistRequestDto {
     private int memberId;
-    private int placeId;
+    private String placeId;
     private String title;
     private String content;
     private String picture;

@@ -10,10 +10,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PlaceRegistRequestDto {
-    private String name;
-    private String address;
-    private String openTime;
-    private String closeTime;
-    private String longitude;
-    private String latitude;
+    private String title;
+    private String venue;
+    private String subjectCategory;
+    private String description;
+    private String subDescription;
+    private String reference;
+    private String source;
 }

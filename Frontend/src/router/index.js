@@ -25,7 +25,7 @@ const routes = [
     component: SearchPage
   },
   {
-    path: '/detail',
+    path: '/detail/:title',
     name: 'detail',
     component: DetailPage
   },
