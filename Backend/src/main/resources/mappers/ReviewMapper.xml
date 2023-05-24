@@ -23,6 +23,12 @@
         LIMIT 3
     </select>
 
+    <select id="findByTitle" parameterType="String" resultType="Review">
+        SELECT review.id, member_id as memberId, nickname as name, place_name as placeName, title, content, rate, like_cnt as likeCnt, review.last_modified_date as lastModifiedDate
+        FROM review JOIN member ON review.member_id = member.id
+        WHERE place_name = #{placeName} AND title LIKE CONCAT ('%', #{title}, '%')
+    </select>
+
     <select id="findById" parameterType="Integer" resultType="Review">
         SELECT review.id, member_id as memberId, nickname as name, place_name as placeName, title, content, rate, like_cnt as likeCnt, review.last_modified_date as lastModifiedDate
         FROM review JOIN member ON review.member_id = member.id

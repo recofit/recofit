@@ -30,9 +30,15 @@ public class ReviewController {
         return new ResponseEntity<>(responseDtos, HttpStatus.OK);
     }
 
-    @GetMapping("/top/{placeId}")
+    @GetMapping("/top/{placeName}")
     public ResponseEntity<?> selectThreeReview(@PathVariable final String placeName) {
         List<ReviewListResponseDto> responseDtos = service.selectThree(placeName);
+        return new ResponseEntity<>(responseDtos, HttpStatus.OK);
+    }
+
+    @GetMapping("/search/{placeName}")
+    public ResponseEntity<?> selectByTitle(@PathVariable final String placeName, @RequestParam final String title) {
+        List<ReviewListResponseDto> responseDtos = service.selectByTitle(placeName, title);
         return new ResponseEntity<>(responseDtos, HttpStatus.OK);
     }
 

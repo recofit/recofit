@@ -18,6 +18,9 @@ public interface ReviewService {
 
     // 리뷰 확인
     ReviewListResponseDto selectById(final int reviewId);
+    
+    // 리뷰 검색
+    List<ReviewListResponseDto> selectByTitle(final String placeName, final String title);
 
     // 리뷰 수정
     void updateReview(final int reviewId, final ReviewUpdateRequestDto requestDto);

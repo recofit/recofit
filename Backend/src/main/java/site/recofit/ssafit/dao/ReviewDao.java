@@ -19,6 +19,9 @@ public interface ReviewDao {
     // 리뷰 확인
     Review findById(final int reviewId);
 
+    // 리뷰 검색
+    List<Review> findByTitle(final String placeName, final String title);
+
     // 리뷰 수정
     void updateReview(final Review review);
 
