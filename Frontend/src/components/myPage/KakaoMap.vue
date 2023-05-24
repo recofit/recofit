@@ -38,12 +38,15 @@ export default {
   },
   data() {
     return {
+      id: this.$route.params.id,
       map: null,
     };
   },
   created() {
-    const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
-    this.$store.dispatch("getReservations", memberId);
+    // const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
+    // this.$store.dispatch("getReservations", memberId);
+
+    this.$store.dispatch("getReservations", this.id);
   },
   mounted() {
     this.loadMap();
