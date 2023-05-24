@@ -12,10 +12,10 @@
             <div class="section-title">
               <h1>{{ member.nickname }}</h1>
               <br />
-              <button>수정</button>
+              <button v-if="id == routerId">수정</button>
             </div>
           </div>
-          <div>
+          <div v-if="id == routerId">
             <button
               @click="follower"
               data-bs-toggle="modal"
@@ -30,7 +30,7 @@
               </li>
             </ol>
           </div>
-          <div>
+          <div v-if="id == routerId">
             <button @click="following"><b>팔로잉</b></button
             >&nbsp;&nbsp;&nbsp;<a>{{ followingCnt }}</a> <br />
             <ol>
@@ -45,14 +45,16 @@
     </div>
     <div class="container">
       <div class="section-calendar">
-        <h1>내 일정</h1>
+        <h1 v-if="id == routerId">내 일정</h1>
+        <h1 v-if="id != routerId">{{ member.nickname }} 일정</h1>
         <div class="reservation">
           <calendar-page />
         </div>
-        <kakao-map />
+        <kakao-map v-if="id == routerId" />
       </div>
       <div class="section-content">
-        <h1>내 영상</h1>
+        <h1 v-if="id == routerId">내 영상</h1>
+        <h1 v-if="id != routerId">{{ member.nickname }} 영상</h1>
         <div class="box">
           <div class="card">
             <iframe src="https://www.youtube.com/embed/gMaB-fG4u4g"></iframe>
@@ -87,13 +89,21 @@ export default defineComponent({
     KakaoMap,
     CalendarPage,
   },
+  data() {
+    return {
+      id: JSON.parse(sessionStorage.getItem("loginUser")).id,
+      routerId: this.$route.params.id,
+    };
+  },
   computed: {
     ...mapState(["member", "followers", "followings"]),
     ...mapGetters(["followerCnt", "followingCnt"]),
   },
   created() {
-    const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
-    this.$store.dispatch("myInformation", memberId);
+    // const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
+    // this.$store.dispatch("myInformation", memberId);
+
+    this.$store.dispatch("myInformation", this.routerId);
   },
   methods: {
     unfollow(id) {

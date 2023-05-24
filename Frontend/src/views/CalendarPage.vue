@@ -29,6 +29,7 @@ export default {
   },
   data() {
     return {
+      id: this.$route.params.id,
       attributes: ref([
         {
           key: "today",
@@ -73,9 +74,9 @@ export default {
     };
   },
   created() {
-    const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
-
-    this.$store.dispatch("getReservations", memberId);
+    // const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
+    // this.$store.dispatch("getReservations", memberId);
+    this.$store.dispatch("getReservations", this.id);
   },
   methods: {},
 };
