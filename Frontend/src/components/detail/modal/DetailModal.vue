@@ -47,9 +47,9 @@ export default {
   name: "DetailModal",
   methods: {
     deleteReview(id) {
-      console.log(id);
       this.$store.dispatch("deleteReview", id);
       this.$router.go(0);
+      this.$toast.info(`삭제를 완료했습니다`);
     }
   },
   computed: {
