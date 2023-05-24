@@ -64,9 +64,9 @@ export default createStore({
     SEARCH_PLACE(state, results) {
       state.results = results;
     },
-    DETAIL_PLACE(state, result) {
+    SAVE_PLACE(state, result) {
       state.result = result;
-      router.push(`/detail`);
+      router.push(`/detail/` + result.title);
     },
     SEARCH_LOCATION(state, location) {
       state.location.lat = location.lat;
@@ -76,6 +76,7 @@ export default createStore({
       state.reservations = reservations;
     },
     SET_REVIEW: function(state, review) {
+      console.log(review);
       state.review = review;
     },
     SET_REVIEWS: function(state, reviews) {
@@ -83,7 +84,6 @@ export default createStore({
     },
     WRITE_REVIEW: function(state, review) {
       state.reviews.push(review);
-      console.log(state.reviews);
     },
     DELETE_REVIEW: function(state) {
       state.reviews
@@ -391,8 +391,66 @@ export default createStore({
       })
       .catch((err) => console.log(err));
     },
-    detailPlace({commit}, payload) {
-      commit("DETAIL_PLACE", payload);
+    savePlace({commit}, payload) {
+      const API_URL = '/place';
+      console.log(payload);
+      axios({
+        url: API_URL,
+        method: "POST",
+        data: payload,
+      })
+        .then(() => {
+          commit("SAVE_PLACE", payload);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    getResult: function({commit}, title) {
+      const API_URL = `/place/` + title;
+
+      axios({
+        url: API_URL,
+        method: "GET",
+        // headers: {
+        //   "access-token": sessionStorage.getItem("access-token"),
+        // },
+      })
+        .then(res => {
+          commit("SAVE_PLACE", res.data);
+
+          let address = res.data.venue;
+
+          let temp = address.split("").reverse().join("").toString();
+          let reverse = temp;
+          
+          while(isNaN(temp.charAt(0))) {
+            temp = temp.substr(temp.indexOf(" ") + 1)
+          }
+          
+          temp = temp.split("").reverse().join("");
+    
+          if (temp.length > 0) {
+            address = temp;
+          } else {
+            address = reverse.split("").reverse().join("");
+          }
+    
+          axios({
+            url:
+              "https://maps.googleapis.com/maps/api/geocode/json?address=" +
+              address +
+              "&key=AIzaSyArzJTlqNuBRUSFM45tn5D-wAkj1499F2U",
+            method: "GET",
+          })
+            .then((res) => {
+              commit("SEARCH_LOCATION", res.data.results[0].geometry.location);
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     searchLocation({ commit }, address) {
       let temp = address.split("").reverse().join("").toString();
@@ -447,14 +505,14 @@ export default createStore({
         })
     },
     getReview: function({commit}, reviewId) {
-      const API_URL = `/review/detail/` + reviewId;
+      const API_URL = `/review/` + reviewId;
 
       return axios({
         url: API_URL,
         method: "GET",
-        headers: {
-          "access-token": sessionStorage.getItem("access-token"),
-        },
+        // headers: {
+        //   "access-token": sessionStorage.getItem("access-token"),
+        // },
       })
         .then(res => {
           commit("SET_REVIEW", res.data);
@@ -463,18 +521,19 @@ export default createStore({
           console.log(err);
         });
     },
-    getReviews: function({commit}, exerciseId) {
-      const API_URL = `/review/list/` + exerciseId;
+    getReviews: function({commit}, placeName) {
+      const API_URL = `/review/list/` + placeName;
 
       return axios({
         url: API_URL,
         method: "GET",
-        headers: {
-          "access-token": sessionStorage.getItem("access-token"),
-        },
+        // headers: {
+        //   "access-token": sessionStorage.getItem("access-token"),
+        // },
       })
         .then(res => {
           commit("SET_REVIEWS", res.data);
+          console.log(res.data);
         })
         .catch(err => {
           console.log(err);
@@ -482,12 +541,11 @@ export default createStore({
     },
     writeReview: function({commit}, review) {
       const API_URL = '/review/write';
-      
+
       axios({
         url: API_URL,
         method: "POST",
         data: review,
-        headers: {},
       })
         .then(() => {
           commit("WRITE_REVIEW", review);
@@ -497,14 +555,14 @@ export default createStore({
         });
     },
     deleteReview: function({state}, reviewId) {
-      const API_URL = `/review/delete/` + reviewId;
+      const API_URL = `/review/` + reviewId;
       
       axios({
         url: API_URL,
         method: "DELETE",
-        headers: {
-          "access-token": sessionStorage.getItem("access-token"),
-        },
+        // headers: {
+        //   "access-token": sessionStorage.getItem("access-token"),
+        // },
       })
         .then(() => {
           alert("삭제 완료!");
@@ -521,15 +579,15 @@ export default createStore({
         });
     },
     modifyReview: function({commit}, review) {
-      const API_URL = `/review/update`;
+      const API_URL = `/review/` + review.id;
 
       axios({
         url: API_URL,
         method: "PUT",
         data: review,
-        headers: {
-          "access-token": sessionStorage.getItem("access-token"),
-        },
+        // headers: {
+        //   "access-token": sessionStorage.getItem("access-token"),
+        // },
       })
         .then(() => {
           alert("수정 완료!");
