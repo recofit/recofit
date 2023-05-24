@@ -4,7 +4,7 @@
       <div class="modal-content">
       
       <div class="modal-header">
-        <h1 class="modal-title fs-5"><strong>{{result.title}} 리뷰</strong></h1>
+        <h1 class="modal-title fs-5"><strong>{{result.title}} 리뷰 상세</strong></h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
   
@@ -12,9 +12,9 @@
         <div class="d-grid gap-2 d-md-block">
           <div class="box">
             <h2 class="title"><strong>{{review.title}}</strong></h2>
-            <p>{{review.name}}</p>
-            <p>{{review.rate}}</p>
-            <p>{{review.likeCnt}}</p>
+            <p>작성자 : {{review.name}}</p>
+            <p>평점   : {{review.rate}} / 5</p>
+            <p>추천수 : {{review.likeCnt}}회</p>
             <br><hr>
             <p>{{review.content}}</p>
           </div>

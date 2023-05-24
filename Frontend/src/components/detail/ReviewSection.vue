@@ -20,6 +20,7 @@
           <td>
             {{review.likeCnt}}
             <i class="bi bi-hand-thumbs-up" @click="doLike(review)"></i>
+            <i class="bi bi-hand-thumbs-up-fill"></i>
           </td>
         </tr>
       </tbody>
@@ -75,6 +76,9 @@ tbody tr:active {
 .bi-hand-thumbs-up {
   float: right;
   color: royalblue;
-  display: inline;
+}
+.bi-hand-thumbs-up-fill {
+  float: right;
+  color: royalblue;
 }
 </style>
