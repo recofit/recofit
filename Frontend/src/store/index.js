@@ -17,6 +17,8 @@ export default createStore({
     result: {},
     results: [],
     location: { lat: 0, lng: 0 },
+    reservation: {},
+    reservations: [],
     review: {},
     reviews: [],
   },
@@ -69,6 +71,9 @@ export default createStore({
     SEARCH_LOCATION(state, location) {
       state.location.lat = location.lat;
       state.location.lng = location.lng;
+    },
+    SET_DATES: function (state, reservations) {
+      state.reservations = reservations;
     },
     SET_REVIEW: function(state, review) {
       state.review = review;
@@ -164,8 +169,8 @@ export default createStore({
         })
     },
     login: function ({ commit }, member) {
-      console.log(member);
       const API_URL = '/member/login';
+
       axios({
         url: API_URL,
         method: 'POST',
@@ -174,11 +179,57 @@ export default createStore({
         .then((res) => {
           commit('LOG_IN', member)
           alert(res.data.nickname + '님 어서오세요!')
+          const loginData = JSON.stringify(res.data);
+          sessionStorage.setItem("loginUser", loginData);
           router.push('/')
         })
         .catch(() => {
           alert('너 누구야!')
         })
+    },
+    // searchPopularYoutube({commit}, payload) {
+    //   const URL = "https://www.googleapis.com/youtube/v3/search";
+    //   const API_KEY = "AIzaSyDFor2GS0t1ZNfh4EDaWgyJKgl6A13K7qI";
+    //   axios({
+    //     url: URL,
+    //     method: "GET",
+    //     params: {
+    //       key: API_KEY,
+    //       part: "snippet",
+    //       order: "viewCount",
+    //       videoCategoryId: 17,
+    //       q: payload,
+    //       type: "video",
+    //       maxResults: 3,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     commit("SEARCH_POPULAR_YOUTUBE", res.data.items);
+    //   })
+    //   .catch((err) => console.log(err));
+    // },
+    // searchLikeYoutube({commit}, payload) {
+    //   const URL = "https://www.googleapis.com/youtube/v3/search";
+    //   const API_KEY = "AIzaSyDFor2GS0t1ZNfh4EDaWgyJKgl6A13K7qI";
+    //   axios({
+    //     url: URL,
+    //     method: "GET",
+    //     params: {
+    //       key: API_KEY,
+    //       part: "snippet",
+    //       videoCategoryId: 17,
+    //       q: payload,
+    //       type: "video",
+    //       maxResults: 3,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     commit("SEARCH_LIKE_YOUTUBE", res.data.items);
+    //   })
+    //   .catch((err) => console.log(err));
+    // },
+    clickVideo({commit}, payload) {
+      commit("CLICK_VIDEO", payload);
     },
     logout: function ({ commit }) {
       const API_URL = '/member/logout';
@@ -213,7 +264,8 @@ export default createStore({
       const API_URL = '/member/follower';
       axios({
         url: API_URL,
-        method: 'GET'
+        method: 'GET',
+        params: this.state.member.id,
       })
         .then((res) => {
           let followers = res.data;
@@ -227,7 +279,8 @@ export default createStore({
       const API_URL = '/member/following';
       axios({
         url: API_URL,
-        method: 'GET'
+        method: 'GET',
+        params: this.state.member.id,
       })
         .then((res) => {
           let followings = res.data;
@@ -383,6 +436,30 @@ export default createStore({
         })
         .catch((err) => console.log(err));
     },
+    setDays: function ({ commit }) {
+      const API_URL = '/reservation';
+      axios({
+        url: API_URL,
+        method: 'GET'
+      })
+        .then((res) => {
+          let reservations = [];
+
+          let i;
+          for (i = 0; i < res.data.length; i++) {
+            const start_date = res.data[i].startDate.split('-');
+            const end_date = res.data[i].endDate.split('-');
+            console.log(new Date(start_date[0], start_date[1], start_date[2]))
+            console.log(new Date(end_date[0], end_date[1], end_date[2]))
+            reservations.push({ start: new Date(start_date[0], start_date[1]-1, start_date[2]), end: new Date(end_date[0], end_date[1]-1, end_date[2]) });
+          }
+
+          commit('SET_DATES', reservations);
+        })
+        .catch(() => {
+          alert('일정 가져오기 실패')
+        })
+    },
     getReview: function({commit}, reviewId) {
       const API_URL = `http://localhost:9999/api/review/detail/` + reviewId;
 
@@ -480,3 +557,4 @@ export default createStore({
   },
   modules: {},
 });
+  

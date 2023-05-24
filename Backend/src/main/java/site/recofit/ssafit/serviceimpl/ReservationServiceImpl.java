@@ -4,11 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.recofit.ssafit.dao.ReservationDao;
+import site.recofit.ssafit.domain.Place;
 import site.recofit.ssafit.domain.Reservation;
+import site.recofit.ssafit.dto.place.PlaceListResponseDto;
+import site.recofit.ssafit.dto.reservation.ReservationReadResponseDto;
 import site.recofit.ssafit.dto.reservation.ReservationRegistRequestDto;
 import site.recofit.ssafit.dto.reservation.ReservationRegistResponseDto;
 import site.recofit.ssafit.service.ReservationService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -37,15 +41,34 @@ public class ReservationServiceImpl implements ReservationService {
                 .build();
     }
 
-    public List<Reservation> findMemberUnavailableDate(final int memberId) {
-        return reservationDao.findByMemberId(memberId);
+    public List<ReservationReadResponseDto> findMemberUnavailableDate(final int memberId) {
+        List<Reservation> reservationList = reservationDao.findByMemberId(memberId);
+
+        return getReservationDtoList(reservationList);
     }
 
-    public List<Reservation> findPlaceUnavailableDate(final int placeId) {
-        return reservationDao.findByPlaceId(placeId);
+    public List<ReservationReadResponseDto> findPlaceUnavailableDate(final int placeId) {
+        List<Reservation> reservationList = reservationDao.findByPlaceId(placeId);
+
+        return getReservationDtoList(reservationList);
     }
 
     public void cancelReservation(final int memberId, final int placeId) {
         reservationDao.deleteByMemberIdAndPlaceId(memberId, placeId);
+    }
+
+    private List<ReservationReadResponseDto> getReservationDtoList(final List<Reservation> reservationList) {
+        List<ReservationReadResponseDto> dtoList = new ArrayList<>();
+
+        for (Reservation reservation : reservationList) {
+            ReservationReadResponseDto responseDto = ReservationReadResponseDto.builder()
+                    .startDate(reservation.getStartDate())
+                    .endDate(reservation.getEndDate())
+                    .build();
+
+            dtoList.add(responseDto);
+        }
+
+        return dtoList;
     }
 }

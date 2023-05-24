@@ -3,11 +3,9 @@ package site.recofit.ssafit.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import site.recofit.ssafit.dto.place.PlaceListResponseDto;
 import site.recofit.ssafit.dto.place.PlaceRegistRequestDto;
-import site.recofit.ssafit.security.userdetails.MemberDetails;
 import site.recofit.ssafit.service.PlaceService;
 
 import java.util.List;
@@ -26,15 +24,16 @@ public class PlaceController {
     }
 
     @PostMapping("/{placeId}")
-    public ResponseEntity<?> subscribePlace(@AuthenticationPrincipal final MemberDetails memberDetails,
+    public ResponseEntity<?> subscribePlace(
+            @RequestParam int id,
                                              @PathVariable final int placeId) {
-        service.subscribePlace(memberDetails.getId(), placeId);
+        service.subscribePlace(id, placeId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/list")
-    public ResponseEntity<?> findByMemberId(@AuthenticationPrincipal final MemberDetails memberDetails) {
-        List<PlaceListResponseDto> responseDtos = service.findByMembmerId(memberDetails.getId());
+    public ResponseEntity<?> findByMemberId(@RequestParam int id) {
+        List<PlaceListResponseDto> responseDtos = service.findByMembmerId(id);
         return new ResponseEntity<>(responseDtos, HttpStatus.OK);
     }
 
@@ -45,9 +44,9 @@ public class PlaceController {
     }
 
     @DeleteMapping("/{placeId}")
-    public ResponseEntity<?> unsubscribePlace(@AuthenticationPrincipal final MemberDetails memberDetails,
+    public ResponseEntity<?> unsubscribePlace(@RequestParam int id,
                                               @PathVariable final int placeId) {
-        service.unsubscribePlace(memberDetails.getId(), placeId);
+        service.unsubscribePlace(id, placeId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -1,5 +1,6 @@
 package site.recofit.ssafit.service;
 
+import site.recofit.ssafit.domain.Member;
 import site.recofit.ssafit.dto.member.*;
 
 import javax.mail.MessagingException;
@@ -14,7 +15,7 @@ public interface MemberService {
 
     MemberSignupResponseDto signup(final MemberSignupRequestDto requestDto);
 
-    MemberLoginResponseDto login(final MemberLoginRequestDto requestDto);
+    Member login(final MemberLoginRequestDto requestDto);
 
     String verificationSender(final String email) throws MessagingException;
 
