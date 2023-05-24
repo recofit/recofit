@@ -8,6 +8,7 @@ import lombok.*;
 @Setter
 @Builder
 public class Place {
+    private int id;
     private String title;
     private String venue;
     private String subjectCategory;

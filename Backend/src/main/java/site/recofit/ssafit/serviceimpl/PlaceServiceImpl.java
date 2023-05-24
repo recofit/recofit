@@ -7,8 +7,6 @@ import site.recofit.ssafit.dao.PlaceDao;
 import site.recofit.ssafit.domain.Place;
 import site.recofit.ssafit.service.PlaceService;
 
-import java.util.List;
-
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -20,25 +18,15 @@ public class PlaceServiceImpl implements PlaceService {
         placeDao.savePlace(place);
     }
 
-    @Transactional
-    public void subscribePlace(int memberId, String placeName) {
-        placeDao.subscribePlace(memberId, placeName);
-    }
-
     @Override
-    public List<Place> findByMembmerId(int memberId) {
-        List<Place> placeList = placeDao.findByMemberId(memberId);
-        return placeList;
+    public Place findByPlaceId(final int placeId) {
+        Place place = placeDao.findByPlaceId(placeId);
+        return place;
     }
 
     @Override
     public Place findByPlaceName(String placeName) {
         Place place = placeDao.findByPlaceName(placeName);
         return place;
-    }
-
-    @Transactional
-    public void unsubscribePlace(int memberId, String placeName) {
-        placeDao.unsubscribePlace(memberId, placeName);
     }
 }
