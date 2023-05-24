@@ -10,7 +10,7 @@
                         <div class="container container-top">
                             <div class="row" >
                                 <div class="col">
-                                    <div class="card" v-for="video in videos1.slice(0, 1)" :key="video.id" :video="video">
+                                    <div class="card" v-for="video in videos1.slice(0, 2)" :key="video.id" :video="video">
                                         <img :src="`http://i.ytimg.com/vi/${video.id}/maxresdefault.jpg`" @click="clickVideo(video)" data-bs-toggle="modal" data-bs-target="#youtubeModal"/>
                                         <div class="card-body">
                                             <div class="row">

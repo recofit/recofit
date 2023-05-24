@@ -50,8 +50,8 @@ export default createStore({
     SET_PLACES: function (state, places) {
       state.places = places;
     },
-    SEARCH_POPULAR_YOUTUBE(state, videos) {
-      state.videos1 = videos;
+    SEARCH_POPULAR_YOUTUBE(state, video) {
+      state.videos1.push(video);
     },
     SEARCH_LIKE_YOUTUBE(state, videos) {
       state.videos2 = videos;
@@ -78,6 +78,7 @@ export default createStore({
     },
     WRITE_REVIEW: function(state, review) {
       state.reviews.push(review);
+      console.log(state.reviews);
     },
     DELETE_REVIEW: function(state) {
       state.reviews
@@ -266,7 +267,7 @@ export default createStore({
     },
     searchPopularYoutube({commit}, payload) {
       const URL = "https://www.googleapis.com/youtube/v3/search";
-      const API_KEY = "";
+      const API_KEY = "AIzaSyBH872nJMrMtQ1WkEI-dwrg6Zz0sty1Krs";
       axios({
         url: URL,
         method: "GET",
@@ -277,7 +278,7 @@ export default createStore({
           videoCategoryId: 17,
           q: payload,
           type: "video",
-          maxResults: 1,
+          maxResults: 2,
         },
       })
       .then((res) => {
@@ -292,7 +293,6 @@ export default createStore({
             },
           })
           .then((res) => {
-            console.log(res.data.items)
             commit("SEARCH_POPULAR_YOUTUBE", res.data.items);
           })
           .catch((err) => console.log(err))
@@ -302,7 +302,7 @@ export default createStore({
     },
     searchLikeYoutube({commit}, payload) {
       const URL = "https://www.googleapis.com/youtube/v3/search";
-      const API_KEY = "";
+      const API_KEY = "AIzaSyBH872nJMrMtQ1WkEI-dwrg6Zz0sty1Krs";
       axios({
         url: URL,
         method: "GET",
@@ -312,28 +312,14 @@ export default createStore({
           videoCategoryId: 17,
           q: payload,
           type: "video",
-          maxResults: 1,
+          maxResults: 2,
         },
       })
       .then((res) => {
-        for (const item of res.data.items) {
-          axios({
-            url: "https://www.googleapis.com/youtube/v3/videos",
-            method: "GET",
-            params: {
-              key: API_KEY,
-              part: "statistics",
-              id: item.id.videoId,
-            },
-          })
-          .then((res) => {
-            console.log(res.data.items)
-            commit("SEARCH_LIKE_YOUTUBE", res.data.items);
-          })
-          .catch((err) => console.log(err))
-        }
+        console.log(res.data.items)
+        commit("SEARCH_LIKE_YOUTUBE", res.data.items);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
     },
     searchPlace({commit}, payload) {
       const URL = "http://api.kcisa.kr/openapi/service/rest/convergence2019/getConver09";
@@ -384,7 +370,7 @@ export default createStore({
         .catch((err) => console.log(err));
     },
     getReview: function({commit}, reviewId) {
-      const API_URL = `http://localhost:9999/api/review/detail/` + reviewId;
+      const API_URL = `/review/detail/` + reviewId;
 
       return axios({
         url: API_URL,
@@ -401,7 +387,7 @@ export default createStore({
         });
     },
     getReviews: function({commit}, exerciseId) {
-      const API_URL = `http://localhost:9999/api/review/list/` + exerciseId;
+      const API_URL = `/review/list/` + exerciseId;
 
       return axios({
         url: API_URL,
@@ -418,8 +404,7 @@ export default createStore({
         });
     },
     writeReview: function({commit}, review) {
-      const API_URL = `http://localhost:8080/review/write`;
-      
+      const API_URL = '/review/write';
       
       axios({
         url: API_URL,
@@ -435,7 +420,7 @@ export default createStore({
         });
     },
     deleteReview: function({state}, reviewId) {
-      const API_URL = `http://localhost:8080/review/delete/` + reviewId;
+      const API_URL = `/review/delete/` + reviewId;
       
       axios({
         url: API_URL,
@@ -459,7 +444,7 @@ export default createStore({
         });
     },
     modifyReview: function({commit}, review) {
-      const API_URL = `http://localhost:9999/api/review/update`;
+      const API_URL = `/review/update`;
 
       axios({
         url: API_URL,
