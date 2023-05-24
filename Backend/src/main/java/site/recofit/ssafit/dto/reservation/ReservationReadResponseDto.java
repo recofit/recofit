@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Builder
 public class ReservationReadResponseDto {
     private final String title;
+    private final String venue;
     private final LocalDate startDate;
     private final LocalDate endDate;
 }

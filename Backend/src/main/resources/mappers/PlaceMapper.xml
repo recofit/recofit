@@ -9,16 +9,11 @@
         VALUES (#{title}, #{venue}, #{subjectCategory}, #{description}, #{subDescription}, #{reference}, #{source})
     </insert>
 
-<!--    <insert id="subscribePlace" parameterType="Integer">-->
-<!--        INSERT INTO place_subscribe (member_id, review_id)-->
-<!--        VALUES (#{memberId}, #{reviewId})-->
-<!--    </insert>-->
-
-<!--    <select id="findByMemberId" parameterType="Integer" resultType="Place">-->
-<!--        SELECT name, address, open_time AS openTime, close_time AS closeTime, longitude, latitude-->
-<!--        FROM place_subscribe JOIN place ON place_subscribe.place_id = place.id-->
-<!--        WHERE member_id = #{memberId}-->
-<!--    </select>-->
+    <select id="findByPlaceId" parameterType="Integer" resultType="Place">
+        SELECT title, venue
+        FROM place
+        WHERE id = #{placeId}
+    </select>
 
     <select id="findByPlaceName" parameterType="String" resultType="Place">
         SELECT title, venue, subjectCategory, description, subDescription, reference, source

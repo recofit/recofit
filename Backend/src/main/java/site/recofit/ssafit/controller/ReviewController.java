@@ -11,10 +11,10 @@ import site.recofit.ssafit.service.ReviewService;
 
 import java.util.List;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/review")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class ReviewController {
     private final ReviewService service;
 
