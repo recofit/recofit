@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/video")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class VideoController {
 
     private final VideoService videoServiceImpl;
