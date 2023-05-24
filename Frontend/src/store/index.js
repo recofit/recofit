@@ -155,8 +155,8 @@ export default createStore({
         })
     },
     login: function ({ commit }, member) {
-      console.log(member);
       const API_URL = '/member/login';
+
       axios({
         url: API_URL,
         method: 'POST',
@@ -165,6 +165,8 @@ export default createStore({
         .then((res) => {
           commit('LOG_IN', member)
           alert(res.data.nickname + '님 어서오세요!')
+          const loginData = JSON.stringify(res.data);
+          sessionStorage.setItem("loginUser", loginData);
           router.push('/')
         })
         .catch(() => {
@@ -248,7 +250,8 @@ export default createStore({
       const API_URL = '/member/follower';
       axios({
         url: API_URL,
-        method: 'GET'
+        method: 'GET',
+        params: this.state.member.id,
       })
         .then((res) => {
           let followers = res.data;
@@ -262,7 +265,8 @@ export default createStore({
       const API_URL = '/member/following';
       axios({
         url: API_URL,
-        method: 'GET'
+        method: 'GET',
+        params: this.state.member.id,
       })
         .then((res) => {
           let followings = res.data;
@@ -375,3 +379,4 @@ export default createStore({
   },
   modules: {},
 });
+  
