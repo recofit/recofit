@@ -223,6 +223,7 @@ export default createStore({
         .then(() => {
           commit;
           alert('안녕히가세요!')
+          sessionStorage.removeItem('loginUser')
           router.push('/')
         })
         .catch(() => {
