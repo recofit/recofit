@@ -35,7 +35,7 @@ public class PlaceController {
 
     @GetMapping("/list")
     public ResponseEntity<?> findByMemberId(@RequestParam int memberId) {
-        List<PlaceListResponseDto> responseDtos = service.findByMembmerId(memberId);
+        List<Place> responseDtos = service.findByMembmerId(memberId);
         return new ResponseEntity<>(responseDtos, HttpStatus.OK);
     }
 
