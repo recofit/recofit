@@ -12,12 +12,15 @@
       </thead>
     
       <tbody>
-        <tr v-for="(review, index) in reviews" :key="index" data-bs-toggle="modal" data-bs-target="#detailModal" @click="detailReview(review)">
+        <tr nowrap v-for="(review, index) in reviews" :key="index" data-bs-toggle="modal" data-bs-target="#detailModal" @click="detailReview(review)">
           <td>{{index + 1}}</td>
           <td>{{review.title}}</td>
           <td>{{review.name}}</td>
-          <td>{{review.rate}}</td>
-          <td>{{review.likeCnt}}</td>
+          <td>{{review.rate}} / 5</td>
+          <td>
+            {{review.likeCnt}}
+            <i class="bi bi-hand-thumbs-up" @click="doLike(review)"></i>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -44,6 +47,9 @@ export default {
     detailReview(review) {
       this.$store.dispatch("getReview", review.id);
     },
+    doLike(review) {
+      this.$store.dispatch("doLike", review.id);
+    }
   },
   computed: {
     ...mapState(["reviews"])
@@ -58,10 +64,17 @@ export default {
 .table {
   width: 70%; 
   margin: 0 auto;
+  z-index: 30;
 }
 tbody tr:hover,
 tbody tr:focus,
 tbody tr:active {
   background-color: lightgray;
+}
+
+.bi-hand-thumbs-up {
+  float: right;
+  color: royalblue;
+  display: inline;
 }
 </style>

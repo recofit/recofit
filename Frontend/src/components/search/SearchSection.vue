@@ -58,8 +58,7 @@ video {
 }
 
 select option {
-    background-color: #ecf0f3;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 .d-flex { 

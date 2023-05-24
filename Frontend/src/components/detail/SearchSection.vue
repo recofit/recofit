@@ -4,7 +4,6 @@
       <div class="container-fluid">
         <div>
           <button type="button" class="btn btn-review btn-outline-primary" data-bs-toggle="modal" data-bs-target="#writeModal">리뷰작성</button>
-          <button type="button" class="btn btn-review btn-outline-primary">예약하기</button>
         </div>
 
         <form class="d-flex">
@@ -31,14 +30,14 @@ export default {
 
 <style scoped>
 .btn-review {
-  color: #285c4d;
-  border-color: #285c4d;
-  margin-right: 5px;
-}
-.btn-review:hover {
   background-color: #285c4d;
   border-color: white;
   color: white;
+}
+.btn-review:hover {
+  background-color: white;
+  border-color: #285c4d;
+  color: #285c4d;
 }
 .btn-review:focus {
   outline: none;

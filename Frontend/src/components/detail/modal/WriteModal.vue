@@ -17,16 +17,17 @@
               <textarea class="form-control" rows="3" placeholder="내용을 작성해주세요" v-model="content" />
             </div>
 
+            <span class="notice"><strong>{{result.title}}의 점수를 평가해주세요</strong></span>
             <div class="star-rating">
-              <input type="radio" id="5-stars" name="rating" value="5" />
+              <input type="radio" id="5-stars" name="rating" value="5" v-model="rate"/>
               <label for="5-stars" class="star">&#9733;</label>
-              <input type="radio" id="4-stars" name="rating" value="4" />
+              <input type="radio" id="4-stars" name="rating" value="4" v-model="rate"/>
               <label for="4-stars" class="star">&#9733;</label>
-              <input type="radio" id="3-stars" name="rating" value="3" />
+              <input type="radio" id="3-stars" name="rating" value="3" v-model="rate"/>
               <label for="3-stars" class="star">&#9733;</label>
-              <input type="radio" id="2-stars" name="rating" value="2" />
+              <input type="radio" id="2-stars" name="rating" value="2" v-model="rate"/>
               <label for="2-stars" class="star">&#9733;</label>
-              <input type="radio" id="1-star" name="rating" value="1" />
+              <input type="radio" id="1-star" name="rating" value="1" v-model="rate"/>
               <label for="1-star" class="star">&#9733;</label>
             </div>
           </div>
@@ -65,10 +66,11 @@ export default {
         placeId: this.$store.state.result.title,
         title: this.title,
         content: this.content,
-        rate: 5,
+        rate: this.rate,
       }
 
       this.$store.dispatch("writeReview", review);
+      console.log(review);
       this.$router.go(0);
     }
   },
@@ -81,6 +83,12 @@ export default {
 <style scoped>
 button {
   margin: 1px;
+}
+
+.notice {
+  justify-content: center;
+  align-items: center;
+  display: flex;
 }
 
 .star-rating {

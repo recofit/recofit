@@ -10,9 +10,18 @@
             </div>
           </div>
           <div class="information-content">
+            <div class="star-ratings">
+              <div class="star-ratings-fill space-x-2 text-lg" :style="{ width: ratingToPercent + '%' }">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+              </div>
+              <div class="star-ratings-base space-x-2 text-lg">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+              </div>
+            </div>
             <div class="row">
               <div class="section-title">
                 <h1 style="white-space: nowrap; font-size: 30px; "> {{result.title}} </h1>
+                <button type="button" class="btn btn-review btn-outline-primary">예약하기</button>
               </div>
             </div>
             <p style="font-size: 16px;">
@@ -39,10 +48,15 @@ export default {
   data() {
     return {
       map: null,
+      averageScore: 4.1
     };
   },
   computed: {
     ...mapState(['result', 'location']),
+    ratingToPercent() {
+      const score = this.averageScore * 20;
+      return score + 1.5;
+    }
   },
   created() {
     this.$store.dispatch("getResult", this.$route.params.title);
@@ -74,6 +88,50 @@ export default {
 </script>
 
 <style scoped>
+.star-ratings {
+  color: #aaa9a9; 
+  position: relative;
+  unicode-bidi: bidi-override;
+  width: max-content;
+  -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: 1.3px;
+  -webkit-text-stroke-color: #2b2a29;
+}
+ 
+.star-ratings-fill {
+  color: #fff58c;
+  padding: 0;
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  -webkit-text-fill-color: gold;
+}
+ 
+.star-ratings-base {
+  z-index: 0;
+  padding: 0;
+}
+
+.btn-review {
+  background-color: #285c4d;
+  border-color: white;
+  color: white;
+  margin-left: 2%;
+  margin-bottom: 2%;
+}
+.btn-review:hover {
+  background-color: white;
+  border-color: #285c4d;
+  color: #285c4d;
+}
+.btn-review:focus {
+  outline: none;
+}
+
+
 .information-section {
   margin-bottom : 3%;
 }
