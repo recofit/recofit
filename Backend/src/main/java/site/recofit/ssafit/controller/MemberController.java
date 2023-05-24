@@ -24,6 +24,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/member")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class MemberController {
     private final MemberService memberService;
     private final KakaoService kakaoService;
@@ -51,8 +52,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody final MemberLoginRequestDto requestDto,
-                                                        final HttpServletResponse response) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody final MemberLoginRequestDto requestDto) {
         Member member = memberService.login(requestDto);
 
         Map<String, Object> result = new HashMap<>();
@@ -64,6 +64,7 @@ public class MemberController {
                 result.put("message", "SUCCESS");
                 result.put("id", member.getId());
                 result.put("nickname", member.getNickname());
+                result.put("picture", member.getPicture());
                 status = HttpStatus.OK;
             } else {
                 status = HttpStatus.BAD_REQUEST;
@@ -74,10 +75,11 @@ public class MemberController {
         }
 
         return new ResponseEntity<>(result, status);
+    }
 
-//        CookieUtility.addCookie(response, AccessTokenProperties.COOKIE_NAME, result.getAccessToken());
-//        CookieUtility.addCookie(response, RefreshTokenProperties.COOKIE_NAME, result.getRefreshToken(), 6480000);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    @GetMapping("/kakao/login")
+    public String goKakaoLoginPage(@RequestParam final String url) {
+        return url +  "?client_id=7276680ce0f3c0be137b878203962dfa&redirect_uri=http://localhost:8080/member/kakao/callback&response_type=code";
     }
 
     @GetMapping("/kakao/callback")
@@ -91,13 +93,12 @@ public class MemberController {
             result.put("message", "SUCCESS");
             result.put("id", member.getId());
             result.put("nickname", member.getNickname());
+            result.put("picture", member.getPicture());
             status = HttpStatus.OK;
         } catch (UnsupportedEncodingException e) {
             result.put("message", "FAIL");
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
-//        CookieUtility.addCookie(response, AccessTokenProperties.COOKIE_NAME, result.getAccessToken());
-//        CookieUtility.addCookie(response, RefreshTokenProperties.COOKIE_NAME, result.getRefreshToken(), 6480000);
 
         response.sendRedirect("http://localhost:8081");
 
@@ -106,10 +107,7 @@ public class MemberController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(final HttpSession session) {
-
         session.invalidate();
-//        CookieUtility.deleteCookie(response, AccessTokenProperties.COOKIE_NAME);
-//        CookieUtility.deleteCookie(response, RefreshTokenProperties.COOKIE_NAME);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -147,40 +145,28 @@ public class MemberController {
     }
 
     @GetMapping("/follower")
-    public ResponseEntity<List<MemberFollowListResponseDto>> findFollower(
-            @RequestParam int followingId
-            ) {
-//        final int id = memberDetails.getId();
-
-        List<MemberFollowListResponseDto> responseDtos = memberService.selectFollower(followingId);
+    public ResponseEntity<List<MemberFollowListResponseDto>> findFollower(@RequestParam int memberId) {
+        List<MemberFollowListResponseDto> responseDtos = memberService.selectFollower(memberId);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDtos);
     }
 
     @GetMapping("/following")
-    public ResponseEntity<List<MemberFollowListResponseDto>> findFollowing(
-            @RequestParam int followerId
-            ) {
-
-        List<MemberFollowListResponseDto> responseDtos = memberService.selectFollowing(followerId);
+    public ResponseEntity<List<MemberFollowListResponseDto>> findFollowing(@RequestParam int memberId) {
+        List<MemberFollowListResponseDto> responseDtos = memberService.selectFollowing(memberId);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDtos);
     }
 
     @GetMapping("")
-    public ResponseEntity<MemberReadResponseDto> findMember(
-            @RequestParam int id
-    ) {
-
-        final MemberReadResponseDto responseDto = memberService.findMember(id);
+    public ResponseEntity<MemberReadResponseDto> findMember(@RequestParam int memberId) {
+        final MemberReadResponseDto responseDto = memberService.findMember(memberId);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @PatchMapping(value = "")
-    public ResponseEntity<MemberUpdateResponseDto> updateProfile(
-            @RequestParam int id,
-                                                                 @RequestBody final MemberUpdateRequestDto requestDto) {
+    public ResponseEntity<MemberUpdateResponseDto> updateProfile(@RequestParam int id, @RequestBody final MemberUpdateRequestDto requestDto) {
 
         final MemberUpdateResponseDto responseDto = memberService.updateProfile(id, requestDto);
 
@@ -188,9 +174,7 @@ public class MemberController {
     }
 
     @PatchMapping(value = "/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<MemberPictureUploadResponseDto> uploadPicture(
-            @RequestParam int id,
-                                                                        @ModelAttribute final MemberPictureUploadRequestDto requestDto) {
+    public ResponseEntity<MemberPictureUploadResponseDto> uploadPicture(@RequestParam int id, @ModelAttribute final MemberPictureUploadRequestDto requestDto) {
 
         final MemberPictureUploadResponseDto responseDto = memberService.uploadPicture(id, requestDto);
 

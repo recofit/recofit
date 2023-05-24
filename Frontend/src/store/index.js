@@ -1,7 +1,7 @@
 import { createStore } from "vuex";
 import axios from "axios";
 import router from "../router";
-
+axios.defaults.baseURL = 'http://localhost:8080'
 export default createStore({
   state: {
     member: {},
@@ -44,7 +44,7 @@ export default createStore({
       state.member = member;
     },
     GET_FOLLOWERS: function (state, followers) {
-      state.followers = followers
+      state.followers = followers;
     },
     GET_FOLLOWINGS: function (state, followings) {
       state.followings = followings;
@@ -178,7 +178,27 @@ export default createStore({
         data: member
       })
         .then((res) => {
-          commit('LOG_IN', member)
+          commit('LOG_IN', res.data)
+          alert(res.data.nickname + '님 어서오세요!')
+          const loginData = JSON.stringify(res.data);
+          sessionStorage.setItem("loginUser", loginData);
+          router.push('/')
+        })
+        .catch(() => {
+          alert('너 누구야!')
+        })
+    },
+    kakaologin: function ({ commit }) {
+      const API_URL = '/kakao/login';
+      const KAKAO_URL = 'https://kauth.kakao.com/oauth/authorize'
+
+      axios({
+        url: API_URL,
+        method: 'GET',
+        params: { KAKAO_URL }
+      })
+        .then((res) => {
+          commit('LOG_IN', res.data)
           alert(res.data.nickname + '님 어서오세요!')
           const loginData = JSON.stringify(res.data);
           sessionStorage.setItem("loginUser", loginData);
@@ -248,48 +268,38 @@ export default createStore({
         })
     },
     myInformation: function ({ commit }) {
-      const API_URL = '/member';
-      axios({
-        url: API_URL,
-        method: 'GET'
-      })
-        .then((res) => {
-          let member = res.data;
-          commit('MY_INFORMAITON', member);
-        })
-        .catch(() => {
-          alert('내 정보가 이상해')
-        })
+      const member = JSON.parse(sessionStorage.getItem("loginUser"));
+      commit('MY_INFORMAITON', member);
     },
-    getFollowers: function ({ commit }) {
+    getFollowers: function ({ commit }, memberId) {
       const API_URL = '/member/follower';
       axios({
         url: API_URL,
         method: 'GET',
-        params: this.state.member.id,
+        params: { memberId },
       })
         .then((res) => {
           let followers = res.data;
           commit('GET_FOLLOWERS', followers);
         })
-        .catch(() => {
-          alert('내 팔로워가 이상해')
-        })
+        // .catch(() => {
+        //   alert('내 팔로워가 이상해')
+        // })
     },
-    getFollowings: function ({ commit }) {
+    getFollowings: function ({ commit }, memberId) {
       const API_URL = '/member/following';
       axios({
         url: API_URL,
         method: 'GET',
-        params: this.state.member.id,
+        params: { memberId },
       })
         .then((res) => {
           let followings = res.data;
           commit('GET_FOLLOWINGS', followings);
         })
-        .catch(() => {
-          alert('내 팔로잉이 이상해')
-        })
+        // .catch(() => {
+        //   alert('내 팔로잉이 이상해')
+        // })
     },
     unfollow: function ({ commit }, id) {
       const API_URL = '/member/unfollow/' + id;
@@ -305,18 +315,19 @@ export default createStore({
           alert('넌 내꺼라 언팔 안돼')
         })
     },
-    getPlaces: function ({ commit }) {
+    getPlaces: function ({ commit }, memberId) {
       const API_URL = '/place/list';
       axios({
         url: API_URL,
-        method: 'GET'
+        method: 'GET',
+        params: { memberId },
       })
         .then((res) => {
           commit('SET_PLACES', res.data);
         })
-        .catch(() => {
-          alert('장소 안줘 안돼')
-        })
+        // .catch(() => {
+        //   alert('장소 안줘 안돼')
+        // })
     },
     searchPopularYoutube({commit}, payload) {
       const URL = "https://www.googleapis.com/youtube/v3/search";
@@ -480,29 +491,29 @@ export default createStore({
         })
         .catch((err) => console.log(err));
     },
-    setDays: function ({ commit }) {
+    setDays: function ({ commit }, memberId) {
       const API_URL = '/reservation';
       axios({
         url: API_URL,
-        method: 'GET'
+        method: 'GET',
+        params: { memberId },
       })
         .then((res) => {
           let reservations = [];
 
           let i;
+
           for (i = 0; i < res.data.length; i++) {
-            const start_date = res.data[i].startDate.split('-');
-            const end_date = res.data[i].endDate.split('-');
-            console.log(new Date(start_date[0], start_date[1], start_date[2]))
-            console.log(new Date(end_date[0], end_date[1], end_date[2]))
-            reservations.push({ start: new Date(start_date[0], start_date[1]-1, start_date[2]), end: new Date(end_date[0], end_date[1]-1, end_date[2]) });
+            let start_date = res.data[i].startDate;
+            let end_date = res.data[i].endDate;
+            reservations.push({ title: res.data[i].title, start: new Date(start_date[0], start_date[1] - 1, start_date[2]), end: new Date(end_date[0], end_date[1] - 1, end_date[2]) });
           }
 
           commit('SET_DATES', reservations);
         })
-        .catch(() => {
-          alert('일정 가져오기 실패')
-        })
+        // .catch(() => {
+        //   alert('일정 가져오기 실패')
+        // })
     },
     getReview: function({commit}, reviewId) {
       const API_URL = `/review/` + reviewId;

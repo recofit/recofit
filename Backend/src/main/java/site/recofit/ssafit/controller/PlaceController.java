@@ -12,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/place")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class PlaceController {
 
     private final PlaceService service;
@@ -33,9 +34,9 @@ public class PlaceController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<?> findByMemberId(@RequestParam final int id) {
-        List<Place> placeList = service.findByMembmerId(id);
-        return new ResponseEntity<>(placeList, HttpStatus.OK);
+    public ResponseEntity<?> findByMemberId(@RequestParam int memberId) {
+        List<PlaceListResponseDto> responseDtos = service.findByMembmerId(memberId);
+        return new ResponseEntity<>(responseDtos, HttpStatus.OK);
     }
 
     @GetMapping("/{placeName}")

@@ -14,7 +14,14 @@
             </div>
           </div>
           <div>
-            <b>팔로워 </b>&nbsp;&nbsp;&nbsp;<a>{{ followerCnt }}</a> <br />
+            <button
+              @click="follower"
+              data-bs-toggle="modal"
+              data-bs-target="#followmodal"
+            >
+              <b>팔로워</b></button
+            >&nbsp;&nbsp;&nbsp;<a>{{ followerCnt }}</a>
+            <br />
             <ol>
               <li v-for="(follower, index) in followers" :key="index">
                 {{ follower.nickname }}
@@ -22,7 +29,8 @@
             </ol>
           </div>
           <div>
-            <b>팔로잉 </b>&nbsp;&nbsp;&nbsp;<a>{{ followingCnt }}</a> <br />
+            <button @click="following"><b>팔로잉</b></button
+            >&nbsp;&nbsp;&nbsp;<a>{{ followingCnt }}</a> <br />
             <ol>
               <li v-for="(following, index) in followings" :key="index">
                 {{ following.nickname }}
@@ -83,13 +91,20 @@ export default defineComponent({
     ...mapGetters(["followerCnt", "followingCnt"]),
   },
   created() {
-    this.$store.dispatch("myInformation");
-    this.$store.dispatch("getFollowers");
-    this.$store.dispatch("getFollowings");
+    const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
+    this.$store.dispatch("myInformation", memberId);
   },
   methods: {
     unfollow(id) {
       this.$store.dispatch("unfollow", id);
+    },
+    follower() {
+      const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
+      this.$store.dispatch("getFollowers", memberId);
+    },
+    following() {
+      const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
+      this.$store.dispatch("getFollowings", memberId);
     },
   },
 });
@@ -197,6 +212,11 @@ export default defineComponent({
   width: 100%;
   height: 3px;
   background-color: #285c4d;
+}
+
+button {
+  border: none;
+  background-color: white;
 }
 
 .box {

@@ -31,7 +31,8 @@ export default {
     };
   },
   created() {
-    this.$store.dispatch("getPlaces");
+    const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
+    this.$store.dispatch("getPlaces", memberId);
   },
   mounted() {
     this.loadMap();

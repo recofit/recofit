@@ -3,6 +3,7 @@ package site.recofit.ssafit.serviceimpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.recofit.ssafit.dao.PlaceDao;
 import site.recofit.ssafit.dao.ReservationDao;
 import site.recofit.ssafit.domain.Place;
 import site.recofit.ssafit.domain.Reservation;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReservationServiceImpl implements ReservationService {
     private final ReservationDao reservationDao;
+    private final PlaceDao placeDao;
 
     @Transactional
     public ReservationRegistResponseDto createReservation(final int memberId,
@@ -61,7 +63,10 @@ public class ReservationServiceImpl implements ReservationService {
         List<ReservationReadResponseDto> dtoList = new ArrayList<>();
 
         for (Reservation reservation : reservationList) {
+            Place place = placeDao.findByPlaceId(reservation.getPlaceId());
+
             ReservationReadResponseDto responseDto = ReservationReadResponseDto.builder()
+                    .title(place.getName())
                     .startDate(reservation.getStartDate())
                     .endDate(reservation.getEndDate())
                     .build();

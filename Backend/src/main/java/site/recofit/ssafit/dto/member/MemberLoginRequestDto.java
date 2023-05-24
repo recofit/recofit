@@ -4,6 +4,7 @@ import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @Getter
+@Setter
 @Builder
 @RequiredArgsConstructor
 public class MemberLoginRequestDto {

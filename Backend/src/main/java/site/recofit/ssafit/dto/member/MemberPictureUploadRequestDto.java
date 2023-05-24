@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @RequiredArgsConstructor
 @Builder
+@Setter
 public class MemberPictureUploadRequestDto {
     private final MultipartFile pictureFile;
 }

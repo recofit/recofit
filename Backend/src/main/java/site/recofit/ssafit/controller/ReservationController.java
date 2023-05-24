@@ -14,22 +14,23 @@ import java.util.List;
 @RestController
 @RequestMapping("/reservation")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping("/write")
-    public ResponseEntity<ReservationRegistResponseDto> createReservation(@RequestParam int id,
+    public ResponseEntity<ReservationRegistResponseDto> createReservation(@RequestParam int memberId,
                                                           @RequestBody final ReservationRegistRequestDto requestDto) {
 
-        ReservationRegistResponseDto responseDto = reservationService.createReservation(id, requestDto);
+        ReservationRegistResponseDto responseDto = reservationService.createReservation(memberId, requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     @GetMapping("")
-    public ResponseEntity<List<ReservationReadResponseDto>> findMemberUnavailableDate(@RequestParam int id) {
+    public ResponseEntity<List<ReservationReadResponseDto>> findMemberUnavailableDate(@RequestParam int memberId) {
 
-        List<ReservationReadResponseDto> list = reservationService.findMemberUnavailableDate(id);
+        List<ReservationReadResponseDto> list = reservationService.findMemberUnavailableDate(memberId);
 
         return ResponseEntity.ok().body(list);
     }
