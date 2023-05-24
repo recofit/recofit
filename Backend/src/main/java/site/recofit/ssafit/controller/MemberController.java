@@ -114,8 +114,8 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PostMapping("/mailsender")
-    public ResponseEntity<String> verificationSender(@RequestParam final String email) throws MessagingException {
+    @PostMapping("/mailsender/{email}")
+    public ResponseEntity<String> verificationSender(@PathVariable final String email) throws MessagingException {
         final String code = memberService.verificationSender(email);
 
         return ResponseEntity.status(HttpStatus.OK).body(code);
