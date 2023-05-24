@@ -10,7 +10,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class ReviewListResponseDto {
+    private int id;
     private String title;
+    private String name;
     private String content;
     private String picture;
     private int rate;

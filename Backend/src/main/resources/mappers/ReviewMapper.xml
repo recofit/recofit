@@ -5,33 +5,33 @@
 <mapper namespace="site.recofit.ssafit.dao.ReviewDao">
 
     <insert id="saveReview" parameterType="Review">
-        INSERT INTO review (member_id, place_id, title, content, picture, rate)
-        VALUES (#{memberId}, #{placeId}, #{title}, #{content}, #{picture}, #{rate})
+        INSERT INTO review (member_id, place_name, title, content, rate)
+        VALUES (#{memberId}, #{placeId}, #{title}, #{content}, #{rate})
     </insert>
 
-    <select id="findAll" parameterType="Integer" resultType="Review">
-        SELECT member_id as memberId, place_id as placeId, title, content, picture, rate, like_cnt as likeCnt, created_date as createDate, last_modified_date as lastModifiedDate
-        FROM review
-        WHERE place_id = #{placeId}
+    <select id="findAll" parameterType="String" resultType="Review">
+        SELECT review.id, member_id as memberId, nickname as name, place_name as placeName, title, content, rate, like_cnt as likeCnt, review.last_modified_date as lastModifiedDate
+        FROM review JOIN member ON review.member_id = member.id
+        WHERE place_name = #{placeName}
     </select>
 
-    <select id="findThree" parameterType="Integer" resultType="Review">
-        SELECT member_id as memberId, place_id as placeId, title, content, picture, rate, like_cnt as likeCnt, created_date as createDate, last_modified_date as lastModifiedDate
-        FROM review
-        WHERE place_id = #{placeId}
+    <select id="findThree" parameterType="String" resultType="Review">
+        SELECT review.id, member_id as memberId, nickname as name, place_name as placeName, title, content, rate, like_cnt as likeCnt, review.last_modified_date as lastModifiedDate
+        FROM review JOIN member ON review.member_id = member.id
+        WHERE place_name = #{placeName}
         ORDER BY like_cnt DESC
         LIMIT 3
     </select>
 
     <select id="findById" parameterType="Integer" resultType="Review">
-        SELECT member_id as memberId, place_id as placeId, title, content, picture, rate, like_cnt as likeCnt, created_date as createDate, last_modified_date as lastModifiedDate
-        FROM review
-        WHERE id = #{reviewId}
+        SELECT review.id, member_id as memberId, nickname as name, place_name as placeName, title, content, rate, like_cnt as likeCnt, review.last_modified_date as lastModifiedDate
+        FROM review JOIN member ON review.member_id = member.id
+        WHERE review.id = #{reviewId}
     </select>
 
     <update id="updateReview" parameterType="Review">
         UPDATE review
-        SET title = #{title}, content=#{content}, picture=#{picture}, rate=#{rate}, last_modified_date = now()
+        SET title = #{title}, content=#{content}, rate=#{rate}, last_modified_date = now()
         WHERE id = #{id}
     </update>
 
