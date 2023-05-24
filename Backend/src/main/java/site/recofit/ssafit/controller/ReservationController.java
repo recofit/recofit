@@ -19,10 +19,9 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping("/write")
-    public ResponseEntity<ReservationRegistResponseDto> createReservation(@RequestParam int memberId,
-                                                          @RequestBody final ReservationRegistRequestDto requestDto) {
+    public ResponseEntity<ReservationRegistResponseDto> createReservation(@RequestBody final ReservationRegistRequestDto requestDto) {
 
-        ReservationRegistResponseDto responseDto = reservationService.createReservation(memberId, requestDto);
+        ReservationRegistResponseDto responseDto = reservationService.createReservation(requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
@@ -35,9 +34,9 @@ public class ReservationController {
         return ResponseEntity.ok().body(list);
     }
 
-    @GetMapping("/{placeId}")
-    public ResponseEntity<List<ReservationReadResponseDto>> findPlaceUnavailableDate(@PathVariable final int placeId) {
-        List<ReservationReadResponseDto> list = reservationService.findPlaceUnavailableDate(placeId);
+    @GetMapping("/{placeName}")
+    public ResponseEntity<List<ReservationReadResponseDto>> findPlaceReservationList(@PathVariable final String placeName) {
+        List<ReservationReadResponseDto> list = reservationService.findPlaceReservationList(placeName);
 
         return ResponseEntity.ok().body(list);
     }

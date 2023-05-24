@@ -14,11 +14,12 @@
         SELECT member_id as memberId, place_id as placeId, date_format(start_date, "%Y-%m-%d") as startDate, date_format(end_date, "%Y-%m-%d") as endDate
         FROM reservation
         WHERE member_id = #{memberId}
+        ORDER BY startDate
     </select>
 
     <!-- 장소 id로 조회 -->
     <select id="findByPlaceId" parameterType="Integer" resultType="Reservation">
-        SELECT *
+        SELECT member_id as memberId, place_id as placeId, date_format(start_date, "%Y-%m-%d") as startDate, date_format(end_date, "%Y-%m-%d") as endDate
         FROM reservation
         WHERE place_id = #{placeId}
     </select>

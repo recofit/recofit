@@ -10,6 +10,5 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class ReservationRegistResponseDto {
-    private final LocalDate startDate;
-    private final LocalDate endDate;
+    private final String name;
 }

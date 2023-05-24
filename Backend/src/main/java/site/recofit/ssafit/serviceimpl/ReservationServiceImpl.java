@@ -23,22 +23,23 @@ public class ReservationServiceImpl implements ReservationService {
     private final PlaceDao placeDao;
 
     @Transactional
-    public ReservationRegistResponseDto createReservation(final int memberId,
-                                                       final ReservationRegistRequestDto requestDto) {
+    public ReservationRegistResponseDto createReservation(final ReservationRegistRequestDto requestDto) {
         // 날짜 가능한지에 대한 유효성 검사 필요여부 차후 판단
 
+        Place place = placeDao.findByPlaceName(requestDto.getPlaceName());
+
+        System.out.println(place.getId());
         Reservation reservation = Reservation.builder()
-                .memberId(memberId)
-                .placeId(requestDto.getPlaceId())
-                .startDate(requestDto.getStartDate())
-                .endDate(requestDto.getEndDate())
+                .memberId(requestDto.getMemberId())
+                .placeId(place.getId())
+                .startDate(requestDto.getStart())
+                .endDate(requestDto.getEnd())
                 .build();
 
         reservationDao.save(reservation);
 
         return ReservationRegistResponseDto.builder()
-                .startDate(reservation.getStartDate())
-                .endDate(reservation.getEndDate())
+                .name(place.getTitle())
                 .build();
     }
 
@@ -48,8 +49,10 @@ public class ReservationServiceImpl implements ReservationService {
         return getReservationDtoList(reservationList);
     }
 
-    public List<ReservationReadResponseDto> findPlaceUnavailableDate(final int placeId) {
-        List<Reservation> reservationList = reservationDao.findByPlaceId(placeId);
+    public List<ReservationReadResponseDto> findPlaceReservationList(final String placeName) {
+        Place place = placeDao.findByPlaceName(placeName);
+
+        List<Reservation> reservationList = reservationDao.findByPlaceId(place.getId());
 
         return getReservationDtoList(reservationList);
     }
@@ -64,12 +67,22 @@ public class ReservationServiceImpl implements ReservationService {
         for (Reservation reservation : reservationList) {
             Place place = placeDao.findByPlaceId(reservation.getPlaceId());
 
-            ReservationReadResponseDto responseDto = ReservationReadResponseDto.builder()
-                    .title(place.getTitle())
-                    .venue(place.getVenue())
-                    .startDate(reservation.getStartDate())
-                    .endDate(reservation.getEndDate())
-                    .build();
+            ReservationReadResponseDto responseDto;
+
+            if (place == null) {
+                responseDto = ReservationReadResponseDto.builder()
+                        .startDate(reservation.getStartDate())
+                        .endDate(reservation.getEndDate())
+                        .build();
+            } else {
+                responseDto = ReservationReadResponseDto.builder()
+                        .title(place.getTitle())
+                        .venue(place.getVenue())
+                        .startDate(reservation.getStartDate())
+                        .endDate(reservation.getEndDate())
+                        .build();
+            }
+
 
             dtoList.add(responseDto);
         }

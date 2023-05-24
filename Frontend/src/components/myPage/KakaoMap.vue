@@ -20,10 +20,8 @@
         >
           <h5>{{ reservation.title }}</h5>
           {{ reservation.venue }}
-          <!-- <br />
-          시작 : {{ reservation.start }}
           <br />
-          끝 : {{ reservation.end }} -->
+          시작 : {{ reservation.startDate }} / 끝 : {{ reservation.endDate }}
         </div>
       </div>
     </div>

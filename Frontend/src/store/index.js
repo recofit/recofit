@@ -225,6 +225,7 @@ export default createStore({
         .then(() => {
           commit;
           alert('안녕히가세요!')
+          sessionStorage.removeItem('loginUser')
           router.push('/')
         })
         .catch(() => {
@@ -279,6 +280,17 @@ export default createStore({
           alert('넌 내꺼라 언팔 안돼')
         })
     },
+    createReservation: function({ commit }, data) {
+      const API_URL = '/reservation/write';
+      axios({
+        url: API_URL,
+        method: 'POST',
+        data: data,
+      })
+        .then(() => {
+          commit;
+        })
+    },
     getReservations: function ({ commit }, memberId) {
       const API_URL = '/reservation';
       axios({
@@ -294,7 +306,31 @@ export default createStore({
           for (i = 0; i < res.data.length; i++) {
             let start_date = res.data[i].startDate;
             let end_date = res.data[i].endDate;
-            reservations.push({ title: res.data[i].title, venue: res.data[i].venue, start: new Date(start_date[0], start_date[1] - 1, start_date[2]), end: new Date(end_date[0], end_date[1] - 1, end_date[2]) });
+            let startDate = res.data[i].startDate[0] + "년" + res.data[i].startDate[1] + "월" + res.data[i].startDate[2] + "일";
+            let endDate = res.data[i].endDate[0] + "년" + res.data[i].endDate[1] + "월" + res.data[i].endDate[2] + "일";
+            reservations.push({ title: res.data[i].title, venue: res.data[i].venue, startDate: startDate, endDate: endDate, start: new Date(start_date[0], start_date[1] - 1, start_date[2]), end: new Date(end_date[0], end_date[1] - 1, end_date[2]) });
+          }
+
+          commit('SET_RESERVATIONS', reservations);
+        })
+    },
+    getReservationsByName: function ({ commit }, placeName) {
+      const API_URL = '/reservation/' + placeName;
+      axios({
+        url: API_URL,
+        method: 'GET',
+        params: { placeName },
+      })
+        .then((res) => {
+          let reservations = [];
+
+          let i;
+          console.log(res.data)
+
+          for (i = 0; i < res.data.length; i++) {
+            let start_date = res.data[i].startDate;
+            let end_date = res.data[i].endDate;
+            reservations.push({ start: new Date(start_date[0], start_date[1] - 1, start_date[2]), end: new Date(end_date[0], end_date[1] - 1, end_date[2]) });
           }
 
           commit('SET_RESERVATIONS', reservations);
