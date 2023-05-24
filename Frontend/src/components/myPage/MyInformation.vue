@@ -11,6 +11,8 @@
           <div class="row">
             <div class="section-title">
               <h1>{{ member.nickname }}</h1>
+              <br />
+              <button>수정</button>
             </div>
           </div>
           <div>
@@ -44,9 +46,10 @@
     <div class="container">
       <div class="section-calendar">
         <h1>내 일정</h1>
-        <div>
+        <div class="reservation">
           <calendar-page />
         </div>
+        <kakao-map />
       </div>
       <div class="section-content">
         <h1>내 영상</h1>
@@ -69,10 +72,6 @@
           </div>
         </div>
       </div>
-      <div class="section-content">
-        <h1>내 장소</h1>
-        <google-maps></google-maps>
-      </div>
     </div>
   </section>
 </template>
@@ -81,9 +80,11 @@
 import { defineComponent } from "vue";
 import { mapState, mapGetters } from "vuex";
 import CalendarPage from "@/views/CalendarPage.vue";
+import KakaoMap from "@/components/myPage/KakaoMap.vue";
 
 export default defineComponent({
   components: {
+    KakaoMap,
     CalendarPage,
   },
   computed: {
@@ -119,6 +120,11 @@ export default defineComponent({
   box-shadow: 5px 10px 30px 10px white;
 }
 
+.reservation {
+  padding-right: 100px;
+  margin-bottom: 20px;
+}
+
 .row {
   display: flex;
   flex-wrap: wrap;
@@ -147,6 +153,10 @@ export default defineComponent({
   align-items: center;
 }
 
+/* section title */
+.section-title {
+  text-align: center;
+}
 .section-title h1:before {
   content: "";
   box-sizing: border-box;
@@ -158,6 +168,11 @@ export default defineComponent({
   background-color: #285c4d;
 }
 
+.section-title button {
+  margin-top: 20px;
+}
+
+/* section content */
 .section-content {
   flex: 0 0 100%;
   max-width: 100%;
@@ -187,6 +202,7 @@ export default defineComponent({
   background-color: #285c4d;
 }
 
+/* section calender */
 .section-calendar {
   max-width: 100%;
   text-align: center;

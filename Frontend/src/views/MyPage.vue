@@ -3,7 +3,6 @@
     <header-section />
     <div class="container">
       <my-information />
-      <kakao-map />
     </div>
     <footer-section />
   </div>
@@ -12,13 +11,11 @@
 <script>
 import HeaderSection from "@/components/common/HeaderSection.vue";
 import MyInformation from "@/components/myPage/MyInformation.vue";
-import KakaoMap from "@/components/myPage/KakaoMap.vue";
 import FooterSection from "@/components/common/FooterSection.vue";
 export default {
   components: {
     HeaderSection,
     MyInformation,
-    KakaoMap,
     FooterSection,
   },
 };

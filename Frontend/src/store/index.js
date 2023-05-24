@@ -1,7 +1,9 @@
 import { createStore } from "vuex";
 import axios from "axios";
 import router from "../router";
+
 axios.defaults.baseURL = 'http://localhost:8080'
+
 export default createStore({
   state: {
     member: {},
@@ -17,7 +19,7 @@ export default createStore({
     result: {},
     results: [],
     location: { lat: 0, lng: 0 },
-    reservation: {},
+    reservation: [],
     reservations: [],
     review: {},
     reviews: [],
@@ -50,9 +52,6 @@ export default createStore({
     GET_FOLLOWINGS: function (state, followings) {
       state.followings = followings;
     },
-    SET_PLACES: function (state, places) {
-      state.places = places;
-    },
     SEARCH_POPULAR_YOUTUBE(state, video) {
       state.videos1.push(video);
     },
@@ -76,8 +75,11 @@ export default createStore({
     SAVE_AVERAGE(state, average) {
       state.average = average;
     },
-    SET_DATES: function (state, reservations) {
+    SET_RESERVATIONS: function (state, reservations) {
       state.reservations = reservations;
+    },
+    SET_RESERVATION: function (state, reservation) {
+      state.reservation = reservation;
     },
     SET_REVIEW: function(state, review) {
       console.log(review);
@@ -126,13 +128,10 @@ export default createStore({
         })
     },
     sendMessage: function ({ commit }, email) {
-      const API_URL = '/member/mailsender';
+      const API_URL = '/member/mailsender/' + email;
       axios({
         url: API_URL,
         method: 'POST',
-        params: {
-          email: email
-        }
       })
         .then(() => {
           commit;
@@ -212,47 +211,6 @@ export default createStore({
           alert('너 누구야!')
         })
     },
-    // searchPopularYoutube({commit}, payload) {
-    //   const URL = "https://www.googleapis.com/youtube/v3/search";
-    //   const API_KEY = "AIzaSyDFor2GS0t1ZNfh4EDaWgyJKgl6A13K7qI";
-    //   axios({
-    //     url: URL,
-    //     method: "GET",
-    //     params: {
-    //       key: API_KEY,
-    //       part: "snippet",
-    //       order: "viewCount",
-    //       videoCategoryId: 17,
-    //       q: payload,
-    //       type: "video",
-    //       maxResults: 3,
-    //     },
-    //   })
-    //   .then((res) => {
-    //     commit("SEARCH_POPULAR_YOUTUBE", res.data.items);
-    //   })
-    //   .catch((err) => console.log(err));
-    // },
-    // searchLikeYoutube({commit}, payload) {
-    //   const URL = "https://www.googleapis.com/youtube/v3/search";
-    //   const API_KEY = "AIzaSyDFor2GS0t1ZNfh4EDaWgyJKgl6A13K7qI";
-    //   axios({
-    //     url: URL,
-    //     method: "GET",
-    //     params: {
-    //       key: API_KEY,
-    //       part: "snippet",
-    //       videoCategoryId: 17,
-    //       q: payload,
-    //       type: "video",
-    //       maxResults: 3,
-    //     },
-    //   })
-    //   .then((res) => {
-    //     commit("SEARCH_LIKE_YOUTUBE", res.data.items);
-    //   })
-    //   .catch((err) => console.log(err));
-    // },
     clickVideo({commit}, payload) {
       commit("CLICK_VIDEO", payload);
     },
@@ -319,19 +277,31 @@ export default createStore({
           alert('넌 내꺼라 언팔 안돼')
         })
     },
-    getPlaces: function ({ commit }, memberId) {
-      const API_URL = '/place/list';
+    getReservations: function ({ commit }, memberId) {
+      const API_URL = '/reservation';
       axios({
         url: API_URL,
         method: 'GET',
         params: { memberId },
       })
         .then((res) => {
-          commit('SET_PLACES', res.data);
+          let reservations = [];
+
+          let i;
+
+          for (i = 0; i < res.data.length; i++) {
+            let start_date = res.data[i].startDate;
+            let end_date = res.data[i].endDate;
+            reservations.push({ title: res.data[i].title, venue: res.data[i].venue, start: new Date(start_date[0], start_date[1] - 1, start_date[2]), end: new Date(end_date[0], end_date[1] - 1, end_date[2]) });
+          }
+
+          commit('SET_RESERVATIONS', reservations);
         })
-        // .catch(() => {
-        //   alert('장소 안줘 안돼')
-        // })
+    },
+    clickedDate({ commit }, data) {
+      let reservation = [];
+      reservation.push(data)
+      commit('SET_RESERVATION', reservation);
     },
     searchPopularYoutube({commit}, payload) {
       const URL = "https://www.googleapis.com/youtube/v3/search";
@@ -495,30 +465,6 @@ export default createStore({
           commit("SEARCH_LOCATION", res.data.results[0].geometry.location);
         })
         .catch((err) => console.log(err));
-    },
-    setDays: function ({ commit }, memberId) {
-      const API_URL = '/reservation';
-      axios({
-        url: API_URL,
-        method: 'GET',
-        params: { memberId },
-      })
-        .then((res) => {
-          let reservations = [];
-
-          let i;
-
-          for (i = 0; i < res.data.length; i++) {
-            let start_date = res.data[i].startDate;
-            let end_date = res.data[i].endDate;
-            reservations.push({ title: res.data[i].title, start: new Date(start_date[0], start_date[1] - 1, start_date[2]), end: new Date(end_date[0], end_date[1] - 1, end_date[2]) });
-          }
-
-          commit('SET_DATES', reservations);
-        })
-        // .catch(() => {
-        //   alert('일정 가져오기 실패')
-        // })
     },
     getReview: function({commit}, reviewId) {
       const API_URL = `/review/` + reviewId;

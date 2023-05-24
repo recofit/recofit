@@ -2,14 +2,28 @@
   <div class="place-container">
     <div id="map"></div>
     <div class="map-info">
-      <div class="card" v-for="(place, index) in places" :key="index">
+      <div
+        class="card"
+        v-for="(reservation, index) in reservations"
+        :key="index"
+      >
         <div
           class="place-box"
-          @click="movePointer(place.longitude, place.latitude)"
+          @click="
+            getPlace(
+              reservation.title,
+              reservation.venue,
+              reservation.start,
+              reservation.end
+            )
+          "
         >
-          <h4>{{ place.name }}</h4>
-          open : {{ place.openTime }} / close : {{ place.closeTime }}
-          {{ place.address }}
+          <h5>{{ reservation.title }}</h5>
+          {{ reservation.venue }}
+          <!-- <br />
+          시작 : {{ reservation.start }}
+          <br />
+          끝 : {{ reservation.end }} -->
         </div>
       </div>
     </div>
@@ -17,13 +31,12 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "KakaoMap",
   computed: {
-    ...mapState(["places"]),
-    ...mapGetters(["placeCnt"]),
+    ...mapState(["reservations"]),
   },
   data() {
     return {
@@ -32,11 +45,10 @@ export default {
   },
   created() {
     const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
-    this.$store.dispatch("getPlaces", memberId);
+    this.$store.dispatch("getReservations", memberId);
   },
   mounted() {
     this.loadMap();
-    setTimeout(() => this.loadMarkers(), 500);
   },
   methods: {
     loadMap() {
@@ -47,31 +59,61 @@ export default {
         level: 3, //지도의 레벨(확대, 축소 정도)
       };
       this.map = new window.kakao.maps.Map(container, options);
-      this.loadMarker();
     },
-    loadMarker() {
-      const markerPosition = new window.kakao.maps.LatLng(
-        33.450701,
-        126.570667
+    getPlace(title, address, start, end) {
+      let data = {
+        start: start,
+        end: end,
+      };
+      this.$store.dispatch("searchLocation", address);
+      this.$store.dispatch("clickedDate", data);
+      setTimeout(
+        () =>
+          this.movePointer(
+            this.$store.state.location.lat,
+            this.$store.state.location.lng
+          ),
+        100
       );
-      const marker = new window.kakao.maps.Marker({ position: markerPosition });
-      marker.setMap(this.map);
+      setTimeout(
+        () =>
+          this.loadMarker(
+            title,
+            this.$store.state.location.lat,
+            this.$store.state.location.lng
+          ),
+        100
+      );
     },
     movePointer(latitude, longitude) {
       let moveLatLon = new window.kakao.maps.LatLng(latitude, longitude);
       this.map.setCenter(moveLatLon);
     },
-    loadMarkers() {
-      for (let place in this.places) {
-        const markerPosition = new window.kakao.maps.LatLng(
-          this.places[place].longitude,
-          this.places[place].latitude
-        );
-        const marker = new window.kakao.maps.Marker({
-          position: markerPosition,
-        });
-        marker.setMap(this.map);
-      }
+    loadMarker(title, latitude, longitude) {
+      const markerPosition = new window.kakao.maps.LatLng(latitude, longitude);
+      const marker = new window.kakao.maps.Marker({ position: markerPosition });
+      marker.setMap(this.map);
+
+      let iwContent =
+          '<div style="padding:5px; text-align: center">' +
+          title +
+          '<br><a href="https://map.kakao.com/link/map/여기로 가주세요!,' +
+          latitude +
+          "," +
+          longitude +
+          '" style="color:blue" target="_blank">카카오맵</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://localhost:8081/detail/' +
+          title +
+          '">상세</a></div>',
+        iwPosition = new window.kakao.maps.LatLng(latitude, longitude); //인포윈도우 표시 위치입니다
+
+      // 인포윈도우를 생성합니다
+      let infowindow = new window.kakao.maps.InfoWindow({
+        position: iwPosition,
+        content: iwContent,
+      });
+
+      // 마커 위에 인포윈도우를 표시합니다. 두번째 파라미터인 marker를 넣어주지 않으면 지도 위에 표시됩니다
+      infowindow.open(this.map, marker);
     },
   },
 };
