@@ -6,6 +6,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @RequiredArgsConstructor
 @Builder
+@Setter
 public class MemberPictureUploadResponseDto {
     private final String picture;
 }

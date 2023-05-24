@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class ReservationReadResponseDto {
+    private final String title;
     private final LocalDate startDate;
     private final LocalDate endDate;
 }

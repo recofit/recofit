@@ -6,6 +6,7 @@ import lombok.*;
 @RequiredArgsConstructor
 @Builder
 @Getter
+@Setter
 public class MemberUpdateRequestDto {
     private final String nickname;
 }
