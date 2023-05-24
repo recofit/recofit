@@ -10,13 +10,13 @@
                         <div class="container container-top">
                             <div class="row" >
                                 <div class="col">
-                                    <div class="card" v-for="video in videos1.slice(0, 3)" :key="video.id" :video="video">
+                                    <div class="card" v-for="video in videos1.slice(0, 1)" :key="video.id" :video="video">
                                         <img :src="`http://i.ytimg.com/vi/${video.id}/maxresdefault.jpg`" @click="clickVideo(video)" data-bs-toggle="modal" data-bs-target="#youtubeModal"/>
                                         <div class="card-body">
                                             <div class="row">
-                                                <div class="col col1">
-                                                    <div class="card-text"> <i class="bi bi-hand-thumbs-up"></i> {{video.statistics.likeCount}}번</div><br>
-                                                    <div class="card-text"><i class="bi bi-eye"></i> {{video.statistics.viewCount}}회</div><br>
+                                                <div class="col">
+                                                    <div class="card-text"> <i class="bi bi-hand-thumbs-up"></i>  {{video.statistics.likeCount}}회 </div><br>
+                                                    <div class="card-text"><i class="bi bi-eye"></i>  {{video.statistics.viewCount}}회 </div><br>
                                                 </div>
                                                 <div class="col">
                                                     <div class="heart"><i class="bi bi-heart"></i></div>
@@ -102,7 +102,7 @@ export default {
         ...mapState(['videos1']),
     },
     created() {
-        this.$store.dispatch("searchPopularYoutube", "다이어트");
+        // this.$store.dispatch("searchPopularYoutube", "다이어트");
     }
 }
 </script>

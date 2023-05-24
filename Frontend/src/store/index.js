@@ -266,7 +266,7 @@ export default createStore({
     },
     searchPopularYoutube({commit}, payload) {
       const URL = "https://www.googleapis.com/youtube/v3/search";
-      const API_KEY = "AIzaSyBH872nJMrMtQ1WkEI-dwrg6Zz0sty1Krs";
+      const API_KEY = "";
       axios({
         url: URL,
         method: "GET",
@@ -277,7 +277,7 @@ export default createStore({
           videoCategoryId: 17,
           q: payload,
           type: "video",
-          maxResults: 3,
+          maxResults: 1,
         },
       })
       .then((res) => {
@@ -312,7 +312,7 @@ export default createStore({
           videoCategoryId: 17,
           q: payload,
           type: "video",
-          maxResults: 3,
+          maxResults: 1,
         },
       })
       .then((res) => {
