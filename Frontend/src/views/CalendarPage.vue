@@ -1,19 +1,6 @@
 <template>
   <div class="calendar">
-    <VCalendar :expanded="expanded" :attributes="attributes" />
-    <div class="calendar-info">
-      <div
-        class="card"
-        v-for="(reservation, index) in reservations"
-        :key="index"
-      >
-        <div class="calendar-box">
-          <h4>{{ reservation.title }}</h4>
-          start : {{ reservation.start }} / end :
-          {{ reservation.end }}
-        </div>
-      </div>
-    </div>
+    <VCalendar expanded :attributes="attributes" />
   </div>
 </template>
 
@@ -23,14 +10,21 @@ import { mapState } from "vuex";
 
 export default {
   computed: {
-    ...mapState(["reservations", "placename"]),
+    ...mapState(["reservations", "reservation"]),
     computedReservations() {
       return this.reservations;
+    },
+    computedReservation() {
+      return this.reservation;
     },
   },
   watch: {
     computedReservations(newReservations) {
       this.attributes[1].dates = newReservations;
+    },
+    computedReservation(newReservation) {
+      console.log(this.reservation);
+      this.attributes[2].dates = newReservation;
     },
   },
   data() {
@@ -56,11 +50,22 @@ export default {
         {
           content: {
             style: {
+              color: "black",
+            },
+          },
+          dot: {
+            backgroundColor: "blue",
+          },
+          dates: null,
+        },
+        {
+          content: {
+            style: {
               color: "white",
             },
           },
           highlight: {
-            color: "red",
+            color: "pink",
           },
           dates: null,
         },
@@ -70,8 +75,9 @@ export default {
   created() {
     const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
 
-    this.$store.dispatch("setDays", memberId);
+    this.$store.dispatch("getReservations", memberId);
   },
+  methods: {},
 };
 </script>
 
@@ -81,6 +87,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding-left: 100px;
+  margin-bottom: 20px;
 }
 
 .calendar-info {
