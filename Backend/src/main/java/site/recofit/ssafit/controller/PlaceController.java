@@ -9,10 +9,10 @@ import site.recofit.ssafit.service.PlaceService;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/place")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class PlaceController {
 
     private final PlaceService service;

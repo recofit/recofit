@@ -21,9 +21,9 @@
 <!--    </select>-->
 
     <select id="findByPlaceName" parameterType="String" resultType="Place">
-        SELECT title, venue, subjectCategory, description, subDescription, reference, source
-        FROM place
-        WHERE title = #{placeName}
+        SELECT place.title, venue, subjectCategory, description, subDescription, reference, source, AVG(rate) AS rate
+        FROM place JOIN review on place.title = review.place_name
+        WHERE place.title = #{placeName}
     </select>
 
 <!--    <insert id="unsubscribePlace" parameterType="Integer">-->
