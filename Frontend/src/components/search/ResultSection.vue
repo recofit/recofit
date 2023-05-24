@@ -32,7 +32,7 @@ export default {
   methods: {
         detailPlace(place) {
             this.$store.dispatch('searchLocation', place.venue);
-            setTimeout(() =>this.$store.dispatch('detailPlace', place), 500);
+            setTimeout(() =>this.$store.dispatch('savePlace', place), 500);
         },
     },
 }

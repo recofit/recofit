@@ -196,4 +196,8 @@ export default {
 .btn-style:focus {
   outline: none;
 }
+
+.form-btn {
+  margin-top: 5%;
+}
 </style>

@@ -23,15 +23,15 @@ public class ReviewController {
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/list/{placeId}")
-    public ResponseEntity<?> selectAllReview(@PathVariable final int placeId) {
-        List<ReviewListResponseDto> responseDtos = service.selectAll(placeId);
+    @GetMapping("/list/{placeName}")
+    public ResponseEntity<?> selectAllReview(@PathVariable final String placeName) {
+        List<ReviewListResponseDto> responseDtos = service.selectAll(placeName);
         return new ResponseEntity<>(responseDtos, HttpStatus.OK);
     }
 
     @GetMapping("/top/{placeId}")
-    public ResponseEntity<?> selectThreeReview(@PathVariable final int placeId) {
-        List<ReviewListResponseDto> responseDtos = service.selectThree(placeId);
+    public ResponseEntity<?> selectThreeReview(@PathVariable final String placeName) {
+        List<ReviewListResponseDto> responseDtos = service.selectThree(placeName);
         return new ResponseEntity<>(responseDtos, HttpStatus.OK);
     }
 

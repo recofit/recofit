@@ -51,23 +51,25 @@ export default {
   name: "WriteModal",
   data() {
     return {
-      placeId: "",
       memberId: "",
+      placeId: "",
       title: "",
       content: "",
+      rate: "",
     }
   },
   methods: {
     writeReview() {   
       let review = {
+        memberId: 2,
         placeId: this.$store.state.result.title,
-        userId: this.$store.state.member.id,
         title: this.title,
         content: this.content,
+        rate: 5,
       }
 
       this.$store.dispatch("writeReview", review);
-      // this.$router.go(0);
+      this.$router.go(0);
     }
   },
   computed: {

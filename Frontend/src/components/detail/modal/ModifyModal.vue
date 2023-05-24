@@ -10,12 +10,12 @@
 
         <div class="modal-body">
           <div class="d-grid gap-2 d-md-block">
-            <!-- <div class="mb-3">
-              <input type="text" class="form-control" placeholder="제목" v-model="result.title">
+            <div class="mb-3">
+              <input type="text" class="form-control" placeholder="제목" v-model="review.title">
             </div>
             <div class="mb-3">
-              <textarea class="form-control" rows="3" placeholder="수정 내용 작성" v-model="result.content"></textarea>
-            </div> -->
+              <textarea class="form-control" rows="3" placeholder="수정 내용 작성" v-model="review.content"></textarea>
+            </div>
           </div>
         </div>
         
@@ -44,7 +44,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["result"])
+    ...mapState(["review", "result"])
   },
 }
 </script>

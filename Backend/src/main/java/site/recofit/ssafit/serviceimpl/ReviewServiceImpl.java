@@ -35,13 +35,15 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewListResponseDto> selectAll(int placeId) {
-        List<Review> reviewList = reviewDao.findAll(placeId);
+    public List<ReviewListResponseDto> selectAll(String placeName) {
+        List<Review> reviewList = reviewDao.findAll(placeName);
         List<ReviewListResponseDto> dtoList = new ArrayList<>();
 
         for (Review review : reviewList) {
             ReviewListResponseDto responseDto = ReviewListResponseDto.builder()
+                    .id(review.getId())
                     .title(review.getTitle())
+                    .name(review.getName())
                     .content(review.getContent())
                     .picture(review.getPicture())
                     .rate(review.getRate())
@@ -56,12 +58,13 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewListResponseDto> selectThree(int placeId) {
+    public List<ReviewListResponseDto> selectThree(String placeId) {
         List<Review> reviewList = reviewDao.findThree(placeId);
         List<ReviewListResponseDto> dtoList = new ArrayList<>();
 
         for (Review review : reviewList) {
             ReviewListResponseDto responseDto = ReviewListResponseDto.builder()
+                    .id(review.getId())
                     .title(review.getTitle())
                     .content(review.getContent())
                     .picture(review.getPicture())
@@ -81,6 +84,7 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewDao.findById(reviewId);
 
         ReviewListResponseDto responseDto = ReviewListResponseDto.builder()
+                .id(review.getId())
                 .title(review.getTitle())
                 .content(review.getContent())
                 .picture(review.getPicture())

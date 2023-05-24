@@ -11,8 +11,9 @@ import java.time.LocalDateTime;
 @Builder
 public class Review {
     private int id;
+    private String name;
     private int memberId;
-    private int placeId;
+    private String placeId;
     private String title;
     private String content;
     private String picture;

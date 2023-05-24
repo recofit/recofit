@@ -1,23 +1,22 @@
 package site.recofit.ssafit.service;
 
-import site.recofit.ssafit.dto.place.PlaceListResponseDto;
-import site.recofit.ssafit.dto.place.PlaceRegistRequestDto;
+import site.recofit.ssafit.domain.Place;
 
 import java.util.List;
 
 public interface PlaceService {
     // 장소 커뮤니티 등록
-    void registPlace(final PlaceRegistRequestDto requestDto);
+    void registPlace(final Place place);
 
     // 장소 찜
-    void subscribePlace(final int memberId, final int placeId);
+    void subscribePlace(final int memberId, final String placeName);
 
     // 장소 찜 목록 확인
-    List<PlaceListResponseDto> findByMembmerId(final int memberId);
+    List<Place> findByMembmerId(final int memberId);
 
     // 장소 상세 확인
-    PlaceListResponseDto findByPlaceId(final int placeId);
+    Place findByPlaceName(final String placeName);
 
     // 장소 찜 해제
-    void unsubscribePlace(final int memberId, final int placeId);
+    void unsubscribePlace(final int memberId, final String placeName);
 }
