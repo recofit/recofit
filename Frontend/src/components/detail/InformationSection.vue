@@ -48,14 +48,13 @@ export default {
   data() {
     return {
       map: null,
-      averageScore: 4.1
     };
   },
   computed: {
-    ...mapState(['result', 'location']),
+    ...mapState(['result', 'location', 'average']),
     ratingToPercent() {
-      const score = this.averageScore * 20;
-      return score + 1.5;
+      const score = this.$store.state.average * 20;
+      return score;
     }
   },
   created() {

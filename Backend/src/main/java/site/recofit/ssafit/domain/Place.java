@@ -16,4 +16,5 @@ public class Place {
     private String subDescription;
     private String reference;
     private String source;
+    private double rate;
 }

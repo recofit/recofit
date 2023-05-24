@@ -23,6 +23,7 @@ export default createStore({
     reservations: [],
     review: {},
     reviews: [],
+    average: 0,
   },
   getters: {
     followerCnt: function (state) {
@@ -70,6 +71,9 @@ export default createStore({
     SEARCH_LOCATION(state, location) {
       state.location.lat = location.lat;
       state.location.lng = location.lng;
+    },
+    SAVE_AVERAGE(state, average) {
+      state.average = average;
     },
     SET_RESERVATIONS: function (state, reservations) {
       state.reservations = reservations;
@@ -398,8 +402,6 @@ export default createStore({
         // },
       })
         .then(res => {
-          commit("SAVE_PLACE", res.data);
-
           let address = res.data.venue;
 
           let temp = address.split("").reverse().join("").toString();
@@ -416,6 +418,9 @@ export default createStore({
           } else {
             address = reverse.split("").reverse().join("");
           }
+
+          commit("SAVE_AVERAGE", res.data.rate);
+          commit("SAVE_PLACE", res.data);
     
           axios({
             url:
