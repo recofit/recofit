@@ -8,34 +8,41 @@
                         <div class="container container-top">
                             <div class="row" >
                                 <div class="col">
-                                    <!-- <div class="card" v-for="video in videos2.slice(0, 3)" :key="video.id.videoId" :video="video">
-                                        <img :src="video.snippet.thumbnails.high.url" @click="clickVideo(video)"  data-bs-toggle="modal" data-bs-target="#youtubeModal"/>
+                                    <div class="card" v-for="video in videos2.slice(0, 3)" :key="video.id" :video="video">
+                                        <img :src="`http://i.ytimg.com/vi/${video.id}/maxresdefault.jpg`" @click="clickVideo(video)" data-bs-toggle="modal" data-bs-target="#youtubeModal"/>
                                         <div class="card-body">
-                                            <span class="card-text">{{video.snippet.channelTitle}}</span><br>
+                                            <div class="row">
+                                                <div class="col col1">
+                                                    <div class="card-text"> <i class="bi bi-hand-thumbs-up"></i> {{video.statistics.likeCount}}번</div><br>
+                                                    <div class="card-text"><i class="bi bi-eye"></i> {{video.statistics.viewCount}}회</div><br>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="heart"><i class="bi bi-heart"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="card" data-bs-toggle="modal" data-bs-target="#youtubeModal">
+                                        <img :src="require(`@/assets/img/carousel1.jpg`)" />
+                                        <div class="card-body">
+                                            <span class="card-text">채널명</span><br>
+                                            <i class="bi bi-heart-fill"></i>
+                                        </div>
+                                    </div>
+                                    <div class="card" data-bs-toggle="modal" data-bs-target="#youtubeModal">
+                                        <img :src="require(`@/assets/img/carousel1.jpg`)" />
+                                        <div class="card-body">
+                                            <span class="card-text">채널명</span><br>
+                                            <i class="bi bi-heart-fill"></i>
+                                        </div>
+                                    </div>
+                                    <div class="card" data-bs-toggle="modal" data-bs-target="#youtubeModal">
+                                        <img :src="require(`@/assets/img/carousel1.jpg`)" />
+                                        <div class="card-body">
+                                            <span class="card-text">채널명</span><br>
                                             <i class="bi bi-heart-fill"></i>
                                         </div>
                                     </div> -->
-                                    <div class="card" data-bs-toggle="modal" data-bs-target="#youtubeModal">
-                                        <img :src="require(`@/assets/img/carousel1.jpg`)" />
-                                        <div class="card-body">
-                                            <span class="card-text">채널명</span><br>
-                                            <i class="bi bi-heart-fill"></i>
-                                        </div>
-                                    </div>
-                                    <div class="card" data-bs-toggle="modal" data-bs-target="#youtubeModal">
-                                        <img :src="require(`@/assets/img/carousel1.jpg`)" />
-                                        <div class="card-body">
-                                            <span class="card-text">채널명</span><br>
-                                            <i class="bi bi-heart-fill"></i>
-                                        </div>
-                                    </div>
-                                    <div class="card" data-bs-toggle="modal" data-bs-target="#youtubeModal">
-                                        <img :src="require(`@/assets/img/carousel1.jpg`)" />
-                                        <div class="card-body">
-                                            <span class="card-text">채널명</span><br>
-                                            <i class="bi bi-heart-fill"></i>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>

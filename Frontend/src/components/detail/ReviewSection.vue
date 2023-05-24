@@ -2,20 +2,22 @@
   <div>
     <table class="table">
       <thead>
-        <tr data-bs-toggle="modal" data-bs-target="#detailModal">
+        <tr>
           <th scope="col">번호</th>
           <th scope="col">제목</th>
           <th scope="col">작성자</th>
-          <th scope="col">작성일</th>
+          <th scope="col">평점</th>
+          <th scope="col">추천수</th>
         </tr>
       </thead>
     
       <tbody>
-        <tr>
+        <tr data-bs-toggle="modal" data-bs-target="#detailModal">
           <td>더미</td>
           <td>더미</td>
-          <td>더미</td>
-          <td>더미</td>
+          <td> </td>
+          <td> / 5</td>
+          <td> 누구세요</td>
         </tr>
       </tbody>
     </table>
@@ -28,15 +30,15 @@
 </template>
 
 <script>
-// import DetailModal from './modal/DetailModal.vue'
-// import ModifyModal from './modal/ModifyModal.vue'
+import DetailModal from './modal/DetailModal.vue'
+import ModifyModal from './modal/ModifyModal.vue'
 // import { mapGetters } from "vuex"
 
 export default {
   name: "ReviewSection",
   components: { 
-    // DetailModal,
-    // ModifyModal 
+    DetailModal,
+    ModifyModal 
   },
 }
 </script>
