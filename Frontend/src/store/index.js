@@ -19,6 +19,8 @@ export default createStore({
     location: { lat: 0, lng: 0 },
     reservation: {},
     reservations: [],
+    review: {},
+    reviews: [],
   },
   getters: {
     followerCnt: function (state) {
@@ -51,10 +53,10 @@ export default createStore({
       state.places = places;
     },
     SEARCH_POPULAR_YOUTUBE(state, videos) {
-      state.videos2 = videos;
+      state.videos1 = videos;
     },
     SEARCH_LIKE_YOUTUBE(state, videos) {
-      state.videos1 = videos;
+      state.videos2 = videos;
     },
     CLICK_VIDEO(state, video) {
       state.video = video;
@@ -72,7 +74,19 @@ export default createStore({
     },
     SET_DATES: function (state, reservations) {
       state.reservations = reservations;
-    }
+    },
+    SET_REVIEW: function(state, review) {
+      state.review = review;
+    },
+    SET_REVIEWS: function(state, reviews) {
+      state.reviews = reviews;
+    },
+    WRITE_REVIEW: function(state, review) {
+      state.reviews.push(review);
+    },
+    DELETE_REVIEW: function(state) {
+      state.reviews
+    },
   },
   actions: {
     signup: function ({ commit }, member) {
@@ -173,47 +187,47 @@ export default createStore({
           alert('너 누구야!')
         })
     },
-    searchPopularYoutube({commit}, payload) {
-      const URL = "https://www.googleapis.com/youtube/v3/search";
-      const API_KEY = "AIzaSyDFor2GS0t1ZNfh4EDaWgyJKgl6A13K7qI";
-      axios({
-        url: URL,
-        method: "GET",
-        params: {
-          key: API_KEY,
-          part: "snippet",
-          order: "viewCount",
-          videoCategoryId: 17,
-          q: payload,
-          type: "video",
-          maxResults: 3,
-        },
-      })
-      .then((res) => {
-        commit("SEARCH_POPULAR_YOUTUBE", res.data.items);
-      })
-      .catch((err) => console.log(err));
-    },
-    searchLikeYoutube({commit}, payload) {
-      const URL = "https://www.googleapis.com/youtube/v3/search";
-      const API_KEY = "AIzaSyDFor2GS0t1ZNfh4EDaWgyJKgl6A13K7qI";
-      axios({
-        url: URL,
-        method: "GET",
-        params: {
-          key: API_KEY,
-          part: "snippet",
-          videoCategoryId: 17,
-          q: payload,
-          type: "video",
-          maxResults: 3,
-        },
-      })
-      .then((res) => {
-        commit("SEARCH_LIKE_YOUTUBE", res.data.items);
-      })
-      .catch((err) => console.log(err));
-    },
+    // searchPopularYoutube({commit}, payload) {
+    //   const URL = "https://www.googleapis.com/youtube/v3/search";
+    //   const API_KEY = "AIzaSyDFor2GS0t1ZNfh4EDaWgyJKgl6A13K7qI";
+    //   axios({
+    //     url: URL,
+    //     method: "GET",
+    //     params: {
+    //       key: API_KEY,
+    //       part: "snippet",
+    //       order: "viewCount",
+    //       videoCategoryId: 17,
+    //       q: payload,
+    //       type: "video",
+    //       maxResults: 3,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     commit("SEARCH_POPULAR_YOUTUBE", res.data.items);
+    //   })
+    //   .catch((err) => console.log(err));
+    // },
+    // searchLikeYoutube({commit}, payload) {
+    //   const URL = "https://www.googleapis.com/youtube/v3/search";
+    //   const API_KEY = "AIzaSyDFor2GS0t1ZNfh4EDaWgyJKgl6A13K7qI";
+    //   axios({
+    //     url: URL,
+    //     method: "GET",
+    //     params: {
+    //       key: API_KEY,
+    //       part: "snippet",
+    //       videoCategoryId: 17,
+    //       q: payload,
+    //       type: "video",
+    //       maxResults: 3,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     commit("SEARCH_LIKE_YOUTUBE", res.data.items);
+    //   })
+    //   .catch((err) => console.log(err));
+    // },
     clickVideo({commit}, payload) {
       commit("CLICK_VIDEO", payload);
     },
@@ -303,6 +317,77 @@ export default createStore({
           alert('장소 안줘 안돼')
         })
     },
+    searchPopularYoutube({commit}, payload) {
+      const URL = "https://www.googleapis.com/youtube/v3/search";
+      const API_KEY = "";
+      axios({
+        url: URL,
+        method: "GET",
+        params: {
+          key: API_KEY,
+          part: "snippet",
+          order: "viewCount",
+          videoCategoryId: 17,
+          q: payload,
+          type: "video",
+          maxResults: 1,
+        },
+      })
+      .then((res) => {
+        for (const item of res.data.items) {
+          axios({
+            url: "https://www.googleapis.com/youtube/v3/videos",
+            method: "GET",
+            params: {
+              key: API_KEY,
+              part: "statistics",
+              id: item.id.videoId,
+            },
+          })
+          .then((res) => {
+            console.log(res.data.items)
+            commit("SEARCH_POPULAR_YOUTUBE", res.data.items);
+          })
+          .catch((err) => console.log(err))
+        }
+      })
+      .catch((err) => console.log(err));
+    },
+    searchLikeYoutube({commit}, payload) {
+      const URL = "https://www.googleapis.com/youtube/v3/search";
+      const API_KEY = "";
+      axios({
+        url: URL,
+        method: "GET",
+        params: {
+          key: API_KEY,
+          part: "snippet",
+          videoCategoryId: 17,
+          q: payload,
+          type: "video",
+          maxResults: 1,
+        },
+      })
+      .then((res) => {
+        for (const item of res.data.items) {
+          axios({
+            url: "https://www.googleapis.com/youtube/v3/videos",
+            method: "GET",
+            params: {
+              key: API_KEY,
+              part: "statistics",
+              id: item.id.videoId,
+            },
+          })
+          .then((res) => {
+            console.log(res.data.items)
+            commit("SEARCH_LIKE_YOUTUBE", res.data.items);
+          })
+          .catch((err) => console.log(err))
+        }
+      })
+      .catch((err) => console.log(err));
+    },
     searchPlace({commit}, payload) {
       const URL = "http://api.kcisa.kr/openapi/service/rest/convergence2019/getConver09";
       const API_KEY = "55ca8ff9-ef34-47b2-a379-3c10775354e8";
@@ -317,7 +402,6 @@ export default createStore({
       })
       .then((res) => {
         commit("SEARCH_PLACE", res.data.response.body.items.item);
-        console.log(res.data.response.body.items.item);
       })
       .catch((err) => console.log(err));
     },
@@ -375,7 +459,101 @@ export default createStore({
         .catch(() => {
           alert('일정 가져오기 실패')
         })
-    }
+    },
+    getReview: function({commit}, reviewId) {
+      const API_URL = `http://localhost:9999/api/review/detail/` + reviewId;
+
+      return axios({
+        url: API_URL,
+        method: "GET",
+        headers: {
+          "access-token": sessionStorage.getItem("access-token"),
+        },
+      })
+        .then(res => {
+          commit("SET_REVIEW", res.data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    getReviews: function({commit}, exerciseId) {
+      const API_URL = `http://localhost:9999/api/review/list/` + exerciseId;
+
+      return axios({
+        url: API_URL,
+        method: "GET",
+        headers: {
+          "access-token": sessionStorage.getItem("access-token"),
+        },
+      })
+        .then(res => {
+          commit("SET_REVIEWS", res.data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    writeReview: function({commit}, review) {
+      const API_URL = `http://localhost:8080/review/write`;
+      
+      
+      axios({
+        url: API_URL,
+        method: "POST",
+        data: review,
+        headers: {},
+      })
+        .then(() => {
+          commit("WRITE_REVIEW", review);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    deleteReview: function({state}, reviewId) {
+      const API_URL = `http://localhost:8080/review/delete/` + reviewId;
+      
+      axios({
+        url: API_URL,
+        method: "DELETE",
+        headers: {
+          "access-token": sessionStorage.getItem("access-token"),
+        },
+      })
+        .then(() => {
+          alert("삭제 완료!");
+          let index;
+          for (let i = 0; i < state.reviews.length; i++) {
+            if (state.reviews[i].id === reviewId) {
+              index = i;
+            }
+          }
+          state.reviews.splice(index, 1);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    modifyReview: function({commit}, review) {
+      const API_URL = `http://localhost:9999/api/review/update`;
+
+      axios({
+        url: API_URL,
+        method: "PUT",
+        data: review,
+        headers: {
+          "access-token": sessionStorage.getItem("access-token"),
+        },
+      })
+        .then(() => {
+          alert("수정 완료!");
+          commit;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
   },
   modules: {},
 });

@@ -11,6 +11,7 @@ import site.recofit.ssafit.service.ReviewService;
 
 import java.util.List;
 
+@CrossOrigin(origins = { "*" })
 @RestController
 @RequestMapping("/review")
 @RequiredArgsConstructor

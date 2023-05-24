@@ -20,6 +20,7 @@
     "bootstrap-icons-vue": "^1.10.3",
     "core-js": "^3.8.3",
     "v-calendar": "^3.0.3",
+    "cors": "^2.8.5",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
     "vuex": "^4.1.0"

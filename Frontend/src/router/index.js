@@ -7,6 +7,7 @@ import MyPage from '../views/MyPage.vue'
 import CalendarPage from '../views/CalendarPage.vue'
 
 
+
 const routes = [
   {
     path: '/',
