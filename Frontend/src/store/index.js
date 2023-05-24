@@ -1,6 +1,8 @@
 import { createStore } from "vuex";
 import axios from "axios";
 import router from "../router";
+import { createToaster } from "@meforma/vue-toaster";
+const toaster = createToaster({ });
 
 axios.defaults.baseURL = 'http://localhost:8080'
 
@@ -501,6 +503,28 @@ export default createStore({
           console.log(err);
         });
     },
+    searchReviews: function({commit}, information) {
+      console.log(information.place);
+      const API_URL = `/review/search/` + information.place;
+
+      return axios({
+        url: API_URL,
+        method: "GET",
+        params: {
+          title: information.key,
+        },
+        // headers: {
+        //   "access-token": sessionStorage.getItem("access-token"),
+        // },
+      })
+        .then(res => {
+          commit("SET_REVIEWS", res.data);
+          console.log(res.data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
     writeReview: function({commit}, review) {
       const API_URL = '/review/write';
 
@@ -527,7 +551,16 @@ export default createStore({
         // },
       })
         .then(() => {
-          alert("삭제 완료!");
+          toaster.success(`삭제를 완료했습니다`);
+          // alert("삭제 완료!");
+
+          // this.$toast.success(`글이 등록되었습니다.`,
+          //   {
+          //     position:"bottom"
+          //   }
+          // );
+          // setTimeout(this.$toast.clear, 2000)
+          this.$toast.show(`Hey! I'm here`);
           let index;
           for (let i = 0; i < state.reviews.length; i++) {
             if (state.reviews[i].id === reviewId) {

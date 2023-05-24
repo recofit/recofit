@@ -7,8 +7,8 @@
         </div>
 
         <form class="d-flex">
-          <button class="btn" type="button"><i class="bi bi-search"></i></button>
-          <input class="form-control me-2" type="search" placeholder="제목으로 검색" aria-label="Search" size="40" />
+          <button class="btn" type="button" @click="search"><i class="bi bi-search"></i></button>
+          <input class="form-control me-2" type="search" placeholder="제목으로 검색" aria-label="Search" size="40" v-model="info.key"/>
         </form>
       </div>
     </nav>
@@ -20,10 +20,28 @@
 
 <script>
 import WriteModal from './modal/WriteModal.vue'
+import { mapState } from "vuex"
 
 export default {
+  name: "SearchSeciton",
   components: { 
     WriteModal 
+  },
+  data() {
+    return {
+      info: {
+        place : this.$route.params.title,
+        key: "",
+      }
+    }
+  },
+  methods: {
+    search() {
+      this.$store.dispatch("searchReviews", this.info);
+    }
+  },
+  computed: {
+    ...mapState(["reviews"]),
   },
 }
 </script>
