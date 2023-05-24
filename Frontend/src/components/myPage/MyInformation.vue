@@ -34,6 +34,12 @@
       </div>
     </div>
     <div class="container">
+      <div class="section-calendar">
+        <h1>내 일정</h1>
+        <div>
+          <calendar-page />
+        </div>
+      </div>
       <div class="section-content">
         <h1>내 영상</h1>
         <div class="box">
@@ -66,8 +72,12 @@
 <script>
 import { defineComponent } from "vue";
 import { mapState, mapGetters } from "vuex";
+import CalendarPage from "@/views/CalendarPage.vue";
 
 export default defineComponent({
+  components: {
+    CalendarPage,
+  },
   computed: {
     ...mapState(["member", "followers", "followings"]),
     ...mapGetters(["followerCnt", "followingCnt"]),
@@ -152,6 +162,33 @@ export default defineComponent({
 }
 
 .section-content h1:before {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 100%;
+  height: 3px;
+  background-color: #285c4d;
+}
+
+.section-calendar {
+  max-width: 100%;
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 60px;
+  padding: 0 15px;
+}
+.section-calendar h1 {
+  display: inline-block;
+  font-size: 40px;
+  color: #000000;
+  font-weight: 700;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.section-calendar h1:before {
   content: "";
   box-sizing: border-box;
   position: absolute;

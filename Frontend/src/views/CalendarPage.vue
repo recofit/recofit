@@ -1,7 +1,5 @@
 <template>
   <VCalendar :attributes="attributes" :disabled-dates="computedReservations" />
-  <button @click="disabledDays"></button>
-  <button @click="printReservations"></button>
 </template>
 
 <script>
