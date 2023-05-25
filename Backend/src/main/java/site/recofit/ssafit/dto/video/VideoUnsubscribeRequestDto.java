@@ -9,10 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class VideoSubscribeRequestDto {
+public class VideoUnsubscribeRequestDto {
     private int memberId;
     private String videoId;
-    private String channelName;
-    private int viewCnt;
-    private int likeCnt;
 }

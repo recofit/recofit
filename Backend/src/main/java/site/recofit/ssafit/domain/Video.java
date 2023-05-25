@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 public class Video {
     private String id;
-    private String title;
-    private String url;
     private String channelName;
+    private int viewCnt;
+    private int likeCnt;
 }

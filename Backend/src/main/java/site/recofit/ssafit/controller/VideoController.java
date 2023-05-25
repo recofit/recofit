@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import site.recofit.ssafit.dto.video.VideoListRequestDto;
 import site.recofit.ssafit.dto.video.VideoListResponseDto;
 import site.recofit.ssafit.dto.video.VideoSubscribeRequestDto;
+import site.recofit.ssafit.dto.video.VideoUnsubscribeRequestDto;
 import site.recofit.ssafit.service.VideoService;
 
 import java.util.List;
@@ -27,14 +27,14 @@ public class VideoController {
     }
 
     @DeleteMapping()
-    public ResponseEntity<?> unsubscribeVideo(@RequestBody final VideoSubscribeRequestDto requestDto) {
+    public ResponseEntity<?> unsubscribeVideo(@RequestBody final VideoUnsubscribeRequestDto requestDto) {
         videoServiceImpl.unsubscribeVideo(requestDto);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<VideoListResponseDto>> findSubscribeVideo(@RequestBody final VideoListRequestDto requestDto) {
-        List<VideoListResponseDto> responseDtos = videoServiceImpl.selectSubscribeVideo(requestDto);
+    public ResponseEntity<List<VideoListResponseDto>> findSubscribeVideo(@RequestParam final String memberId) {
+        List<VideoListResponseDto> responseDtos = videoServiceImpl.selectSubscribeVideo(memberId);
         return new ResponseEntity<>(responseDtos, HttpStatus.OK);
     }
 }

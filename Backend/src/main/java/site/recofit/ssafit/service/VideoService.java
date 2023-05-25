@@ -1,8 +1,8 @@
 package site.recofit.ssafit.service;
 
-import site.recofit.ssafit.dto.video.VideoListRequestDto;
 import site.recofit.ssafit.dto.video.VideoListResponseDto;
 import site.recofit.ssafit.dto.video.VideoSubscribeRequestDto;
+import site.recofit.ssafit.dto.video.VideoUnsubscribeRequestDto;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public interface VideoService {
 
     void subscribeVideo(final VideoSubscribeRequestDto requestDto);
 
-    void unsubscribeVideo(final VideoSubscribeRequestDto requestDto);
+    void unsubscribeVideo(final VideoUnsubscribeRequestDto requestDto);
 
-    List<VideoListResponseDto> selectSubscribeVideo(final VideoListRequestDto requestDto);
+    List<VideoListResponseDto> selectSubscribeVideo(final String memberId);
 }
