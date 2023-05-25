@@ -15,7 +15,9 @@ export default createStore({
     loginUser: null,
     video: null,
     videos1: [],
+    videoState1: [],
     videos2: [],
+    videoState2: [],
     place: {},
     places: [],
     result: {},
@@ -57,8 +59,14 @@ export default createStore({
     SEARCH_POPULAR_YOUTUBE(state, video) {
       state.videos1.push(video);
     },
+    SET_POPULAR_STATE(state, flag) {
+      state.videoState1.push(flag);
+    },
     SEARCH_LIKE_YOUTUBE(state, videos) {
       state.videos2 = videos;
+    },
+    SET_LIKE_STATE(state, flag) {
+      state.videoState2.push(flag);
     },
     CLICK_VIDEO(state, video) {
       state.video = video;

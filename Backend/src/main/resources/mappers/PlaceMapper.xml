@@ -10,7 +10,7 @@
     </insert>
 
     <select id="findByPlaceId" parameterType="Integer" resultType="Place">
-        SELECT title, venue
+        SELECT id, title, venue
         FROM place
         WHERE id = #{placeId}
     </select>

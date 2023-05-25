@@ -22,27 +22,52 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- <div class="card" data-bs-toggle="modal" data-bs-target="#youtubeModal">
-                                        <img :src="require(`@/assets/img/carousel1.jpg`)" />
-                                        <div class="card-body">
-                                            <span class="card-text">채널명</span><br>
-                                            <i class="bi bi-heart-fill"></i>
-                                        </div>
-                                    </div>
+                                    
                                     <div class="card" data-bs-toggle="modal" data-bs-target="#youtubeModal">
                                         <img :src="require(`@/assets/img/carousel1.jpg`)" />
                                         <div class="card-body">
-                                            <span class="card-text">채널명</span><br>
-                                            <i class="bi bi-heart-fill"></i>
+                                            <span class="card-text channel">채널명</span><br>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="card-text"><i class="bi bi-eye"></i> 3451002 </div><br>
+                                                    <div class="card-text"> <i class="bi bi-hand-thumbs-up"></i> 10452  </div><br>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="heart"><i class="bi bi-heart"></i></div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="card" data-bs-toggle="modal" data-bs-target="#youtubeModal">
-                                        <img :src="require(`@/assets/img/carousel1.jpg`)" />
+                                        <img :src="require(`@/assets/img/carousel2.jpg`)" />
                                         <div class="card-body">
-                                            <span class="card-text">채널명</span><br>
-                                            <i class="bi bi-heart-fill"></i>
+                                            <span class="card-text channel">채널명</span><br>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="card-text"><i class="bi bi-eye"></i> 3451002 </div><br>
+                                                    <div class="card-text"> <i class="bi bi-hand-thumbs-up"></i> 10452  </div><br>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="heart"><i class="bi bi-heart"></i></div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div> -->
+                                    </div>
+                                    <div class="card" data-bs-toggle="modal" data-bs-target="#youtubeModal">
+                                        <img :src="require(`@/assets/img/carousel3.jpg`)" />
+                                        <div class="card-body">
+                                            <span class="card-text channel">채널명</span><br>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="card-text"><i class="bi bi-eye"></i> 3451002 </div><br>
+                                                    <div class="card-text"> <i class="bi bi-hand-thumbs-up"></i> 10452  </div><br>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="heart"><i class="bi bi-heart"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -139,6 +164,7 @@ export default {
     text-align: center;
     margin-bottom: 10ox;
 }
+
 .card {
     width: 25%;
     box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.1);
@@ -146,23 +172,37 @@ export default {
     margin: 2%;
     margin-top: 3%;
 }
+
 .card:hover {
     box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.3);
 }
 .card-body {
-    height: 100px;
+    height: 110px;
 }
 .card-text {
-    margin-top : 5px;
-    color: #285c4d; 
+    height: 5%;
+    margin-top: -3%;
     font-weight: bold;
+    text-align: left;
+    line-height: 2rem;
 }
+
 img {
     width: 100%;
     height: 220px;
 }
+
+.stat {
+    margin-left: 20%;
+}
+
+.heart {
+    margin-right: 20%;
+    text-align: right;
+}
+
 .bi-heart, .bi-heart-fill {
-    font-size: 25px;
+    font-size: 30px;
     color: rgb(204, 99, 99);
 }
 
