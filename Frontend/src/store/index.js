@@ -151,6 +151,21 @@ export default createStore({
           alert('메일 전송에 실패했습니다.');
         })
     },
+    sendContactMail: function ({ commit }, mail) {
+      const API_URL = '/member/mailsender';
+      axios({
+        url: API_URL,
+        method: 'POST',
+        data: mail
+      })
+        .then(() => {
+          commit;
+          alert('메일이 전송되었습니다.')
+        })
+        .catch(() => {
+          alert('메일 전송에 실패했습니다.');
+        })
+    },
     emailVerify: function ({ commit }, code) {
       const API_URL = '/member/verification';
       axios({
