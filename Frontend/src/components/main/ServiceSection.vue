@@ -25,7 +25,7 @@
                         <i class="bi bi-person-check"></i>
                     </span>
                     <h4 class="my-3">회원 정보 관리</h4>
-                    <p class="text-muted">RECOFIT은 마이페이지를 통해 회원 정보를 관리하고 <br> 제공합니다. 회원들은 자신의 개인 정보를 빠르고 <br> 편리하게 확인할 수 있습니다 </p>
+                    <p class="text-muted">RECOFIT은 마이페이지를 통해 회원 정보를 관리하고 <br> 제공합니다. 회원들은 이 곳에서 자신의 정보를 빠르고 <br>편리하게 확인할 수 있습니다 </p>
                 </div>
             </div>
         </div>

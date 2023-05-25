@@ -122,7 +122,7 @@
         <div class="switch__container" id="switch-c1">
           <h2 class="switch__title title">어서오세요!</h2>
           <p class="switch__description description">
-            어서 개인정보를 탈취할 수 있게 알려주세요!
+            회원가입을 통해 RECOFIT과 함께해주세요
           </p>
           <button class="switch__button button switch-btn" @click="toggle">
             회원가입하러 가기
@@ -131,7 +131,7 @@
         <div class="switch__container is-hidden" id="switch-c2">
           <h2 class="switch__title title">다시 돌아오셔서 기뻐요!</h2>
           <p class="switch__description description">
-            저희와 함께하기 위해 로그인하러 가시죠!
+            RECOFIT이 제공하는 서비스를 즐겨보세요
           </p>
           <button class="switch__button button switch-btn" @click="toggle">
             로그인하러 가기

@@ -7,7 +7,6 @@
           <th scope="col">제목</th>
           <th scope="col">작성자</th>
           <th scope="col">평점</th>
-          <th scope="col">추천수</th>
         </tr>
       </thead>
     
@@ -17,11 +16,6 @@
           <td>{{review.title}}</td>
           <td>{{review.name}}</td>
           <td>{{review.rate}} / 5</td>
-          <td>
-            {{review.likeCnt}}
-            <i class="bi bi-hand-thumbs-up" @click="doLike(review)"></i>
-            <i class="bi bi-hand-thumbs-up-fill"></i>
-          </td>
         </tr>
       </tbody>
     </table>

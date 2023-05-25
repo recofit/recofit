@@ -57,7 +57,7 @@ video {
 }
 
 select option {
-    font-weight: 400;
+    font-weight: 600;
 }
 
 .d-flex { 
