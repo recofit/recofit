@@ -11,9 +11,9 @@
               <li><a href="#team">Contact</a></li>
               <li><a href="/search">Search</a></li>
               <li><a href="#"></a></li>
-              <li><a href="/sign">Login</a></li>
-              <li><a href="/mypage/{{ id }}">myPage</a></li>
-              <li><a href="/" @click="logout">Logout</a></li>
+              <li><a v-if="id == null" href="/sign">Login</a></li>
+              <li><a v-if="id" :href="`/mypage/${id}`">myPage</a></li>
+              <li><a v-if="id" href="/" @click="logout">Logout</a></li>
             </ul>
           </nav>
         </span>
@@ -26,8 +26,16 @@
 export default {
   data() {
     return {
-      id: JSON.parse(sessionStorage.getItem("loginUser")).id,
+      id: null,
     };
+  },
+  created() {
+    let key = sessionStorage.getItem("loginUser");
+    if (key != null) {
+      this.id = JSON.parse(sessionStorage.getItem("loginUser")).id;
+    } else {
+      this.id = null;
+    }
   },
   methods: {
     logout() {

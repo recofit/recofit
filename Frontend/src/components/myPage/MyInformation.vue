@@ -19,26 +19,20 @@
             <button
               @click="follower"
               data-bs-toggle="modal"
-              data-bs-target="#followmodal"
+              data-bs-target="#followerModal"
             >
               <b>팔로워</b></button
             >&nbsp;&nbsp;&nbsp;<a>{{ followerCnt }}</a>
             <br />
-            <ol>
-              <li v-for="(follower, index) in followers" :key="index">
-                {{ follower.nickname }}
-              </li>
-            </ol>
           </div>
           <div v-if="id == routerId">
-            <button @click="following"><b>팔로잉</b></button
+            <button
+              @click="following"
+              data-bs-toggle="modal"
+              data-bs-target="#followingModal"
+            >
+              <b>팔로잉</b></button
             >&nbsp;&nbsp;&nbsp;<a>{{ followingCnt }}</a> <br />
-            <ol>
-              <li v-for="(following, index) in followings" :key="index">
-                {{ following.nickname }}
-                <button @click="unfollow(following.id)">팔로우 취소</button>
-              </li>
-            </ol>
           </div>
         </div>
       </div>
@@ -75,6 +69,8 @@
         </div>
       </div>
     </div>
+    <follower-modal />
+    <following-modal />
   </section>
 </template>
 
@@ -83,11 +79,15 @@ import { defineComponent } from "vue";
 import { mapState, mapGetters } from "vuex";
 import CalendarPage from "@/views/CalendarPage.vue";
 import KakaoMap from "@/components/myPage/KakaoMap.vue";
+import FollowerModal from "./modal/FollowerModal.vue";
+import FollowingModal from "./modal/FollowingModal.vue";
 
 export default defineComponent({
   components: {
     KakaoMap,
     CalendarPage,
+    FollowerModal,
+    FollowingModal,
   },
   data() {
     return {
@@ -104,18 +104,19 @@ export default defineComponent({
     // this.$store.dispatch("myInformation", memberId);
 
     this.$store.dispatch("myInformation", this.routerId);
+    this.follower();
+    this.following();
   },
   methods: {
-    unfollow(id) {
-      this.$store.dispatch("unfollow", id);
-    },
     follower() {
-      const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
-      this.$store.dispatch("getFollowers", memberId);
+      // const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
+      // this.$store.dispatch("getFollowers", memberId);
+      this.$store.dispatch("getFollowers", this.routerId);
     },
     following() {
-      const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
-      this.$store.dispatch("getFollowings", memberId);
+      // const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
+      // this.$store.dispatch("getFollowings", memberId);
+      this.$store.dispatch("getFollowings", this.routerId);
     },
   },
 });
