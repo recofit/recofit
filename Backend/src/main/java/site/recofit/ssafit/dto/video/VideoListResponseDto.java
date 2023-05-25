@@ -8,7 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class VideoListResponseDto {
-    private String title;
-    private String url;
+    private String id;
     private String channelName;
+    private int viewCnt;
+    private int likeCnt;
 }
