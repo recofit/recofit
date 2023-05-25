@@ -19,6 +19,8 @@ public interface MemberService {
 
     String verificationSender(final String email) throws MessagingException;
 
+    void contactMailSender(final MemberContactMailRequestDto requestDto) throws MessagingException;
+
     void createBasicVerification(final String email);
 
     void verification(final String code);

@@ -11,6 +11,7 @@ import site.recofit.ssafit.dao.VerificationDao;
 import site.recofit.ssafit.domain.Member;
 import site.recofit.ssafit.domain.Verification;
 import site.recofit.ssafit.dto.member.*;
+import site.recofit.ssafit.properties.GmailProperties;
 import site.recofit.ssafit.properties.aws.AwsStorageProperties;
 import site.recofit.ssafit.service.MemberService;
 import site.recofit.ssafit.utility.aws.AwsS3Manager;
@@ -29,10 +30,9 @@ public class MemberServiceImpl implements MemberService {
     private final MemberDao memberDao;
     private final VerificationDao verificationDao;
 
-//    private final PasswordEncoder passwordEncoder;
-
     private final JavaMailSender mailSender;
 
+    private final GmailProperties gmailProperties;
     private final AwsS3Manager awsS3Manager;
     private final AwsStorageProperties awsStorageProperties;
 
@@ -84,28 +84,6 @@ public class MemberServiceImpl implements MemberService {
         );
 
         return member;
-
-//        final Member member = memberDao.findByEmail(requestDto.getEmail()).orElseThrow(
-//                () -> new MemberException(MemberStatus.NOT_EXISTING_EMAIL)
-//        );
-//
-//        if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
-//            throw new MemberException(MemberStatus.INCORRECT_PASSWORD);
-//        }
-//
-//        final Map<String, Integer> payload = new HashMap<>();
-//
-//        payload.put("id", member.getId());
-//
-//        final Map<String, Integer> refreshPayload = new HashMap<>();
-//
-//        refreshPayload.put("id", member.getId());
-//
-//        return MemberLoginResponseDto.builder()
-//                .nickname(member.getNickname())
-//                .accessToken(accessTokenProvider.generate(payload))
-//                .refreshToken(refreshTokenProvider.generate(refreshPayload))
-//                .build();
     }
 
     @Transactional
@@ -138,6 +116,19 @@ public class MemberServiceImpl implements MemberService {
         mailSender.send(message);
 
         return code;
+    }
+
+    @Transactional
+    public void contactMailSender(final MemberContactMailRequestDto requestDto) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        helper.setTo(gmailProperties.getUsername());
+        helper.setSubject(requestDto.getNickname() + "의 문의입니다.");
+        helper.setText("이메일은 " + requestDto.getEmail() + "입니다.\n\n 문의 내용 : \n" + requestDto.getContent());
+
+        mailSender.send(message);
     }
 
     @Transactional

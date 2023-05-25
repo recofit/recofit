@@ -119,6 +119,13 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(code);
     }
 
+    @PostMapping("/mailsender")
+    public ResponseEntity<Void> contactMailSender(@RequestBody final MemberContactMailRequestDto requestDto) throws MessagingException {
+        memberService.contactMailSender(requestDto);
+
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/verification")
     public ResponseEntity<Void> verify(@RequestParam final String code) {
         memberService.verification(code);
