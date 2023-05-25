@@ -25,7 +25,7 @@ public interface MemberService {
 
     void verification(final String code);
 
-    void follow(final int followerId, final int followingId);
+    void follow(final int followerId, final String followingName);
 
     void unfollow(final int followerId, final int followingId);
 

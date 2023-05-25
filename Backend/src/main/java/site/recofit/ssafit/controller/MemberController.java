@@ -1,15 +1,11 @@
 package site.recofit.ssafit.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.http.*;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import site.recofit.ssafit.domain.Member;
 import site.recofit.ssafit.dto.member.*;
 import site.recofit.ssafit.security.oauth2.kakao.KakaoService;
@@ -17,8 +13,6 @@ import site.recofit.ssafit.service.MemberService;
 import site.recofit.ssafit.utility.jwt.JwtUtil;
 
 import javax.mail.MessagingException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -134,11 +128,11 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/follow/{followingId}")
+    @PostMapping("/follow/{followingName}")
     public ResponseEntity<Void> follow(@RequestParam int followerId,
-                                       @PathVariable int followingId) {
+                                       @PathVariable String followingName) {
 
-        memberService.follow(followerId, followingId);
+        memberService.follow(followerId, followingName);
 
         return ResponseEntity.ok().build();
     }
@@ -186,17 +180,5 @@ public class MemberController {
         final MemberPictureUploadResponseDto responseDto = memberService.uploadPicture(memberId, requestDto);
 
         return ResponseEntity.ok().body(responseDto);
-    }
-
-    @PostMapping("/example/{pathVariableId}")
-    public ResponseEntity<Void> example(
-//            @AuthenticationPrincipal final MemberDetails memberDetails,
-            @PathVariable int pathVariableId) {
-//        final int exampleId2 = memberDetails.getId();
-        final int exampleId = 1;
-
-        memberService.follow(exampleId, pathVariableId);
-
-        return ResponseEntity.ok().build();
     }
 }

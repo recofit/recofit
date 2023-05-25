@@ -22,14 +22,14 @@
 
         <div class="modal-body">
           <div class="d-grid gap-2 d-md-block">
-            <div class="mb-3">
+            <!-- <div class="mb-3">
               <input
                 type="text"
                 class="form-control"
                 placeholder="`${member.nickname}`"
                 v-model="member.nickname"
               />
-            </div>
+            </div> -->
             <div class="mb-3">
               <input
                 id="file"
@@ -76,8 +76,8 @@ export default {
     return {
       image: "",
       id: JSON.parse(sessionStorage.getItem("loginUser")).id,
-      nickname: JSON.parse(sessionStorage.getItem("loginUser")).nickname,
-      nickbool: true,
+      // nickname: JSON.parse(sessionStorage.getItem("loginUser")).nickname,
+      // nickbool: true,
       picbool: true,
     };
   },
@@ -92,19 +92,19 @@ export default {
       let form = new FormData();
       form.append("pictureFile", this.image);
 
-      if (this.member.nickname == this.nickname) {
-        this.nickbool = false;
-      }
+      // if (this.member.nickname == this.nickname) {
+      //   this.nickbool = false;
+      // }
       if (this.image == "") {
         this.picbool = false;
       }
 
       let data = {
         form: form,
-        nickname: this.member.nickname,
+        // nickname: this.member.nickname,
         memberId: this.id,
         picbool: this.picbool,
-        nickbool: this.nickbool,
+        // nickbool: this.nickbool,
       };
 
       this.$store.dispatch("editProfile", data);
