@@ -15,12 +15,17 @@ export default createStore({
     loginUser: null,
     
     video: null,
+    
     videoChannel1: [],
     videoInfo1: [],
     videoState1: [],
-    vodeoChannel2: [],
+    
+    videoChannel2: [],
     videoInfo2: [],
     videoState2: [],
+    
+    likeVideos1: [],
+    likeVideos2: [],
 
     place: {},
     places: [],
@@ -71,17 +76,35 @@ export default createStore({
     SET_POPULAR_STATE(state, flag) {
       state.videoState1.push(flag);
     },
-    SET_LIKE_CHANNEL(state, channel) {
-      state.videoChannel2.push(channel);
+    SET_LIKE_CHANNEL(state, snippet) {
+      state.videoChannel2.push(snippet.channelTitle);
     },
-    SET_LIKE_INFO(state, info) {
-      state.videoInfo2.push(info);
+    SET_LIKE_INFO(state, information) {
+      state.videoInfo2.push(information);
     },
     SET_LIKE_STATE(state, flag) {
       state.videoState2.push(flag);
     },
     CLICK_VIDEO(state, video) {
       state.video = video;
+    },
+    SET_LIKE_VIDEOS1(state, id) {
+      state.likeVideos1.push(id);
+    },
+    SET_LIKE_VIDEOS2(state, id) {
+      state.likeVideos2.push(id);
+    },
+    FLUSH_POPULAR(state) {
+      state.videoChannel1 = [];
+      state.videoInfo1 = [];
+      state.videoState1 = [];
+      state.likeVideos1 = [];
+    },
+    FLUSH_LIKE(state) {
+      state.videoChannel2 = [];
+      state.videoInfo2 = [];
+      state.videoState2 = [];
+      state.likeVideos2 = [];
     },
     SEARCH_PLACE(state, results) {
       state.results = results;
@@ -365,8 +388,10 @@ export default createStore({
       commit('SET_RESERVATION', reservation);
     },
     searchPopularYoutube({commit}, payload) {
+      commit('FLUSH_POPULAR');
+
       const URL = "https://www.googleapis.com/youtube/v3/search";
-      const API_KEY = "AIzaSyBH872nJMrMtQ1WkEI-dwrg6Zz0sty1Krs";
+      const API_KEY = "";
       axios({
         url: URL,
         method: "GET",
@@ -377,10 +402,28 @@ export default createStore({
           videoCategoryId: 17,
           q: payload,
           type: "video",
-          maxResults: 1,
+          maxResults: 2,
         },
       })
       .then((res) => {
+        const API_URL = '/video/list';
+
+        axios({
+          url: API_URL,
+          method: "GET",
+          params: {
+            memberId: JSON.parse(sessionStorage.getItem("loginUser")).nickname,
+          },
+        })
+          .then((res) => {
+            for (let i = 0; i < res.data.length; i++) {
+              commit("SET_LIKE_VIDEOS1", res.data[i].id);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+
         for (const item of res.data.items) {
           commit("SET_POPULAR_CHANNEL", item.snippet);
 
@@ -395,20 +438,15 @@ export default createStore({
           })
           .then((res) => {
             commit("SET_POPULAR_INFO", res.data.items[0]);
-          })
-          .catch((err) => console.log(err))
+            
+            let flag = false;
+            for (let i = 0; i < this.likeVideos1.length; i++) {
+              if (res.data.items[0].id === this.likeVideos1[i]) {
+                flag = true;
+              }
+            }
 
-          axios({
-            url: "https://www.googleapis.com/youtube/v3/videos",
-            method: "GET",
-            params: {
-              key: API_KEY,
-              part: "statistics",
-              id: item.id.videoId,
-            },
-          })
-          .then((res) => {
-            commit("SET_POPULAR_INFO", res.data.items[0]);
+            commit("SET_POPULAR_STATE", flag);
           })
           .catch((err) => console.log(err))
         }
@@ -416,8 +454,10 @@ export default createStore({
       .catch((err) => console.log(err));
     },
     searchLikeYoutube({commit}, payload) {
+      commit('FLUSH_LIKE');
+
       const URL = "https://www.googleapis.com/youtube/v3/search";
-      const API_KEY = "AIzaSyBH872nJMrMtQ1WkEI-dwrg6Zz0sty1Krs";
+      const API_KEY = "";
       axios({
         url: URL,
         method: "GET",
@@ -431,9 +471,51 @@ export default createStore({
         },
       })
       .then((res) => {
-        commit("SEARCH_LIKE_YOUTUBE", res.data.items);
+        const API_URL = '/video/list';
+
+        axios({
+          url: API_URL,
+          method: "GET",
+          params: {
+            memberId: JSON.parse(sessionStorage.getItem("loginUser")).nickname,
+          },
+        })
+          .then((res) => {
+            for (let i = 0; i < res.data.length; i++) {
+              commit("SET_LIKE_VIDEOS2", res.data[i].id);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+
+        for (const item of res.data.items) {
+          commit("SET_LIKE_CHANNEL", item.snippet);
+
+          axios({
+            url: "https://www.googleapis.com/youtube/v3/videos",
+            method: "GET",
+            params: {
+              key: API_KEY,
+              part: "statistics",
+              id: item.id.videoId,
+            },
+          })
+          .then((res) => {
+            commit("SET_LIKE_INFO", res.data.items[0]);
+
+            let flag = false;
+            for (let i = 0; i < this.likeVideos2.length; i++) {
+              if (res.data.items[0].id === this.likeVideos2[i]) {
+                flag = true;
+              }
+            }
+            commit("SET_LIKE_STATE", flag);
+          })
+          .catch((err) => console.log(err))
+        }
       })
-      .catch((err) => console.log(err))
+      .catch((err) => console.log(err));
     },
     clickVideo({commit}, payload) {
       commit("CLICK_VIDEO", payload);
