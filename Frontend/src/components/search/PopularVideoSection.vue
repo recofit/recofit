@@ -10,7 +10,7 @@
                         <div class="container container-top">
                             <div class="row" >
                                 <div class="col">
-                                    <div class="card" v-for="(video, idx) in videoInfo1.slice(0, 2)" :key="video.id" :video="video">
+                                    <div class="card" v-for="(video, idx) in videoInfo1.slice(0, 3)" :key="video.id" :video="video">
                                         <img :src="`http://i.ytimg.com/vi/${video.id}/maxresdefault.jpg`" @click="clickVideo(video)" data-bs-toggle="modal" data-bs-target="#youtubeModal"/>
                                         <div class="card-body">
                                             <span class="card-text channel">{{videoChannel1[idx]}}</span><br>
@@ -28,61 +28,6 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    <!-- <div class="card">
-                                        <img :src="require(`@/assets/img/carousel1.jpg`)" data-bs-toggle="modal" data-bs-target="#youtubeModal" />
-                                        <div class="card-body">
-                                            <span class="card-text channel">채널명</span><br>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <div class="card-text"><i class="bi bi-eye"></i> 3451002 </div><br>
-                                                    <div class="card-text"> <i class="bi bi-hand-thumbs-up"></i> 10452  </div><br>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="heart" @click="doSubscribe(idx)">
-                                                        <i v-if="!videoState1[idx]" class="bi bi-heart"></i>
-                                                        <i v-if="videoState1[idx]" class="bi bi-heart-fill"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card">
-                                        <img :src="require(`@/assets/img/carousel2.jpg`)" data-bs-toggle="modal" data-bs-target="#youtubeModal" />
-                                        <div class="card-body">
-                                            <span class="card-text channel">채널명</span><br>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <div class="card-text"><i class="bi bi-eye"></i> 3451002 </div><br>
-                                                    <div class="card-text"> <i class="bi bi-hand-thumbs-up"></i> 10452  </div><br>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="heart" @click="doSubscribe(idx)">
-                                                        <i v-if="!state" class="bi bi-heart"></i>
-                                                        <i v-if="state" class="bi bi-heart-fill"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card">
-                                        <img :src="require(`@/assets/img/carousel3.jpg`)" data-bs-toggle="modal" data-bs-target="#youtubeModal" />
-                                        <div class="card-body">
-                                            <span class="card-text channel">채널명</span><br>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <div class="card-text"><i class="bi bi-eye"></i> 3451002 </div><br>
-                                                    <div class="card-text"> <i class="bi bi-hand-thumbs-up"></i> 10452  </div><br>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="heart">
-                                                        <i class="bi bi-heart"></i>
-                                                        <i class="bi bi-heart-fill"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -90,19 +35,30 @@
 
                     <!-- <div class="carousel-item" style="width: 100%; overflow: hidden">
                         <div class="container container-bottom">
-                            <div class="row">
+                            <div class="row" >
                                 <div class="col">
-                                    <div class="card" v-for="video in videos1.slice(3, 6)" :key="video.id.videoId" :video="video">
-                                        <img :src="video.snippet.thumbnails.high.url" />
+                                    <div class="card" v-for="(video, idx) in videoInfo1.slice(3, 6)" :key="video.id" :video="video">
+                                        <img :src="`http://i.ytimg.com/vi/${video.id}/maxresdefault.jpg`" @click="clickVideo(video)" data-bs-toggle="modal" data-bs-target="#youtubeModal"/>
                                         <div class="card-body">
-                                            <span class="card-text">{{video.snippet.channelTitle}}</span>
+                                            <span class="card-text channel">{{videoChannel1[idx]}}</span><br>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="card-text"><i class="bi bi-eye"></i> {{video.statistics.viewCount}} </div><br>
+                                                    <div class="card-text"> <i class="bi bi-hand-thumbs-up"></i> {{video.statistics.likeCount}} </div><br>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="heart">
+                                                        <i v-if="!videoState1[idx]" @click="subscribe(idx, video, videoChannel1[idx])" class="bi bi-heart"></i>
+                                                        <i v-if="videoState1[idx]" @click="unsubscribe(idx, video)" class="bi bi-heart-fill"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div> -->
-
                 </div>
                 
                 <button class="carousel-control-prev" type="button" data-bs-target="#popular-video" data-bs-slide="prev">
@@ -127,11 +83,6 @@ import YoutubeModal from './modal/YoutubeModal.vue'
 
 export default {
     name: "PopularVideoSection",
-    data() {
-        return {
-            state: true,
-        };
-    },
     components: { 
         YoutubeModal,
     },
@@ -152,8 +103,9 @@ export default {
         ...mapState(['videoChannel1', 'videoInfo1', 'videoState1']),
     },
     created() {
-        // this.$store.dispatch("searchPopularYoutube", "다이어트");
-    }
+        this.$store.dispatch("searchPopularYoutube", "다이어트");
+    },
+
 }
 </script>
 

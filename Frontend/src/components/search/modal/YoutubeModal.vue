@@ -5,10 +5,9 @@
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="d-grid gap-2 d-md-block">
-                        <div class="box">
-                            <iframe v-if="video" width="900" height="600" :src="videoURL" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                            <!-- <iframe width="900" height="600" :src="videoURL" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> -->
-                        </div>
+                            <div class="box">
+                                <iframe v-if="video" width="900" height="600" :src="videoURL" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -28,7 +27,6 @@ export default {
         videoURL() {
             const videoId = this.video.id;
             return `https://www.youtube.com/embed/${videoId}`;
-            // return `https://www.youtube.com/embed/7TLk7pscICk`;
         }
     },
 }
