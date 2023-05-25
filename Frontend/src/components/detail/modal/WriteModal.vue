@@ -62,7 +62,7 @@ export default {
   methods: {
     writeReview() {   
       let review = {
-        memberId: 2,
+        memberId: JSON.parse(sessionStorage.getItem("loginUser")).id,
         placeId: this.$store.state.result.title,
         title: this.title,
         content: this.content,

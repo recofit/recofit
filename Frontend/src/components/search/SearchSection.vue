@@ -30,9 +30,8 @@ export default {
     },
     methods: {
         search() {
-            // this.$store.dispatch("searchLikeYoutube", this.info.keyword);
+            this.$store.dispatch("searchLikeYoutube", this.info.keyword);
             this.$store.dispatch("searchPopularYoutube", this.info.keyword);
-
             this.$store.dispatch("searchPlace", this.info);
         }
     },
@@ -58,7 +57,7 @@ video {
 }
 
 select option {
-    font-weight: 400;
+    font-weight: 600;
 }
 
 .d-flex { 

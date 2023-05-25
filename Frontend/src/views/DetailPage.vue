@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import HeaderSection from '@/components/common/HeaderSection.vue'
+import HeaderSection from '@/components/common/SimpleHeaderSection.vue'
 import InformationSection from '../components/detail/InformationSection.vue'
 import SearchSection from '../components/detail/SearchSection.vue'
 import ReviewSection from '../components/detail/ReviewSection.vue'

@@ -79,6 +79,9 @@
 </template>
 
 <script>
+import { createToaster } from "@meforma/vue-toaster";
+const toaster = createToaster({ });
+
 export default {
   data() {
     return {
@@ -95,7 +98,7 @@ export default {
         nickname: this.nickname,
       };
 
-      alert("메일 전송에 수분이 소요될 수 있습니다.");
+      toaster.info(`메일 전송에 약간의 시간이 소요될 수 있습니다`);
       this.$store.dispatch("sendContactMail", mail);
     },
   },

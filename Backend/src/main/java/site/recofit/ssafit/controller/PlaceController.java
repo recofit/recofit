@@ -20,7 +20,6 @@ public class PlaceController {
     @PostMapping("")
     public ResponseEntity<?> registPlace(@RequestBody final Place place) {
         service.registPlace(place);
-
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 

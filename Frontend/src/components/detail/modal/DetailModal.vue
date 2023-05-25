@@ -14,21 +14,13 @@
             <h2 class="title"><strong>{{review.title}}</strong></h2>
             <p>작성자 : {{review.name}}</p>
             <p>평점   : {{review.rate}} / 5</p>
-            <p>추천수 : {{review.likeCnt}}회</p>
             <br><hr>
             <p>{{review.content}}</p>
           </div>
         </div>
       </div>
 
-      <!-- <div class="modal-footer" v-if="review.name === user.name">
-        <div class="d-grid gap-2 d-md-block">
-          <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modifyModal">수정</button>
-          <button type="submit" class="btn btn-outline-danger" @click="deleteReview(review.id)">삭제</button>
-        </div>
-      </div> -->
-
-      <div class="modal-footer">
+      <div class="modal-footer" v-if="review.name == userName">
         <div class="d-grid gap-2 d-md-block">
           <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modifyModal">수정</button>
           <button type="submit" class="btn btn-outline-danger" @click="deleteReview(review.id)">삭제</button>
@@ -45,17 +37,24 @@ import {mapState} from "vuex"
 
 export default {
   name: "DetailModal",
+  data() {
+    return {
+      userName: "",
+    }
+  },
   methods: {
     deleteReview(id) {
       this.$store.dispatch("deleteReview", id);
       this.$router.go(0);
-      this.$toast.info(`삭제를 완료했습니다`);
     }
   },
   computed: {
     // ...mapGetters(["user"])
     ...mapState(["review", "result"]),
   },
+  created() {
+    this.userName = JSON.parse(sessionStorage.getItem("loginUser")).nickname;
+  }
   
 }
 </script>
