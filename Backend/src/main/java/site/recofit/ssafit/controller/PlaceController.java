@@ -17,8 +17,11 @@ public class PlaceController {
 
     @PostMapping("")
     public ResponseEntity<?> registPlace(@RequestBody final Place place) {
-        if (service.findByPlaceName(place.getTitle()) != null)
+        if (service.findByPlaceId(place.getId()) != null) {
+            System.out.println(place.getTitle());
             return new ResponseEntity<Void>(HttpStatus.ALREADY_REPORTED);
+        }
+
 
         service.registPlace(place);
 
