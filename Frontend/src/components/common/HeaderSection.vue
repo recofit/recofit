@@ -1,35 +1,40 @@
 <template>
-    <header class="header">
-        <div class="container">
-            <div class="row justify-content-between align-items-center">
-                <span class="brand-name">
-                    <a href="/" class="left">RECOFIT</a>
-                    <nav class="nav">
-                        <ul>
-                            <li><a href="#carouselExample">Home</a></li>
-                            <li><a href="#information">Information</a></li>
-                            <li><a href="#team">Contact</a></li>
-                            <li><a href="/search">Search</a></li>
-                            <li><a href="#"></a></li>
-                            <li><a href="/sign">Login</a></li>
-                            <li><a href="/mypage">myPage</a></li>
-                            <li><a href="/" @click="logout">Logout</a></li>
-                        </ul>
-                    </nav>
-                </span>
-            </div>
-        </div>
-    </header>
+  <header class="header">
+    <div class="container">
+      <div class="row justify-content-between align-items-center">
+        <span class="brand-name">
+          <a href="/" class="left">RECOFIT</a>
+          <nav class="nav">
+            <ul>
+              <li><a href="#carouselExample">Home</a></li>
+              <li><a href="#information">Information</a></li>
+              <li><a href="#team">Contact</a></li>
+              <li><a href="/search">Search</a></li>
+              <li><a href="#"></a></li>
+              <li><a href="/sign">Login</a></li>
+              <li><a href="/mypage/{{ id }}">myPage</a></li>
+              <li><a href="/" @click="logout">Logout</a></li>
+            </ul>
+          </nav>
+        </span>
+      </div>
+    </div>
+  </header>
 </template>
 
 <script>
 export default {
-    methods: {
-        logout() {
-            this.$store.dispatch('logout');
-        },
-    }
-}
+  data() {
+    return {
+      id: JSON.parse(sessionStorage.getItem("loginUser")).id,
+    };
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch("logout");
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -43,10 +48,10 @@ export default {
   transition: all 0.5s ease;
 }
 
-.header .brand-name{
+.header .brand-name {
   padding: 0 15px;
 }
-.header .brand-name a{
+.header .brand-name a {
   text-decoration: none;
   font-size: 40px;
   color: #285c4d;
@@ -59,7 +64,7 @@ export default {
   color: #17382f;
 }
 
-.header .nav{
+.header .nav {
   float: right;
 }
 .header .nav ul {

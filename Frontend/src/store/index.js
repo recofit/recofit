@@ -240,9 +240,18 @@ export default createStore({
           alert('나가지마!')
         })
     },
-    myInformation: function ({ commit }) {
-      const member = JSON.parse(sessionStorage.getItem("loginUser"));
-      commit('MY_INFORMAITON', member);
+    myInformation: function ({ commit }, memberId) {
+      const API_URL = '/member';
+      axios({
+        url: API_URL,
+        method: 'GET',
+        params: { memberId },
+      })
+        .then((res) => {
+          commit('MY_INFORMAITON', res.data);
+        })
+      // const member = JSON.parse(sessionStorage.getItem("loginUser"));
+      // commit('MY_INFORMAITON', member);
     },
     getFollowers: function ({ commit }, memberId) {
       const API_URL = '/member/follower';
