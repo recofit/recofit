@@ -12,7 +12,28 @@
             <div class="section-title">
               <h1>{{ member.nickname }}</h1>
               <br />
-              <button v-if="id == routerId">수정</button>
+              <!-- <button
+                v-if="id == routerId"
+                data-bs-toggle="modal"
+                data-bs-target="#nicknameModifyModal"
+              >
+                닉네임 수정
+              </button>
+              <button
+                v-if="id == routerId"
+                data-bs-toggle="modal"
+                data-bs-target="#pictureModifyModal"
+              >
+                프로필 사진 수정
+              </button> -->
+              <button
+                class="edit-button"
+                v-if="id == routerId"
+                data-bs-toggle="modal"
+                data-bs-target="#profileModifyModal"
+              >
+                프로필 수정
+              </button>
             </div>
           </div>
           <div v-if="id == routerId">
@@ -71,6 +92,9 @@
     </div>
     <follower-modal />
     <following-modal />
+    <!-- <nickname-modify-modal />
+    <picture-modify-modal /> -->
+    <profile-modify-modal />
   </section>
 </template>
 
@@ -81,6 +105,9 @@ import CalendarPage from "@/views/CalendarPage.vue";
 import KakaoMap from "@/components/myPage/KakaoMap.vue";
 import FollowerModal from "./modal/FollowerModal.vue";
 import FollowingModal from "./modal/FollowingModal.vue";
+// import NicknameModifyModal from "./modal/NicknameModifyModal.vue";
+// import PictureModifyModal from "./modal/PictureModifyModal.vue";
+import ProfileModifyModal from "./modal/ProfileModifyModal.vue";
 
 export default defineComponent({
   components: {
@@ -88,6 +115,9 @@ export default defineComponent({
     CalendarPage,
     FollowerModal,
     FollowingModal,
+    // NicknameModifyModal,
+    // PictureModifyModal,
+    ProfileModifyModal,
   },
   data() {
     return {
@@ -145,6 +175,12 @@ export default defineComponent({
   width: 30%;
 }
 
+.edit-button {
+  background-color: #285c4d;
+  border: solid 2px;
+  border-radius: 5px;
+  color: white;
+}
 .img-box {
   border-radius: 70%;
   width: 250px;
