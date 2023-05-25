@@ -1,5 +1,5 @@
 <template>
-    <h3 class="view-title"><strong>좋아요 <span class="color">TOP</span> 영상</strong></h3>
+    <h3 class="view-title"><strong>실시간 <span class="color">HOT</span> 영상</strong></h3>
     <div class="video-section">
         <div class="box">
             <div id="like-video" class="carousel carousel-dark slide">

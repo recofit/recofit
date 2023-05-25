@@ -119,7 +119,7 @@
         <div class="switch__container is-hidden" id="switch-c2">
           <h2 class="switch__title title">다시 돌아오셔서 기뻐요!</h2>
           <p class="switch__description description">
-            RECOFIT이 제공하는 서비스를 즐겨보세요
+            RECOFIT에서 제공하는 서비스를 즐겨보세요
           </p>
           <button class="switch__button button switch-btn" @click="toggle">
             로그인하러 가기

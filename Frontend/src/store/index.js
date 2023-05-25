@@ -497,7 +497,7 @@ export default createStore({
           videoCategoryId: 17,
           q: payload,
           type: "video",
-          maxResults: 2,
+          maxResults: 1,
         },
       })
       .then((res) => {
@@ -562,7 +562,7 @@ export default createStore({
           videoCategoryId: 17,
           q: payload,
           type: "video",
-          maxResults: 2,
+          maxResults: 1,
         },
       })
       .then((res) => {
@@ -611,9 +611,6 @@ export default createStore({
         }
       })
       .catch((err) => console.log(err));
-    },
-    clickVideo({commit}, payload) {
-      commit("CLICK_VIDEO", payload);
     },
     doSubscribe({commit}, payload) {
       const API_URL = '/video';
