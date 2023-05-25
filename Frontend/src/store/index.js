@@ -250,6 +250,9 @@ export default createStore({
           toaster.error('로그인에 실패했습니다');
         })
     },
+    clickVideo({commit}, payload) {
+      commit("CLICK_VIDEO", payload);
+    },
     kakaologin: function ({ commit }) {
       const API_URL = '/kakao/login';
       const KAKAO_URL = 'https://kauth.kakao.com/oauth/authorize'
@@ -329,11 +332,14 @@ export default createStore({
         //   alert('내 팔로잉이 이상해')
         // })
     },
-    unfollow: function ({ commit }, id) {
-      const API_URL = '/member/unfollow/' + id;
+    unfollow: function ({ commit }, data) {
+      const API_URL = '/member/unfollow/' + data.followingId;
       axios({
         url: API_URL,
-        method: 'DELETE'
+        method: 'DELETE',
+        params: {
+          followerId: data.followerId
+        }
       })
         .then(() => {
           commit;
@@ -342,6 +348,80 @@ export default createStore({
         .catch(() => {
           toaster.error('요청에 실패했습니다');
         })
+    },
+    modifyProfile: function ({ commit }, data) {
+      console.log(data.memberId)
+      const API_URL = '/member/' + data.memberId;
+      axios({
+        url: API_URL,
+        method: 'PATCH',
+        data: data
+      })
+        .then(() => {
+          commit;
+          let jsondata = JSON.parse(sessionStorage.getItem('loginUser'));
+          jsondata.nickname = data.nickname;
+          sessionStorage.setItem('loginUser', JSON.stringify(jsondata));
+          router.go(0)
+        });
+    },
+    uploadPicture: function ({ commit }, data) {
+      const API_URL = '/member/picture/' + data.memberId;
+      console.log(data.form)
+      axios({
+        url: API_URL,
+        method: 'PATCH',
+        data: data.form,
+        header: { 'Content-Type': 'multipart/form-data' }
+      })
+        .then(() => {
+          commit
+          let jsondata = JSON.parse(sessionStorage.getItem('loginUser'));
+          jsondata.picture = data.picture;
+          sessionStorage.setItem('loginUser', JSON.stringify(jsondata));
+          router.go(0) 
+        })
+    },
+    editProfile: function ({ commit }, data) {
+      let PIC_URL = '/member/picture/' + data.memberId;
+      if (data.picbool) {
+        axios({
+          url: PIC_URL,
+          method: 'PATCH',
+          data: data.form,
+          header: { 'Content-Type': 'multipart/form-data' }
+        })
+          .then(() => {
+            commit
+            let jsondata = JSON.parse(sessionStorage.getItem('loginUser'));
+            jsondata.picture = data.picture;
+            sessionStorage.setItem('loginUser', JSON.stringify(jsondata));
+          })
+          .catch((e) => {
+            alert(e);
+          });
+      }
+      
+      let NICK_URL = '/member/' + data.memberId;
+      if (data.nickbool) {
+        axios({
+          url: NICK_URL,
+          method: 'PATCH',
+          data: {
+            nickname: data.nickname
+          }
+        })
+          .then(() => {
+            commit;
+            let jsondata = JSON.parse(sessionStorage.getItem('loginUser'));
+            jsondata.nickname = data.nickname;
+            sessionStorage.setItem('loginUser', JSON.stringify(jsondata));
+          })
+          .catch((e) => {
+            alert(e);
+          });
+      }
+      
     },
     createReservation: function({ commit }, data) {
       const API_URL = '/reservation/write';

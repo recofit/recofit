@@ -10,16 +10,24 @@
       <div class="modal-content">
         <div class="modal-body">
           <div class="d-grid gap-2 d-md-block">
-            <div
-              class="box"
-              style="display: flex; justify-content: space-between"
-            >
-              <ol>
-                <li v-for="(following, index) in followings" :key="index">
-                  {{ following.nickname }}
-                  <button @click="unfollow(following.id)">팔로우 취소</button>
-                </li>
-              </ol>
+            <div class="box">
+              <div
+                class="vfor"
+                v-for="(following, index) in followings"
+                :key="index"
+              >
+                <button class="wrapper" @click="movePage(following.id)">
+                  <div class="picture-wrapper">
+                    <img :src="`${following.picture}`" />
+                  </div>
+                  <div class="nickname-wrapper">
+                    {{ following.nickname }}
+                  </div>
+                </button>
+                <button class="unfollow" @click="unfollow(following.id)">
+                  unfollow
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -36,9 +44,22 @@ export default {
   computed: {
     ...mapState(["followings"]),
   },
+  data() {
+    return {
+      myId: JSON.parse(sessionStorage.getItem("loginUser")).id,
+    };
+  },
   methods: {
     unfollow(id) {
-      this.$store.dispatch("unfollow", id);
+      let data = {
+        followingId: id,
+        followerId: this.myId,
+      };
+      this.$store.dispatch("unfollow", data);
+    },
+    movePage(id) {
+      this.$router.push("/mypage/" + id);
+      setTimeout(() => this.$router.go(0), 100);
     },
   },
 };
@@ -54,9 +75,44 @@ export default {
   height: 100%;
   object-fit: cover;
 }
+.vfor {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: solid 2px;
+  border-radius: 5px;
+  border-color: #285c4d;
+}
+.wrapper {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 75%;
+  height: 100px;
+  background-color: white;
+  border: none;
+}
+.picture-wrapper img {
+  width: 100px;
+  height: 100px;
+}
+
+.nickname-wrapper {
+  width: 200px;
+  font-size: 30px;
+}
 
 .modal-dialog {
   width: 30%;
+}
+
+.unfollow {
+  border: solid 1px;
+  border-radius: 2px;
+  background-color: #285c4d;
+  color: white;
 }
 
 .video-section {

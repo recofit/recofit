@@ -12,4 +12,5 @@ import lombok.Setter;
 public class MemberFollowListResponseDto {
     private final int id;
     private final String nickname;
+    private final String picture;
 }

@@ -26,9 +26,10 @@ public class ReservationServiceImpl implements ReservationService {
     public ReservationRegistResponseDto createReservation(final ReservationRegistRequestDto requestDto) {
         // 날짜 가능한지에 대한 유효성 검사 필요여부 차후 판단
 
-        Place place = placeDao.findByPlaceName(requestDto.getPlaceName());
+        Place place = placeDao.findByPlaceName(requestDto.getPlaceName()).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 장소가 없습니다.")
+        );
 
-        System.out.println(place.getId());
         Reservation reservation = Reservation.builder()
                 .memberId(requestDto.getMemberId())
                 .placeId(place.getId())
@@ -50,7 +51,9 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     public List<ReservationReadResponseDto> findPlaceReservationList(final String placeName) {
-        Place place = placeDao.findByPlaceName(placeName);
+        Place place = placeDao.findByPlaceName(placeName).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 장소가 없습니다.")
+        );
 
         List<Reservation> reservationList = reservationDao.findByPlaceId(place.getId());
 
