@@ -18,10 +18,10 @@
     </select>
 
     <!-- 유저의 구독 영상 조회 -->
-    <select id="findByMemberId" parameterType="Integer" resultType="Video">
-        SELECT channel_name AS channelName, view_cnt AS viewCnt, like_cnt AS likeCnt
+    <select id="findByMemberId" parameterType="String" resultType="Video">
+        SELECT video.id, channel_name AS channelName, view_cnt AS viewCnt, like_cnt AS likeCnt
         FROM video_subscribe join video on video_subscribe.video_id = video.id
-        WHERE member_id = #{memberId}
+        WHERE member_name = #{memberName}
     </select>
 
     <!-- 영상 구독 등록 -->

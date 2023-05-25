@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import site.recofit.ssafit.dto.video.VideoListRequestDto;
 import site.recofit.ssafit.dto.video.VideoListResponseDto;
 import site.recofit.ssafit.dto.video.VideoSubscribeRequestDto;
 import site.recofit.ssafit.dto.video.VideoUnsubscribeRequestDto;
@@ -34,8 +33,8 @@ public class VideoController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<VideoListResponseDto>> findSubscribeVideo(@RequestBody final VideoListRequestDto requestDto) {
-        List<VideoListResponseDto> responseDtos = videoServiceImpl.selectSubscribeVideo(requestDto);
+    public ResponseEntity<List<VideoListResponseDto>> findSubscribeVideo(@RequestParam final String memberId) {
+        List<VideoListResponseDto> responseDtos = videoServiceImpl.selectSubscribeVideo(memberId);
         return new ResponseEntity<>(responseDtos, HttpStatus.OK);
     }
 }

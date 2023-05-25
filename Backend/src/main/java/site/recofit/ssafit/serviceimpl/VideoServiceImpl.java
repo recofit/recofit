@@ -7,7 +7,6 @@ import site.recofit.ssafit.dao.MemberDao;
 import site.recofit.ssafit.dao.VideoDao;
 import site.recofit.ssafit.domain.Member;
 import site.recofit.ssafit.domain.Video;
-import site.recofit.ssafit.dto.video.VideoListRequestDto;
 import site.recofit.ssafit.dto.video.VideoListResponseDto;
 import site.recofit.ssafit.dto.video.VideoSubscribeRequestDto;
 import site.recofit.ssafit.dto.video.VideoUnsubscribeRequestDto;
@@ -65,9 +64,7 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Override
-    public List<VideoListResponseDto> selectSubscribeVideo(VideoListRequestDto requestDto) {
-
-        int memberId = requestDto.getMemberId();
+    public List<VideoListResponseDto> selectSubscribeVideo(String memberId) {
 
         List<Video> videoList = videoDao.findByMemberId(memberId);
         List<VideoListResponseDto> dtoList = new ArrayList<>();
