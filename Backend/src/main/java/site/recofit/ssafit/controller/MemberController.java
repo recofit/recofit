@@ -1,11 +1,15 @@
 package site.recofit.ssafit.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import site.recofit.ssafit.domain.Member;
 import site.recofit.ssafit.dto.member.*;
 import site.recofit.ssafit.security.oauth2.kakao.KakaoService;
@@ -13,6 +17,8 @@ import site.recofit.ssafit.service.MemberService;
 import site.recofit.ssafit.utility.jwt.JwtUtil;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -77,11 +83,6 @@ public class MemberController {
         return new ResponseEntity<>(result, status);
     }
 
-    @GetMapping("/kakao/login")
-    public String goKakaoLoginPage(@RequestParam final String url) {
-        return url +  "?client_id=7276680ce0f3c0be137b878203962dfa&redirect_uri=http://localhost:8080/member/kakao/callback&response_type=code";
-    }
-
     @GetMapping("/kakao/callback")
     public ResponseEntity<Map<String, Object>> getKakaoRequest(@RequestParam final String code, final HttpServletResponse response) throws JSONException, IOException {
         Map<String, Object> result = new HashMap<>();
@@ -100,7 +101,7 @@ public class MemberController {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
-        response.sendRedirect("http://localhost:8081");
+        response.sendRedirect("http://localhost:8081/");
 
         return new ResponseEntity<>(result, status);
     }
@@ -172,18 +173,17 @@ public class MemberController {
         return ResponseEntity.ok().body(responseDto);
     }
 
-    @PatchMapping(value = "")
-    public ResponseEntity<MemberUpdateResponseDto> updateProfile(@RequestParam int id, @RequestBody final MemberUpdateRequestDto requestDto) {
-
-        final MemberUpdateResponseDto responseDto = memberService.updateProfile(id, requestDto);
+    @PatchMapping(value = "/{memberId}")
+    public ResponseEntity<MemberUpdateResponseDto> updateProfile(@PathVariable int memberId, @RequestBody final MemberUpdateRequestDto requestDto) {
+        final MemberUpdateResponseDto responseDto = memberService.updateProfile(memberId, requestDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
-    @PatchMapping(value = "/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<MemberPictureUploadResponseDto> uploadPicture(@RequestParam int id, @ModelAttribute final MemberPictureUploadRequestDto requestDto) {
+    @PatchMapping(value = "/picture/{memberId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<MemberPictureUploadResponseDto> uploadPicture(@PathVariable int memberId, @ModelAttribute final MemberPictureUploadRequestDto requestDto) {
 
-        final MemberPictureUploadResponseDto responseDto = memberService.uploadPicture(id, requestDto);
+        final MemberPictureUploadResponseDto responseDto = memberService.uploadPicture(memberId, requestDto);
 
         return ResponseEntity.ok().body(responseDto);
     }

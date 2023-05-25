@@ -196,7 +196,6 @@ public class MemberServiceImpl implements MemberService {
     public List<MemberFollowListResponseDto> selectFollower(final int followingId) {
         List<Integer> followerList = memberDao.findByFollowingId(followingId);
 
-        System.out.println(1);
         return convertFollowListToDtoList(followerList);
     }
 
@@ -216,6 +215,7 @@ public class MemberServiceImpl implements MemberService {
 
             MemberFollowListResponseDto responseDto = MemberFollowListResponseDto.builder()
                     .id(member.getId())
+                    .picture(member.getPicture())
                     .nickname(member.getNickname())
                     .build();
 

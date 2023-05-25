@@ -10,15 +10,21 @@
       <div class="modal-content">
         <div class="modal-body">
           <div class="d-grid gap-2 d-md-block">
-            <div
-              class="box"
-              style="display: flex; justify-content: space-between"
-            >
-              <ol>
-                <li v-for="(follower, index) in followers" :key="index">
-                  {{ follower.nickname }}
-                </li>
-              </ol>
+            <div class="box">
+              <div
+                class="vfor"
+                v-for="(follower, index) in followers"
+                :key="index"
+              >
+                <button class="wrapper" @click="movePage(follower.id)">
+                  <div class="picture-wrapper">
+                    <img :src="`${follower.picture}`" />
+                  </div>
+                  <div class="nickname-wrapper">
+                    {{ follower.nickname }}
+                  </div>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -35,6 +41,12 @@ export default {
   computed: {
     ...mapState(["followers"]),
   },
+  methods: {
+    movePage(id) {
+      this.$router.push("/mypage/" + id);
+      setTimeout(() => this.$router.go(0), 100);
+    },
+  },
 };
 </script>
 
@@ -47,6 +59,40 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+.vfor {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: solid 2px;
+  border-radius: 5px;
+  border-color: #285c4d;
+}
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 75%;
+  height: 100px;
+  background-color: white;
+  border: none;
+}
+
+button {
+  border: none;
+  background-color: white;
+}
+
+.picture-wrapper img {
+  width: 100px;
+  height: 100px;
+}
+
+.nickname-wrapper {
+  width: 200px;
+  font-size: 30px;
 }
 
 .modal-dialog {
@@ -66,5 +112,9 @@ export default {
   border-radius: 5px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1), 0 5px 5px 0 rgba(0, 0, 0, 0.2);
   text-align: center;
+}
+
+li {
+  font-size: 20px;
 }
 </style>

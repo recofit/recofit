@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import site.recofit.ssafit.domain.Place;
 import site.recofit.ssafit.service.PlaceService;
 
+import java.util.Optional;
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/place")
@@ -17,9 +19,6 @@ public class PlaceController {
 
     @PostMapping("")
     public ResponseEntity<?> registPlace(@RequestBody final Place place) {
-        if (service.findByPlaceName(place.getTitle()) != null)
-            return new ResponseEntity<Void>(HttpStatus.ALREADY_REPORTED);
-
         service.registPlace(place);
 
         return new ResponseEntity<Void>(HttpStatus.CREATED);
@@ -27,7 +26,7 @@ public class PlaceController {
 
     @GetMapping("/{placeName}")
     public ResponseEntity<?> findByPlaceId(@PathVariable final String placeName) {
-        Place place = service.findByPlaceName(placeName);
+        Optional<Place> place = service.findByPlaceName(placeName);
         return new ResponseEntity<>(place, HttpStatus.OK);
     }
 }
