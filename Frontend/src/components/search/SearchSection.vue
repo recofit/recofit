@@ -30,9 +30,8 @@ export default {
     },
     methods: {
         search() {
-            // this.$store.dispatch("searchLikeYoutube", this.info.keyword);
+            this.$store.dispatch("searchLikeYoutube", this.info.keyword);
             this.$store.dispatch("searchPopularYoutube", this.info.keyword);
-
             this.$store.dispatch("searchPlace", this.info);
         }
     },
