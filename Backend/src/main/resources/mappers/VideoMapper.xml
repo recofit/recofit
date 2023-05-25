@@ -6,8 +6,8 @@
 
     <!-- 영상 등록 -->
     <insert id="save" parameterType="Video">
-        INSERT INTO video (id, title, url, channel_name)
-        VALUES (#{id}, #{title}, #{url}, #{channelName})
+        INSERT INTO video (id, channel_name, view_cnt, like_cnt)
+        VALUES (#{id}, #{channelName}, #{viewCnt}, #{likeCnt})
     </insert>
 
     <!-- 영상 조회 -->
@@ -18,21 +18,21 @@
     </select>
 
     <!-- 유저의 구독 영상 조회 -->
-    <select id="findByMemberId" parameterType="String" resultType="Video">
-        SELECT title, url, channel_name AS channelName
+    <select id="findByMemberId" parameterType="Integer" resultType="Video">
+        SELECT channel_name AS channelName, view_cnt AS viewCnt, like_cnt AS likeCnt
         FROM video_subscribe join video on video_subscribe.video_id = video.id
         WHERE member_id = #{memberId}
     </select>
 
     <!-- 영상 구독 등록 -->
     <insert id="subscribe" parameterType="String">
-        INSERT INTO video_subscribe (member_id, video_id)
-        VALUES (#{memberId}, #{videoId})
+        INSERT INTO video_subscribe (member_name, video_id)
+        VALUES (#{memberName}, #{videoId})
     </insert>
 
     <!-- 영상 구독 취소 -->
     <delete id="unsubscribe" parameterType="String">
         DELETE FROM video_subscribe
-        WHERE member_id = #{memberId} and video_id = #{videoId}
+        WHERE member_name = #{memberName} and video_id = #{videoId}
     </delete>
 </mapper>

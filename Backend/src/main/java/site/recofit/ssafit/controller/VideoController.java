@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import site.recofit.ssafit.dto.video.VideoListRequestDto;
 import site.recofit.ssafit.dto.video.VideoListResponseDto;
 import site.recofit.ssafit.dto.video.VideoSubscribeRequestDto;
+import site.recofit.ssafit.dto.video.VideoUnsubscribeRequestDto;
 import site.recofit.ssafit.service.VideoService;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class VideoController {
     }
 
     @DeleteMapping()
-    public ResponseEntity<?> unsubscribeVideo(@RequestBody final VideoSubscribeRequestDto requestDto) {
+    public ResponseEntity<?> unsubscribeVideo(@RequestBody final VideoUnsubscribeRequestDto requestDto) {
         videoServiceImpl.unsubscribeVideo(requestDto);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }

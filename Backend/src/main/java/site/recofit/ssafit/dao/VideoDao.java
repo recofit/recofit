@@ -11,9 +11,9 @@ public interface VideoDao {
 
     Video findById(final String videoId);
 
-    void subscribe(final String memberId, final String videoId);
+    void subscribe(final String memberName, final String videoId);
 
-    void unsubscribe(final String memberId, final String videoId);
+    void unsubscribe(final String memberName, final String videoId);
 
-    List<Video> findByMemberId(final String memberId);
+    List<Video> findByMemberId(final int memberId);
 }

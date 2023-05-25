@@ -3,11 +3,14 @@ package site.recofit.ssafit.serviceimpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.recofit.ssafit.dao.MemberDao;
+import site.recofit.ssafit.dao.VideoDao;
+import site.recofit.ssafit.domain.Member;
 import site.recofit.ssafit.domain.Video;
 import site.recofit.ssafit.dto.video.VideoListRequestDto;
 import site.recofit.ssafit.dto.video.VideoListResponseDto;
 import site.recofit.ssafit.dto.video.VideoSubscribeRequestDto;
-import site.recofit.ssafit.dao.VideoDao;
+import site.recofit.ssafit.dto.video.VideoUnsubscribeRequestDto;
 import site.recofit.ssafit.service.VideoService;
 
 import java.util.ArrayList;
@@ -18,6 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 public class VideoServiceImpl implements VideoService {
     private final VideoDao videoDao;
+    private final MemberDao memberDao;
 
     @Transactional
     public void registVideo(VideoSubscribeRequestDto requestDto) {
@@ -27,9 +31,9 @@ public class VideoServiceImpl implements VideoService {
 
         Video video = Video.builder()
                 .id(requestDto.getVideoId())
-                .title(requestDto.getTitle())
-                .url(requestDto.getUrl())
                 .channelName(requestDto.getChannelName())
+                .viewCnt(requestDto.getViewCnt())
+                .likeCnt(requestDto.getLikeCnt())
                 .build();
 
         videoDao.save(video);
@@ -38,34 +42,42 @@ public class VideoServiceImpl implements VideoService {
     @Transactional
     public void subscribeVideo(VideoSubscribeRequestDto requestDto) {
 
-        String memberId = requestDto.getMemberId();
+        int memberId = requestDto.getMemberId();
+        Member member = memberDao.findById(memberId).orElseThrow(
+                () -> new IllegalArgumentException("no member"));
+
         String videoId = requestDto.getVideoId();
 
-        videoDao.subscribe(memberId, videoId);
+        videoDao.subscribe(member.getNickname(), videoId);
     }
 
     @Transactional
-    public void unsubscribeVideo(VideoSubscribeRequestDto requestDto) {
+    public void unsubscribeVideo(VideoUnsubscribeRequestDto requestDto) {
 
-        String memberId = requestDto.getMemberId();
+        int memberId = requestDto.getMemberId();
+
+        Member member = memberDao.findById(memberId).orElseThrow(
+                () -> new IllegalArgumentException("no member"));
+
         String videoId = requestDto.getVideoId();
 
-        videoDao.unsubscribe(memberId, videoId);
+        videoDao.unsubscribe(member.getNickname(), videoId);
     }
 
     @Override
     public List<VideoListResponseDto> selectSubscribeVideo(VideoListRequestDto requestDto) {
 
-        String memberId = requestDto.getMemberId();
+        int memberId = requestDto.getMemberId();
 
         List<Video> videoList = videoDao.findByMemberId(memberId);
         List<VideoListResponseDto> dtoList = new ArrayList<>();
 
         for (Video video : videoList) {
             VideoListResponseDto responseDto = VideoListResponseDto.builder()
-                    .title(video.getTitle())
-                    .url(video.getUrl())
+                    .id(video.getId())
                     .channelName(video.getChannelName())
+                    .viewCnt(video.getViewCnt())
+                    .likeCnt(video.getLikeCnt())
                     .build();
 
             dtoList.add(responseDto);
