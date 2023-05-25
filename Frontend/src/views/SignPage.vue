@@ -144,6 +144,9 @@
 
 <script>
 import { defineComponent } from "vue";
+import { createToaster } from "@meforma/vue-toaster";
+const toaster = createToaster({ });
+
 
 export default defineComponent({
   name: "SignPage",
@@ -199,12 +202,12 @@ export default defineComponent({
         this.signupPassword === "" ||
         this.signupNickname === ""
       ) {
-        alert("모든 내용을 입력해주세요");
+        toaster.error(`모든 내용을 입력해주세요`);
         return;
       }
 
       if (this.signupPassword !== this.signupCheckPassword) {
-        alert("비밀번호가 일치하지 않습니다.");
+        toaster.error(`비밀번호가 일치하지 않습니다`);
         return;
       }
 

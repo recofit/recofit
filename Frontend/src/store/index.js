@@ -149,11 +149,11 @@ export default createStore({
       })
         .then(() => {
           commit;
-          alert(member.nickname + '님 회원가입을 축하드립니다!');
-          router.go(0);
+          toaster.info(member.nickname + '님 회원가입을 축하드립니다!');
+          setTimeout(router.go(0), 500);
         })
         .catch(() => {
-          alert('회원 가입에 실패했습니다.');
+          toaster.error(`회원 가입에 실패했습니다`);
         })
     },
     emailDuplicationCheck: function ({ commit }, email) {
@@ -163,12 +163,12 @@ export default createStore({
         method: 'HEAD'
       })
         .then(() => {
-          commit
-          alert('사용 가능한 이메일입니다.');
-          alert('메일 전송에 수분이 소요될 수 있습니다.');
+          commit;
+          toaster.info('사용 가능한 이메일입니다');
+          toaster.info('메일 전송에 수분이 소요될 수 있습니다');
         })
         .catch(() => {
-          alert('사용 불가능한 이메일입니다.');
+          toaster.error(`사용 불가능한 이메일입니다`);
         })
     },
     sendMessage: function ({ commit }, email) {
@@ -179,10 +179,10 @@ export default createStore({
       })
         .then(() => {
           commit;
-          alert('메일이 전송되었습니다.')
+          toaster.info('메일이 전송되었습니다');
         })
         .catch(() => {
-          alert('메일 전송에 실패했습니다.');
+          toaster.error(`메일 전송에 실패했습니다`);
         })
     },
     sendContactMail: function ({ commit }, mail) {
@@ -194,10 +194,10 @@ export default createStore({
       })
         .then(() => {
           commit;
-          alert('메일이 전송되었습니다.')
+          toaster.info('메일이 전송되었습니다');
         })
         .catch(() => {
-          alert('메일 전송에 실패했습니다.');
+          toaster.error(`메일 전송에 실패했습니다`);
         })
     },
     emailVerify: function ({ commit }, code) {
@@ -211,10 +211,10 @@ export default createStore({
       })
         .then(() => {
           commit;
-          alert('인증 완료!');
+          toaster.info('인증이 성공적으로 진행되었습니다');
         })
         .catch(() => {
-          alert('인증 번호와 다릅니다.');
+          toaster.error(`인증 번호와 다릅니다`);
         })
     },
     nicknameDuplicationCheck: function ({ commit }, nickname) {
@@ -225,10 +225,10 @@ export default createStore({
       })
         .then(() => {
           commit;
-          alert('사용 가능한 닉네임입니다.');
+          toaster.info('사용 가능한 닉네임입니다');
         })
         .catch(() => {
-          alert('사용 불가능한 닉네임입니다.');
+          toaster.error('사용 불가능한 닉네임입니다');
         })
     },
     login: function ({ commit }, member) {
@@ -240,14 +240,14 @@ export default createStore({
         data: member
       })
         .then((res) => {
-          commit('LOG_IN', res.data)
-          alert(res.data.nickname + '님 어서오세요!')
+          commit('LOG_IN', res.data);
+          toaster.info(res.data.nickname + '님 환영합니다');
           const loginData = JSON.stringify(res.data);
           sessionStorage.setItem("loginUser", loginData);
           router.push('/')
         })
         .catch(() => {
-          alert('너 누구야!')
+          toaster.error('로그인에 실패했습니다');
         })
     },
     kakaologin: function ({ commit }) {
@@ -260,14 +260,14 @@ export default createStore({
         params: { KAKAO_URL }
       })
         .then((res) => {
-          commit('LOG_IN', res.data)
-          alert(res.data.nickname + '님 어서오세요!')
+          commit('LOG_IN', res.data);
+          toaster.info(res.data.nickname + '님 환영합니다');
           const loginData = JSON.stringify(res.data);
           sessionStorage.setItem("loginUser", loginData);
           router.push('/')
         })
         .catch(() => {
-          alert('너 누구야!')
+          toaster.error('로그인에 실패했습니다');
         })
     },
     logout: function ({ commit }) {
@@ -278,12 +278,12 @@ export default createStore({
       })
         .then(() => {
           commit;
-          alert('안녕히가세요!')
+          toaster.info('좋은 하루 되시길 바랍니다!');
           sessionStorage.removeItem('loginUser')
           router.push('/')
         })
         .catch(() => {
-          alert('나가지마!')
+          toaster.error('로그아웃에 실패했습니다');
         })
     },
     myInformation: function ({ commit }, memberId) {
@@ -340,7 +340,7 @@ export default createStore({
           router.go(0) 
         })
         .catch(() => {
-          alert('넌 내꺼라 언팔 안돼')
+          toaster.error('요청에 실패했습니다');
         })
     },
     createReservation: function({ commit }, data) {
@@ -744,9 +744,11 @@ export default createStore({
         data: review,
       })
         .then(() => {
+          toaster.info(`리뷰 등록을 완료했습니다`);
           commit("WRITE_REVIEW", review);
         })
         .catch(err => {
+          toaster.error(`리뷰 등록에 실패했습니다`);
           console.log(err);
         });
     },
@@ -761,16 +763,8 @@ export default createStore({
         // },
       })
         .then(() => {
-          toaster.success(`삭제를 완료했습니다`);
-          // alert("삭제 완료!");
+          toaster.info(`리뷰 삭제를 완료했습니다`);
 
-          // this.$toast.success(`글이 등록되었습니다.`,
-          //   {
-          //     position:"bottom"
-          //   }
-          // );
-          // setTimeout(this.$toast.clear, 2000)
-          this.$toast.show(`Hey! I'm here`);
           let index;
           for (let i = 0; i < state.reviews.length; i++) {
             if (state.reviews[i].id === reviewId) {
@@ -779,8 +773,8 @@ export default createStore({
           }
           state.reviews.splice(index, 1);
         })
-        .catch(err => {
-          console.log(err);
+        .catch(() => {
+          toaster.error(`리뷰 삭제에 실패했습니다`);
         });
     },
     modifyReview: function({commit}, review) {
@@ -795,10 +789,11 @@ export default createStore({
         // },
       })
         .then(() => {
-          alert("수정 완료!");
+          toaster.info(`리뷰 수정을 완료했습니다`);
           commit;
         })
         .catch(err => {
+          toaster.error(`리뷰 수정에 실패했습니다`);
           console.log(err);
         });
     },
