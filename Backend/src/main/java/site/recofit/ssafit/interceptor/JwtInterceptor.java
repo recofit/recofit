@@ -29,6 +29,10 @@ public class JwtInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        System.out.println(request.getContextPath());
+
+        response.sendRedirect("http://localhost:8081/" + request.getRequestURI());
+
         throw new Exception("유효하지 않은 접근");
     }
 }

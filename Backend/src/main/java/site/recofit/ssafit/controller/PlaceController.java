@@ -5,10 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import site.recofit.ssafit.domain.Place;
-import site.recofit.ssafit.dto.place.PlaceListResponseDto;
 import site.recofit.ssafit.service.PlaceService;
-
-import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
