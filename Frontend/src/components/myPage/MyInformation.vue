@@ -12,20 +12,6 @@
             <div class="section-title">
               <h1>{{ member.nickname }}</h1>
               <br />
-              <!-- <button
-                v-if="id == routerId"
-                data-bs-toggle="modal"
-                data-bs-target="#nicknameModifyModal"
-              >
-                닉네임 수정
-              </button>
-              <button
-                v-if="id == routerId"
-                data-bs-toggle="modal"
-                data-bs-target="#pictureModifyModal"
-              >
-                프로필 사진 수정
-              </button> -->
               <button
                 class="edit-button"
                 v-if="id == routerId"
@@ -70,30 +56,13 @@
       <div class="section-content">
         <h1 v-if="id == routerId">내 영상</h1>
         <h1 v-if="id != routerId">{{ member.nickname }} 영상</h1>
-        <div class="box">
-          <div class="card">
-            <iframe src="https://www.youtube.com/embed/gMaB-fG4u4g"></iframe>
-            <div class="card-body">
-              <h5 class="card-title">주제</h5>
-              <span class="card-text">내용</span>
-              <i class="bi bi-eye">조회수</i>
-            </div>
-          </div>
-          <div class="card">
-            <iframe src="https://www.youtube.com/embed/gMaB-fG4u4g"></iframe>
-            <div class="card-body">
-              <h5 class="card-title">주제</h5>
-              <span class="card-text">내용</span>
-              <i class="bi bi-eye">조회수</i>
-            </div>
-          </div>
+        <div class="youtube-section">
+          <my-youtube />
         </div>
       </div>
     </div>
     <follower-modal />
     <following-modal />
-    <!-- <nickname-modify-modal />
-    <picture-modify-modal /> -->
     <profile-modify-modal />
   </section>
 </template>
@@ -105,9 +74,8 @@ import CalendarPage from "@/views/CalendarPage.vue";
 import KakaoMap from "@/components/myPage/KakaoMap.vue";
 import FollowerModal from "./modal/FollowerModal.vue";
 import FollowingModal from "./modal/FollowingModal.vue";
-// import NicknameModifyModal from "./modal/NicknameModifyModal.vue";
-// import PictureModifyModal from "./modal/PictureModifyModal.vue";
 import ProfileModifyModal from "./modal/ProfileModifyModal.vue";
+import MyYoutube from "@/components/myPage/MyYoutube.vue";
 
 export default defineComponent({
   components: {
@@ -115,9 +83,8 @@ export default defineComponent({
     CalendarPage,
     FollowerModal,
     FollowingModal,
-    // NicknameModifyModal,
-    // PictureModifyModal,
     ProfileModifyModal,
+    MyYoutube,
   },
   data() {
     return {
@@ -126,27 +93,29 @@ export default defineComponent({
     };
   },
   computed: {
-    ...mapState(["member", "followers", "followings"]),
+    ...mapState([
+      "member",
+      "followers",
+      "followings",
+      "myVideoInfo",
+      "myChannel",
+    ]),
     ...mapGetters(["followerCnt", "followingCnt"]),
   },
   created() {
-    // const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
-    // this.$store.dispatch("myInformation", memberId);
-
     this.$store.dispatch("myInformation", this.routerId);
     this.follower();
     this.following();
   },
   methods: {
     follower() {
-      // const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
-      // this.$store.dispatch("getFollowers", memberId);
       this.$store.dispatch("getFollowers", this.routerId);
     },
     following() {
-      // const memberId = JSON.parse(sessionStorage.getItem("loginUser")).id;
-      // this.$store.dispatch("getFollowings", memberId);
       this.$store.dispatch("getFollowings", this.routerId);
+    },
+    clickVideo(video) {
+      this.$store.dispatch("clickVideo", video);
     },
   },
 });
@@ -275,6 +244,10 @@ export default defineComponent({
   width: 100%;
   height: 3px;
   background-color: #285c4d;
+}
+
+.youtube-section {
+  margin-top: 20px;
 }
 
 button {

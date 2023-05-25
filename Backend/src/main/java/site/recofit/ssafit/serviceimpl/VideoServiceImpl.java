@@ -64,9 +64,9 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Override
-    public List<VideoListResponseDto> selectSubscribeVideo(String memberId) {
-
-        List<Video> videoList = videoDao.findByMemberId(memberId);
+    public List<VideoListResponseDto> selectSubscribeVideo(int memberId) {
+        String memberName = memberDao.findById(memberId).get().getNickname();
+        List<Video> videoList = videoDao.findByMemberId(memberName);
         List<VideoListResponseDto> dtoList = new ArrayList<>();
 
         for (Video video : videoList) {

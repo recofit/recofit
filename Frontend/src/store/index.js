@@ -23,6 +23,9 @@ export default createStore({
     videoChannel2: [],
     videoInfo2: [],
     videoState2: [],
+    myVideoInfo: [],
+    myChannel: [],
+    myTitle: [],
     
     likeVideos1: [],
     likeVideos2: [],
@@ -94,6 +97,13 @@ export default createStore({
     SET_LIKE_VIDEOS2(state, id) {
       state.likeVideos2.push(id);
     },
+    SET_MY_YOUTUBE(state, id) {
+      state.myVideoInfo.push(id)
+    },
+    SET_MY_CHANNEL(state, snippet) {
+      state.myChannel.push(snippet.channelTitle);
+      state.myTitle.push(snippet.title);
+    },
     FLUSH_POPULAR(state) {
       state.videoChannel1 = [];
       state.videoInfo1 = [];
@@ -105,6 +115,10 @@ export default createStore({
       state.videoInfo2 = [];
       state.videoState2 = [];
       state.likeVideos2 = [];
+    },
+    FLUSH_MY(state) {
+      state.myChannel = [];
+      state.myVideoInfo = [];
     },
     SEARCH_PLACE(state, results) {
       state.results = results;
@@ -250,9 +264,6 @@ export default createStore({
           toaster.error('로그인에 실패했습니다');
         })
     },
-    clickVideo({commit}, payload) {
-      commit("CLICK_VIDEO", payload);
-    },
     kakaologin: function ({ commit }) {
       const API_URL = '/kakao/login';
       const KAKAO_URL = 'https://kauth.kakao.com/oauth/authorize'
@@ -332,6 +343,23 @@ export default createStore({
         //   alert('내 팔로잉이 이상해')
         // })
     },
+    follow({ commit }, data) {
+      const API_URL = '/member/follow/' + data.followingName;
+      axios({
+        url: API_URL,
+        method: 'POST',
+        params: {
+          followerId: data.followerId
+        }
+      })
+        .then(() => {
+          commit;
+          router.go(0)
+        })
+        .catch(() => {
+          toaster.error('요청에 실패했습니다');
+        })
+    },
     unfollow: function ({ commit }, data) {
       const API_URL = '/member/unfollow/' + data.followingId;
       axios({
@@ -383,8 +411,8 @@ export default createStore({
         })
     },
     editProfile: function ({ commit }, data) {
-      let PIC_URL = '/member/picture/' + data.memberId;
       if (data.picbool) {
+        let PIC_URL = '/member/picture/' + data.memberId;
         axios({
           url: PIC_URL,
           method: 'PATCH',
@@ -401,27 +429,80 @@ export default createStore({
             alert(e);
           });
       }
-      
-      let NICK_URL = '/member/' + data.memberId;
-      if (data.nickbool) {
-        axios({
-          url: NICK_URL,
-          method: 'PATCH',
-          data: {
-            nickname: data.nickname
-          }
-        })
-          .then(() => {
-            commit;
-            let jsondata = JSON.parse(sessionStorage.getItem('loginUser'));
-            jsondata.nickname = data.nickname;
-            sessionStorage.setItem('loginUser', JSON.stringify(jsondata));
-          })
-          .catch((e) => {
-            alert(e);
-          });
-      }
-      
+
+      // if (data.picbool && data.nickbool) {
+      //   let PIC_URL = '/member/picture/' + data.memberId;
+      //   axios({
+      //     url: PIC_URL,
+      //     method: 'PATCH',
+      //     data: data.form,
+      //     header: { 'Content-Type': 'multipart/form-data' }
+      //   })
+      //     .then(() => {
+      //       commit
+      //       let jsondata = JSON.parse(sessionStorage.getItem('loginUser'));
+      //       jsondata.picture = data.picture;
+      //       sessionStorage.setItem('loginUser', JSON.stringify(jsondata));
+      //     })
+      //     .catch((e) => {
+      //       alert(e);
+      //     });
+      //   let NICK_URL = '/member/' + data.memberId;
+      //   axios({
+      //     url: NICK_URL,
+      //     method: 'PATCH',
+      //     data: {
+      //       nickname: data.nickname
+      //     }
+      //   })
+      //     .then(() => {
+      //       commit;
+      //       let jsondata = JSON.parse(sessionStorage.getItem('loginUser'));
+      //       jsondata.nickname = data.nickname;
+      //       sessionStorage.setItem('loginUser', JSON.stringify(jsondata));
+      //       router.go(0)
+      //     })
+      //     .catch((e) => {
+      //       alert(e);
+      //     });
+      // } else if (data.picbool) {
+      //   let PIC_URL = '/member/picture/' + data.memberId;
+      //   axios({
+      //     url: PIC_URL,
+      //     method: 'PATCH',
+      //     data: data.form,
+      //     header: { 'Content-Type': 'multipart/form-data' }
+      //   })
+      //     .then(() => {
+      //       commit
+      //       let jsondata = JSON.parse(sessionStorage.getItem('loginUser'));
+      //       jsondata.picture = data.picture;
+      //       sessionStorage.setItem('loginUser', JSON.stringify(jsondata));
+      //       router.go(0)
+      //     })
+      //     .catch((e) => {
+      //       alert(e);
+      //     });
+      // } else if (data.nickbool) {
+      //   let NICK_URL = '/member/' + data.memberId;
+      //   axios({
+      //     url: NICK_URL,
+      //     method: 'PATCH',
+      //     data: {
+      //       nickname: data.nickname
+      //     }
+      //   })
+      //     .then(() => {
+      //       commit;
+      //       let jsondata = JSON.parse(sessionStorage.getItem('loginUser'));
+      //       jsondata.nickname = data.nickname;
+      //       sessionStorage.setItem('loginUser', JSON.stringify(jsondata));
+      //       router.go(0)
+      //     })
+      //     .catch((e) => {
+      //       alert(e);
+      //     });
+      // }
     },
     createReservation: function({ commit }, data) {
       const API_URL = '/reservation/write';
@@ -611,6 +692,54 @@ export default createStore({
         }
       })
       .catch((err) => console.log(err));
+    },
+    searchMyYoutube({ commit }, memberId) {
+      commit('FLUSH_MY');
+      
+      const API_URL = '/video/list';
+
+      axios({
+        url: API_URL,
+        method: "GET",
+        params: {
+          memberId: memberId,
+        },
+      })
+        .then((res) => {
+          console.log(res.data.length)
+          for (let i = 0; i < res.data.length; i++) {
+            let data = res.data[i];
+            commit("SET_MY_YOUTUBE", data);
+
+            // const URL = "https://www.googleapis.com/youtube/v3/search";
+            // const API_KEY = "";
+            // axios({
+            //   url: URL,
+            //   method: "GET",
+            //   params: {
+            //     key: API_KEY,
+            //     part: "snippet",
+            //     order: "viewCount",
+            //     videoCategoryId: 17,
+            //     q: data,
+            //     type: "video",
+            //     maxResults: 2,
+            //   },
+            // })
+            //   .then((res) => {
+            //     for (let item in res.data.items) {
+            //       commit("SET_MY_CHANNEL", res.data.items[item].snippet);
+            //       console.log(res.data.items[item].snippet)
+            //     }
+            //   })
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    clickVideo({commit}, payload) {
+      commit("CLICK_VIDEO", payload);
     },
     doSubscribe({commit}, payload) {
       const API_URL = '/video';

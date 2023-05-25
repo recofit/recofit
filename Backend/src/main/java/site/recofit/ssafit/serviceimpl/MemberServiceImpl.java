@@ -178,11 +178,15 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Transactional
-    public void follow(final int followerId, final int followingId) {
-        if (memberDao.findByFollowerIdAndFollowingId(followerId, followingId))
+    public void follow(final int followerId, final String followingName) {
+        Member member = memberDao.findByNickname(followingName).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
+        );
+
+        if (memberDao.findByFollowerIdAndFollowingId(followerId, member.getId()))
             throw new IllegalArgumentException("이미 팔로잉하는 회원입니다.");
 
-        memberDao.follow(followerId, followingId);
+        memberDao.follow(followerId, member.getId());
     }
 
     @Transactional
