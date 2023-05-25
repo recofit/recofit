@@ -10,7 +10,7 @@
                                 <div class="col">
                                     <div class="carousel-item active" style="width: 100%; overflow: hidden">
                                         <div class="container container-bottom">
-                                            <div class="row">
+                                            <!-- <div class="row">
                                                 <div class="col">
                                                     <div class="card" v-for="video in videos2.slice(0, 2)" :key="video.id.videoId" :video="video">
                                                         <img :src="video.snippet.thumbnails.high.url" />
@@ -19,7 +19,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                     

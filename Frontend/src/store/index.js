@@ -13,18 +13,24 @@ export default createStore({
     followers: [], 
     followings: [],
     loginUser: null,
+    
     video: null,
-    videos1: [],
+    videoChannel1: [],
+    videoInfo1: [],
     videoState1: [],
-    videos2: [],
+    vodeoChannel2: [],
+    videoInfo2: [],
     videoState2: [],
+
     place: {},
     places: [],
     result: {},
     results: [],
     location: { lat: 0, lng: 0 },
+    
     reservation: [],
     reservations: [],
+    
     review: {},
     reviews: [],
     average: 0,
@@ -56,14 +62,20 @@ export default createStore({
     GET_FOLLOWINGS: function (state, followings) {
       state.followings = followings;
     },
-    SEARCH_POPULAR_YOUTUBE(state, video) {
-      state.videos1.push(video);
+    SET_POPULAR_CHANNEL(state, snippet) {
+      state.videoChannel1.push(snippet.channelTitle);
+    },
+    SET_POPULAR_INFO(state, information) {
+      state.videoInfo1.push(information);
     },
     SET_POPULAR_STATE(state, flag) {
       state.videoState1.push(flag);
     },
-    SEARCH_LIKE_YOUTUBE(state, videos) {
-      state.videos2 = videos;
+    SET_LIKE_CHANNEL(state, channel) {
+      state.videoChannel2.push(channel);
+    },
+    SET_LIKE_INFO(state, info) {
+      state.videoInfo2.push(info);
     },
     SET_LIKE_STATE(state, flag) {
       state.videoState2.push(flag);
@@ -92,7 +104,6 @@ export default createStore({
       state.reservation = reservation;
     },
     SET_REVIEW: function(state, review) {
-      console.log(review);
       state.review = review;
     },
     SET_REVIEWS: function(state, reviews) {
@@ -221,9 +232,6 @@ export default createStore({
           alert('너 누구야!')
         })
     },
-    clickVideo({commit}, payload) {
-      commit("CLICK_VIDEO", payload);
-    },
     logout: function ({ commit }) {
       const API_URL = '/member/logout';
       axios({
@@ -340,9 +348,7 @@ export default createStore({
       })
         .then((res) => {
           let reservations = [];
-
           let i;
-          console.log(res.data)
 
           for (i = 0; i < res.data.length; i++) {
             let start_date = res.data[i].startDate;
@@ -371,11 +377,13 @@ export default createStore({
           videoCategoryId: 17,
           q: payload,
           type: "video",
-          maxResults: 2,
+          maxResults: 1,
         },
       })
       .then((res) => {
         for (const item of res.data.items) {
+          commit("SET_POPULAR_CHANNEL", item.snippet);
+
           axios({
             url: "https://www.googleapis.com/youtube/v3/videos",
             method: "GET",
@@ -386,7 +394,21 @@ export default createStore({
             },
           })
           .then((res) => {
-            commit("SEARCH_POPULAR_YOUTUBE", res.data.items);
+            commit("SET_POPULAR_INFO", res.data.items[0]);
+          })
+          .catch((err) => console.log(err))
+
+          axios({
+            url: "https://www.googleapis.com/youtube/v3/videos",
+            method: "GET",
+            params: {
+              key: API_KEY,
+              part: "statistics",
+              id: item.id.videoId,
+            },
+          })
+          .then((res) => {
+            commit("SET_POPULAR_INFO", res.data.items[0]);
           })
           .catch((err) => console.log(err))
         }
@@ -409,10 +431,51 @@ export default createStore({
         },
       })
       .then((res) => {
-        console.log(res.data.items)
         commit("SEARCH_LIKE_YOUTUBE", res.data.items);
       })
       .catch((err) => console.log(err))
+    },
+    clickVideo({commit}, payload) {
+      commit("CLICK_VIDEO", payload);
+    },
+    doSubscribe({commit}, payload) {
+      const API_URL = '/video';
+
+      axios({
+        url: API_URL,
+        method: "POST",
+        data: {
+          memberId: JSON.parse(sessionStorage.getItem("loginUser")).id,
+          videoId: payload.video.id,
+          channelName: payload.channelName,
+          viewCnt: payload.video.statistics.viewCount,
+          likeCnt: payload.video.statistics.likeCount,
+        },
+      })
+        .then(() => {
+          commit;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    doUnsubscribe({commit}, payload) {
+      const API_URL = '/video';
+
+      axios({
+        url: API_URL,
+        method: "DELETE",
+        data: {
+          memberId: JSON.parse(sessionStorage.getItem("loginUser")).id,
+          videoId: payload.id,
+        },
+      })
+        .then(() => {
+          commit;
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     searchPlace({commit}, payload) {
       const URL = "http://api.kcisa.kr/openapi/service/rest/convergence2019/getConver09";
@@ -433,7 +496,7 @@ export default createStore({
     },
     savePlace({commit}, payload) {
       const API_URL = '/place';
-      console.log(payload);
+
       axios({
         url: API_URL,
         method: "POST",
@@ -550,14 +613,12 @@ export default createStore({
       })
         .then(res => {
           commit("SET_REVIEWS", res.data);
-          console.log(res.data);
         })
         .catch(err => {
           console.log(err);
         });
     },
     searchReviews: function({commit}, information) {
-      console.log(information.place);
       const API_URL = `/review/search/` + information.place;
 
       return axios({
@@ -572,7 +633,6 @@ export default createStore({
       })
         .then(res => {
           commit("SET_REVIEWS", res.data);
-          console.log(res.data);
         })
         .catch(err => {
           console.log(err);
