@@ -3,6 +3,8 @@ package site.recofit.ssafit.dao;
 import org.springframework.stereotype.Repository;
 import site.recofit.ssafit.domain.Place;
 
+import java.util.Optional;
+
 @Repository
 public interface PlaceDao {
     // 장소 커뮤니티 등록
@@ -12,5 +14,7 @@ public interface PlaceDao {
     Place findByPlaceId(final int placeId);
 
     // 장소 상세 확인
-    Place findByPlaceName(final String placeName);
+    Optional<Place> findByPlaceName(final String placeName);
+
+    Optional<Place> findByPlaceNameWithReview(final String placeName);
 }

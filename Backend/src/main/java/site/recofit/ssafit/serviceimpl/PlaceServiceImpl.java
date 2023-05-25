@@ -7,6 +7,8 @@ import site.recofit.ssafit.dao.PlaceDao;
 import site.recofit.ssafit.domain.Place;
 import site.recofit.ssafit.service.PlaceService;
 
+import java.util.Optional;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -15,7 +17,9 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Transactional
     public void registPlace(Place place) {
-        placeDao.savePlace(place);
+        if (placeDao.findByPlaceName(place.getTitle()).isEmpty()) {
+            placeDao.savePlace(place);
+        }
     }
 
     @Override
@@ -25,8 +29,16 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public Place findByPlaceName(String placeName) {
-        Place place = placeDao.findByPlaceName(placeName);
+    public Optional<Place> findByPlaceName(String placeName) {
+        Optional<Place> place = placeDao.findByPlaceName(placeName);
+
+        return place;
+    }
+
+    @Override
+    public Optional<Place> findByPlaceNameWithReview(String placeName) {
+        Optional<Place> place = placeDao.findByPlaceNameWithReview(placeName);
+
         return place;
     }
 }
