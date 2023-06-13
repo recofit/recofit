@@ -354,10 +354,11 @@ export default createStore({
       })
         .then(() => {
           commit;
+          toaster.info('등록 완료!')
           router.go(0)
         })
         .catch(() => {
-          toaster.error('요청에 실패했습니다');
+          toaster.error('이미 등록한 회원입니다.');
         })
     },
     unfollow: function ({ commit }, data) {
@@ -371,6 +372,7 @@ export default createStore({
       })
         .then(() => {
           commit;
+          toaster.info('언팔 완료!')
           router.go(0) 
         })
         .catch(() => {
@@ -530,9 +532,9 @@ export default createStore({
           for (i = 0; i < res.data.length; i++) {
             let start_date = res.data[i].startDate;
             let end_date = res.data[i].endDate;
-            let startDate = res.data[i].startDate[0] + "년" + res.data[i].startDate[1] + "월" + res.data[i].startDate[2] + "일";
-            let endDate = res.data[i].endDate[0] + "년" + res.data[i].endDate[1] + "월" + res.data[i].endDate[2] + "일";
-            reservations.push({ title: res.data[i].title, venue: res.data[i].venue, startDate: startDate, endDate: endDate, start: new Date(start_date[0], start_date[1] - 1, start_date[2]), end: new Date(end_date[0], end_date[1] - 1, end_date[2]) });
+            let startDate = res.data[i].startDate[0] + "년" + res.data[i].startDate[1] + "월" + (res.data[i].startDate[2] - 1) + "일";
+            let endDate = res.data[i].endDate[0] + "년" + res.data[i].endDate[1] + "월" + (res.data[i].endDate[2] - 1) + "일";
+            reservations.push({ title: res.data[i].title, venue: res.data[i].venue, startDate: startDate, endDate: endDate, start: new Date(start_date[0], start_date[1] - 1, start_date[2] - 1), end: new Date(end_date[0], end_date[1] - 1, end_date[2] - 1) });
           }
 
           commit('SET_RESERVATIONS', reservations);
@@ -567,7 +569,7 @@ export default createStore({
       commit('FLUSH_POPULAR');
 
       const URL = "https://www.googleapis.com/youtube/v3/search";
-      const API_KEY = "";
+      const API_KEY = "AIzaSyC5XnMHpjbOjUzxSsd5dxN2koxLARWpFmw";
       axios({
         url: URL,
         method: "GET",
@@ -578,7 +580,7 @@ export default createStore({
           videoCategoryId: 17,
           q: payload,
           type: "video",
-          maxResults: 1,
+          maxResults: 3,
         },
       })
       .then((res) => {
@@ -633,7 +635,7 @@ export default createStore({
       commit('FLUSH_LIKE');
 
       const URL = "https://www.googleapis.com/youtube/v3/search";
-      const API_KEY = "";
+      const API_KEY = "AIzaSyC5XnMHpjbOjUzxSsd5dxN2koxLARWpFmw";
       axios({
         url: URL,
         method: "GET",
@@ -643,7 +645,7 @@ export default createStore({
           videoCategoryId: 17,
           q: payload,
           type: "video",
-          maxResults: 1,
+          maxResults: 3,
         },
       })
       .then((res) => {
@@ -711,27 +713,27 @@ export default createStore({
             let data = res.data[i];
             commit("SET_MY_YOUTUBE", data);
 
-            // const URL = "https://www.googleapis.com/youtube/v3/search";
-            // const API_KEY = "";
-            // axios({
-            //   url: URL,
-            //   method: "GET",
-            //   params: {
-            //     key: API_KEY,
-            //     part: "snippet",
-            //     order: "viewCount",
-            //     videoCategoryId: 17,
-            //     q: data,
-            //     type: "video",
-            //     maxResults: 2,
-            //   },
-            // })
-            //   .then((res) => {
-            //     for (let item in res.data.items) {
-            //       commit("SET_MY_CHANNEL", res.data.items[item].snippet);
-            //       console.log(res.data.items[item].snippet)
-            //     }
-            //   })
+            const URL = "https://www.googleapis.com/youtube/v3/search";
+            const API_KEY = "AIzaSyC5XnMHpjbOjUzxSsd5dxN2koxLARWpFmw";
+            axios({
+              url: URL,
+              method: "GET",
+              params: {
+                key: API_KEY,
+                part: "snippet",
+                order: "viewCount",
+                videoCategoryId: 17,
+                q: data,
+                type: "video",
+                maxResults: 2,
+              },
+            })
+              .then((res) => {
+                for (let item in res.data.items) {
+                  commit("SET_MY_CHANNEL", res.data.items[item].snippet);
+                  console.log(res.data.items[item].snippet)
+                }
+              })
           }
         })
         .catch(err => {
@@ -840,7 +842,6 @@ export default createStore({
             address = reverse.split("").reverse().join("");
           }
 
-          commit("SAVE_AVERAGE", res.data.rate);
           commit("SAVE_PLACE", res.data);
     
           axios({
@@ -854,6 +855,22 @@ export default createStore({
               commit("SEARCH_LOCATION", res.data.results[0].geometry.location);
             })
             .catch((err) => console.log(err));
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      
+      const AVERAGE_URL = `/place/average/` + title;
+      axios({
+        url: AVERAGE_URL,
+        method: "GET",
+        // headers: {
+        //   "access-token": sessionStorage.getItem("access-token"),
+        // },
+      })
+        .then(res => {
+
+          commit("SAVE_AVERAGE", res.data.rate);
         })
         .catch(err => {
           console.log(err);

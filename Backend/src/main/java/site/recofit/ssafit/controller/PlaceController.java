@@ -28,4 +28,10 @@ public class PlaceController {
         Optional<Place> place = service.findByPlaceName(placeName);
         return new ResponseEntity<>(place, HttpStatus.OK);
     }
+
+    @GetMapping("/average/{placeName}")
+    public ResponseEntity<?> getAverage(@PathVariable final String placeName) {
+        Optional<Place> place = service.findByPlaceNameWithReview(placeName);
+        return new ResponseEntity<>(place, HttpStatus.OK);
+    }
 }

@@ -10,7 +10,7 @@
       <div class="container a-container" id="a-container">
         <div class="forms" id="a-form">
           <h2 class="form_title title">로그인하기</h2>
-          <div class="form__icons">
+          <!-- <div class="form__icons">
             <a
               href="https://kauth.kakao.com/oauth/authorize?client_id=7276680ce0f3c0be137b878203962dfa&redirect_uri=http://localhost:8080/member/kakao/callback&response_type=code"
             >
@@ -20,8 +20,8 @@
                 alt=""
               />
             </a>
-          </div>
-          <span class="form__span">혹은 이메일로 로그인하기</span>
+          </div> -->
+          <span class="form__span">이메일로 로그인하기</span>
           <input
             class="form__input"
             type="text"
@@ -41,7 +41,7 @@
       <div class="container b-container" id="b-container">
         <div class="forms" id="b-form">
           <h2 class="form_title title">회원가입하기</h2>
-          <div class="form__icons">
+          <!-- <div class="form__icons">
             <a @click="kakaologin">
               <img
                 class="form__icon"
@@ -49,8 +49,8 @@
                 alt=""
               />
             </a>
-          </div>
-          <span class="form__span">혹은 이메일로 가입하기</span>
+          </div> -->
+          <span class="form__span">이메일로 가입하기</span>
           <div style="display: flex; align-items: center">
             <input
               class="form__input"
@@ -133,8 +133,7 @@
 <script>
 import { defineComponent } from "vue";
 import { createToaster } from "@meforma/vue-toaster";
-const toaster = createToaster({ });
-
+const toaster = createToaster({});
 
 export default defineComponent({
   name: "SignPage",

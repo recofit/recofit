@@ -74,7 +74,7 @@ export default {
             this.$store.state.location.lat,
             this.$store.state.location.lng
           ),
-        100
+        250
       );
       setTimeout(
         () =>
@@ -83,7 +83,7 @@ export default {
             this.$store.state.location.lat,
             this.$store.state.location.lng
           ),
-        100
+        250
       );
     },
     movePointer(latitude, longitude) {
@@ -96,7 +96,7 @@ export default {
       marker.setMap(this.map);
 
       let iwContent =
-          '<div style="padding:5px; text-align: center">' +
+          '<div style="padding:5px; width:200px; height:100px; text-align: center">' +
           title +
           '<br><a href="https://map.kakao.com/link/map/여기로 가주세요!,' +
           latitude +
@@ -153,6 +153,6 @@ export default {
   margin: 10px 0px 10px 0px;
   text-align: right;
   width: 100%;
-  height: 100px;
+  height: 150px;
 }
 </style>

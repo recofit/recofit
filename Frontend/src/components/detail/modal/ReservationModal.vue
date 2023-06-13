@@ -99,6 +99,11 @@ export default {
   created() {
     this.$store.dispatch("getResult", this.result.title);
     this.$store.dispatch("getReservationsByName", this.$route.params.title);
+    // this.$store.dispatch(
+    //   "getReservationsByName",
+    //   this.$route.params.title,
+    //   JSON.parse(sessionStorage.getItem("loginUser")).id
+    // );
   },
   methods: {
     createReservation(name) {

@@ -108,7 +108,7 @@ export default {
       };
 
       this.$store.dispatch("editProfile", data);
-      this.$router.go(0);
+      setTimeout(() => this.$router.go(0), 500);
     },
   },
 };

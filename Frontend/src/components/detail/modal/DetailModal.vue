@@ -28,7 +28,12 @@
               </h2>
               <p>작성자 : {{ review.name }}</p>
               &nbsp;&nbsp;&nbsp;
-              <button @click="follow(review.name)">팔로우</button>
+              <button
+                v-if="review.name != this.nickname"
+                @click="follow(review.name)"
+              >
+                팔로우
+              </button>
               <p>평점 : {{ review.rate }} / 5</p>
               <br />
               <hr />
@@ -69,6 +74,7 @@ export default {
   data() {
     return {
       userName: "",
+      nickname: JSON.parse(sessionStorage.getItem("loginUser")).nickname,
     };
   },
   methods: {
