@@ -569,7 +569,7 @@ export default createStore({
       commit('FLUSH_POPULAR');
 
       const URL = "https://www.googleapis.com/youtube/v3/search";
-      const API_KEY = "AIzaSyC5XnMHpjbOjUzxSsd5dxN2koxLARWpFmw";
+      const API_KEY = "";
       axios({
         url: URL,
         method: "GET",
@@ -635,7 +635,7 @@ export default createStore({
       commit('FLUSH_LIKE');
 
       const URL = "https://www.googleapis.com/youtube/v3/search";
-      const API_KEY = "AIzaSyC5XnMHpjbOjUzxSsd5dxN2koxLARWpFmw";
+      const API_KEY = "";
       axios({
         url: URL,
         method: "GET",
@@ -714,7 +714,7 @@ export default createStore({
             commit("SET_MY_YOUTUBE", data);
 
             const URL = "https://www.googleapis.com/youtube/v3/search";
-            const API_KEY = "AIzaSyC5XnMHpjbOjUzxSsd5dxN2koxLARWpFmw";
+            const API_KEY = "";
             axios({
               url: URL,
               method: "GET",
@@ -784,7 +784,7 @@ export default createStore({
     },
     searchPlace({commit}, payload) {
       const URL = "http://api.kcisa.kr/openapi/service/rest/convergence2019/getConver09";
-      const API_KEY = "55ca8ff9-ef34-47b2-a379-3c10775354e8";
+      const API_KEY = "";
       axios({
         url: URL,
         method: "GET",
@@ -848,7 +848,7 @@ export default createStore({
             url:
               "https://maps.googleapis.com/maps/api/geocode/json?address=" +
               address +
-              "&key=AIzaSyArzJTlqNuBRUSFM45tn5D-wAkj1499F2U",
+              "&key=",
             method: "GET",
           })
             .then((res) => {
@@ -896,7 +896,7 @@ export default createStore({
         url:
           "https://maps.googleapis.com/maps/api/geocode/json?address=" +
           address +
-          "&key=AIzaSyArzJTlqNuBRUSFM45tn5D-wAkj1499F2U",
+          "&key=",
         method: "GET",
       })
         .then((res) => {
