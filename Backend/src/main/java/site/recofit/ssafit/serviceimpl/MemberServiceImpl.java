@@ -11,6 +11,8 @@ import site.recofit.ssafit.dao.VerificationDao;
 import site.recofit.ssafit.domain.Member;
 import site.recofit.ssafit.domain.Verification;
 import site.recofit.ssafit.dto.member.*;
+import site.recofit.ssafit.exception.MemberException;
+import site.recofit.ssafit.exception.status.MemberStatus;
 import site.recofit.ssafit.properties.GmailProperties;
 import site.recofit.ssafit.properties.aws.AwsStorageProperties;
 import site.recofit.ssafit.service.MemberService;
@@ -32,8 +34,9 @@ public class MemberServiceImpl implements MemberService {
 
     private final JavaMailSender mailSender;
 
-    private final GmailProperties gmailProperties;
     private final AwsS3Manager awsS3Manager;
+
+    private final GmailProperties gmailProperties;
     private final AwsStorageProperties awsStorageProperties;
 
     public boolean checkEmailDuplication(final String email) {
@@ -46,7 +49,7 @@ public class MemberServiceImpl implements MemberService {
 
     public boolean checkVerification(final String email) {
         final Verification verification = verificationDao.findByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException("인증 요청을 받지 않은 이메일입니다.")
+                () -> new MemberException(MemberStatus.UNVERIFIED_EMAIL)
         );
 
         return verification.isState();
@@ -54,14 +57,16 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     public MemberSignupResponseDto signup(final MemberSignupRequestDto requestDto) {
-        if (checkEmailDuplication(requestDto.getEmail()))
-            throw new IllegalArgumentException("중복된 이메일입니다.");
+        if (checkEmailDuplication(requestDto.getEmail())) {
+            throw new MemberException(MemberStatus.DUPLICATED_EMAIL);
+        }
 
-        if (checkNicknameDuplication(requestDto.getNickname()))
-            throw new IllegalArgumentException("중복된 닉네임입니다.");
+        if (checkNicknameDuplication(requestDto.getNickname())) {
+            throw new MemberException(MemberStatus.DUPLICATED_NICKNAME);
+        }
 
         if (!checkVerification(requestDto.getEmail())) {
-            throw new IllegalArgumentException("아직 인증되지 않았습니다.");
+            throw new MemberException(MemberStatus.UNVERIFIED_EMAIL);
         }
 
         final Member member = Member.builder()
@@ -78,18 +83,22 @@ public class MemberServiceImpl implements MemberService {
                 .build();
     }
 
-    public Member login(final MemberLoginRequestDto requestDto) {
-        Member member = memberDao.findByEmail(requestDto.getEmail()).orElseThrow(
-                () -> new IllegalArgumentException("일치하는 유저가 없습니다.")
+    public MemberLoginResponseDto login(final MemberLoginRequestDto requestDto) {
+        final Member member = memberDao.findByEmail(requestDto.getEmail()).orElseThrow(
+                () -> new MemberException(MemberStatus.NOT_EXISTING_MEMBER)
         );
 
-        return member;
+        return MemberLoginResponseDto.builder()
+                .id(member.getId())
+                .nickname(member.getNickname())
+                .picture(member.getPicture())
+                .build();
     }
 
     @Transactional
-    public String verificationSender(final String email) throws MessagingException {
+    public void verificationSender(final String email) throws MessagingException {
         if (checkEmailDuplication(email)) {
-            throw new IllegalArgumentException("중복된 이메일입니다.");
+            throw new MemberException(MemberStatus.DUPLICATED_EMAIL);
         }
 
         if (verificationDao.findByEmail(email).isEmpty()) {
@@ -97,32 +106,29 @@ public class MemberServiceImpl implements MemberService {
         }
 
         final Verification verification = verificationDao.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("다시 시도해주세요.")
+                .orElseThrow(() -> new MemberException(MemberStatus.UNVERIFIED_EMAIL)
         );
 
         unverify(email);
 
-        String code = verification.refreshCode();
+        final String code = verification.refreshCode();
+
         refreshCode(email, code);
 
-        MimeMessage message = mailSender.createMimeMessage();
-
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        final MimeMessage message = mailSender.createMimeMessage();
+        final MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
         helper.setTo(email);
         helper.setSubject("SSAFIT verification code");
         helper.setText("This is your verification code: " + code);
 
         mailSender.send(message);
-
-        return code;
     }
 
     @Transactional
     public void contactMailSender(final MemberContactMailRequestDto requestDto) throws MessagingException {
-        MimeMessage message = mailSender.createMimeMessage();
-
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        final MimeMessage message = mailSender.createMimeMessage();
+        final MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
         helper.setTo(gmailProperties.getUsername());
         helper.setSubject(requestDto.getNickname() + "의 문의입니다.");
@@ -136,13 +142,15 @@ public class MemberServiceImpl implements MemberService {
         final Verification verification = Verification.builder()
                 .email(email)
                 .build();
+
         verificationDao.save(verification);
     }
 
     @Transactional
     public void verification(final String code) {
         final Verification verification = verificationDao.findByCode(code)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 코드입니다."));
+                .orElseThrow(() -> new MemberException(MemberStatus.DIFFERENT_VERIFICATION_CODE)
+        );
 
         if (code.equals(verification.getCode())) {
             verify(verification.getEmail());
@@ -151,73 +159,70 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     public void unverify(final String email) {
-        final Verification verification = verificationDao.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("이메일 인증을 진행해주세요."));
-
-        if (verification.isState()) {
+        if (checkVerification(email)) {
             verificationDao.unverify(email);
         }
     }
 
     @Transactional
     public void verify(final String email) {
-        final Verification verification = verificationDao.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("이메일 인증을 진행해주세요."));
-
-        if (!verification.isState()) {
+        if (!checkVerification(email)) {
             verificationDao.verify(email);
         }
     }
 
     @Transactional
     public void refreshCode(final String email, final String code) {
-        if (verificationDao.findByEmail(email).isEmpty())
-            throw new IllegalArgumentException("다시 시도해주세요.");
+        if (verificationDao.findByEmail(email).isEmpty()) {
+            throw new MemberException(MemberStatus.UNVERIFIED_EMAIL);
+        }
 
         verificationDao.refreshCode(code, email);
     }
 
     @Transactional
     public void follow(final int followerId, final String followingName) {
-        Member member = memberDao.findByNickname(followingName).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
+        final Member member = memberDao.findByNickname(followingName).orElseThrow(
+                () -> new MemberException(MemberStatus.NOT_EXISTING_MEMBER)
         );
 
-        if (memberDao.findByFollowerIdAndFollowingId(followerId, member.getId()))
-            throw new IllegalArgumentException("이미 팔로잉하는 회원입니다.");
+        if (memberDao.findByFollowerIdAndFollowingId(followerId, member.getId())) {
+            throw new MemberException(MemberStatus.ALREADY_FOLLOWING_MEMBER);
+        }
 
         memberDao.follow(followerId, member.getId());
     }
 
     @Transactional
     public void unfollow(final int followerId, final int followingId) {
-        if (!memberDao.findByFollowerIdAndFollowingId(followerId, followingId))
-            throw new IllegalArgumentException("이미 팔로우하지 않는 회원입니다.");
+        if (!memberDao.findByFollowerIdAndFollowingId(followerId, followingId)) {
+            throw new MemberException(MemberStatus.ALREADY_UNFOLLOWING_MEMBER);
+        }
 
         memberDao.unfollow(followerId, followingId);
     }
 
     public List<MemberFollowListResponseDto> selectFollower(final int followingId) {
-        List<Integer> followerList = memberDao.findByFollowingId(followingId);
+        final List<Integer> followerList = memberDao.findByFollowingId(followingId);
 
         return convertFollowListToDtoList(followerList);
     }
 
     public List<MemberFollowListResponseDto> selectFollowing(final int followerId) {
-        List<Integer> followingList = memberDao.findByFollowerId(followerId);
+        final List<Integer> followingList = memberDao.findByFollowerId(followerId);
 
         return convertFollowListToDtoList(followingList);
     }
 
     private List<MemberFollowListResponseDto> convertFollowListToDtoList(final List<Integer> list) {
-        List<MemberFollowListResponseDto> dtoList = new ArrayList<>();
+        final List<MemberFollowListResponseDto> dtoList = new ArrayList<>();
 
-        for(int idx : list) {
-            Member member = memberDao.findById(idx).orElseThrow(
-                    () -> new IllegalArgumentException("정보를 불러오지 못했습니다.")
+        for(final int idx : list) {
+            final Member member = memberDao.findById(idx).orElseThrow(
+                    () -> new MemberException(MemberStatus.NOT_EXISTING_MEMBER)
             );
 
-            MemberFollowListResponseDto responseDto = MemberFollowListResponseDto.builder()
+            final MemberFollowListResponseDto responseDto = MemberFollowListResponseDto.builder()
                     .id(member.getId())
                     .picture(member.getPicture())
                     .nickname(member.getNickname())
@@ -230,8 +235,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     public MemberReadResponseDto findMember(final int id) {
-        Member member = memberDao.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("당신은 당신이 아닙니다.")
+        final Member member = memberDao.findById(id).orElseThrow(
+                () -> new MemberException(MemberStatus.NOT_EXISTING_MEMBER)
         );
 
         return MemberReadResponseDto.builder()
@@ -242,8 +247,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     public MemberPictureUploadResponseDto uploadPicture(final int id, final MemberPictureUploadRequestDto requestDto) {
-        Member member = memberDao.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당하는 회원이 없습니다.")
+        final Member member = memberDao.findById(id).orElseThrow(
+                () -> new MemberException(MemberStatus.NOT_EXISTING_MEMBER)
         );
 
         final MultipartFile pictureFile = requestDto.getPictureFile();
@@ -251,11 +256,11 @@ public class MemberServiceImpl implements MemberService {
         final String contentType = pictureFile.getContentType();
 
         if (contentType == null) {
-            throw new IllegalArgumentException("컨텐트 타입이 없습니다.");
+            throw new MemberException(MemberStatus.NO_CONTENT_TYPE);
         }
 
         if (!contentType.matches("(^image)(/)\\w*")) {
-            throw new IllegalArgumentException("지원하는 타입이 아닙니다.");
+            throw new MemberException(MemberStatus.NOT_SUPPORTING_TYPE);
         }
 
         final UnaryOperator<String> titleGenerator = createPictureTitleGenerator(member.getNickname());
@@ -277,14 +282,14 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     public MemberUpdateResponseDto updateProfile(final int id, final MemberUpdateRequestDto requestDto) {
-        Member member = memberDao.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당하는 회원이 없습니다.")
+        final Member member = memberDao.findById(id).orElseThrow(
+                () -> new MemberException(MemberStatus.NOT_EXISTING_MEMBER)
         );
 
         final String nickname = requestDto.getNickname();
 
         if (checkNicknameDuplication(nickname)) {
-            throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
+            throw new MemberException(MemberStatus.DUPLICATED_NICKNAME);
         }
 
         memberDao.updateNickname(nickname, member.getEmail());
@@ -295,6 +300,6 @@ public class MemberServiceImpl implements MemberService {
     }
 
     public static UnaryOperator<String> createPictureTitleGenerator(final String nickname) {
-        return originalFileName -> nickname + "/profile/picture" + FileUtility.getFileExtension(originalFileName);
+        return originalFileName -> nickname + Member.PROFILE_PICTURE_PATH + FileUtility.getFileExtension(originalFileName);
     }
 }

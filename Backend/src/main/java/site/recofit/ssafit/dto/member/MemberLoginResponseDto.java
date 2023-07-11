@@ -10,6 +10,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MemberLoginResponseDto {
+    private final int id;
+    private final String picture;
+    private final String password;
     private final String nickname;
     private final String accessToken;
     private final String refreshToken;
