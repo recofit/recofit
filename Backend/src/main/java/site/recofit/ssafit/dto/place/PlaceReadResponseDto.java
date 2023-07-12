@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @AllArgsConstructor
-public class PlaceRegistRequestDto {
+public class PlaceReadResponseDto {
     private final String title;
     private final String venue;
     private final String subjectCategory;

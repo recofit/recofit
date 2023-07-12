@@ -1,19 +1,19 @@
 package site.recofit.ssafit.service;
 
-import site.recofit.ssafit.domain.Place;
-import site.recofit.ssafit.dto.place.PlaceListResponseDto;
-
-import java.util.Optional;
+import site.recofit.ssafit.dto.place.PlaceRateResponseDto;
+import site.recofit.ssafit.dto.place.PlaceReadResponseDto;
+import site.recofit.ssafit.dto.place.PlaceRegistRequestDto;
+import site.recofit.ssafit.dto.place.PlaceVenueReadResponseDto;
 
 public interface PlaceService {
     // 장소 커뮤니티 등록
-    void registPlace(final Place place);
+    void registPlace(final PlaceRegistRequestDto requestDto);
 
     // 예약 장소 확인
-    Place findByPlaceId(final int placeId);
+    PlaceVenueReadResponseDto readPlaceById(final int placeId);
 
     // 장소 상세 확인
-    Optional<Place> findByPlaceName(final String placeName);
+    PlaceReadResponseDto readPlaceByName(final String placeName);
 
-    Optional<Place> findByPlaceNameWithReview(final String placeName);
+    PlaceRateResponseDto readPlaceRate(final String placeName);
 }
