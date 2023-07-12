@@ -4,10 +4,11 @@ import lombok.*;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @AllArgsConstructor
 public class MemberSignupRequestDto {
-    private String email;
-    private String nickname;
-    private String password;
+    private final String email;
+    private final String nickname;
+    private final String password;
 }
