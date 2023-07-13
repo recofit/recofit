@@ -25,7 +25,7 @@ public class PlaceServiceImpl implements PlaceService {
             throw new PlaceException(PlaceStatus.DUPLICATED_PLACE_NAME);
         }
 
-        Place place = Place.builder()
+        final Place place = Place.builder()
                 .title(requestDto.getTitle())
                 .venue(requestDto.getVenue())
                 .subjectCategory(requestDto.getSubjectCategory())
@@ -40,7 +40,7 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public PlaceVenueReadResponseDto readPlaceById(final int placeId) {
-        Place place = placeDao.findByPlaceId(placeId).orElseThrow(
+        final Place place = placeDao.findByPlaceId(placeId).orElseThrow(
                 () -> new PlaceException(PlaceStatus.NOT_EXISTING_PLACE)
         );
 
@@ -50,8 +50,8 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public PlaceReadResponseDto readPlaceByName(String placeName) {
-        Place place = placeDao.findByPlaceName(placeName).orElseThrow(
+    public PlaceReadResponseDto readPlaceByName(final String placeName) {
+        final Place place = placeDao.findByPlaceName(placeName).orElseThrow(
                 () -> new PlaceException(PlaceStatus.NOT_EXISTING_PLACE)
         );
 
@@ -67,8 +67,8 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public PlaceRateResponseDto readPlaceRate(String placeName) {
-        Place place = placeDao.findByPlaceNameWithReview(placeName).orElseThrow(
+    public PlaceRateResponseDto readPlaceRate(final String placeName) {
+        final Place place = placeDao.findByPlaceNameWithReview(placeName).orElseThrow(
                 () -> new PlaceException(PlaceStatus.NOT_EXISTING_PLACE)
         );
 
