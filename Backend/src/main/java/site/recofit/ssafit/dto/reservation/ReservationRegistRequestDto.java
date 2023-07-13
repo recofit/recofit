@@ -4,11 +4,11 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @Getter
 @Setter
 @Builder
-@RequiredArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
+@AllArgsConstructor
 public class ReservationRegistRequestDto {
     private final int memberId;
     private final String placeName;

@@ -9,7 +9,8 @@ import site.recofit.ssafit.domain.Place;
 import site.recofit.ssafit.domain.Reservation;
 import site.recofit.ssafit.dto.reservation.ReservationReadResponseDto;
 import site.recofit.ssafit.dto.reservation.ReservationRegistRequestDto;
-import site.recofit.ssafit.dto.reservation.ReservationRegistResponseDto;
+import site.recofit.ssafit.exception.PlaceException;
+import site.recofit.ssafit.exception.status.PlaceStatus;
 import site.recofit.ssafit.service.ReservationService;
 
 import java.util.ArrayList;
@@ -23,14 +24,13 @@ public class ReservationServiceImpl implements ReservationService {
     private final PlaceDao placeDao;
 
     @Transactional
-    public ReservationRegistResponseDto createReservation(final ReservationRegistRequestDto requestDto) {
+    public void createReservation(final ReservationRegistRequestDto requestDto) {
         // 날짜 가능한지에 대한 유효성 검사 필요여부 차후 판단
-
-        Place place = placeDao.findByPlaceName(requestDto.getPlaceName()).orElseThrow(
-                () -> new IllegalArgumentException("해당하는 장소가 없습니다.")
+        final Place place = placeDao.findByPlaceName(requestDto.getPlaceName()).orElseThrow(
+                () -> new PlaceException(PlaceStatus.NOT_EXISTING_PLACE)
         );
 
-        Reservation reservation = Reservation.builder()
+        final Reservation reservation = Reservation.builder()
                 .memberId(requestDto.getMemberId())
                 .placeId(place.getId())
                 .startDate(requestDto.getStart())
@@ -38,24 +38,20 @@ public class ReservationServiceImpl implements ReservationService {
                 .build();
 
         reservationDao.save(reservation);
-
-        return ReservationRegistResponseDto.builder()
-                .name(place.getTitle())
-                .build();
     }
 
-    public List<ReservationReadResponseDto> findMemberReservationList(final int memberId) {
-        List<Reservation> reservationList = reservationDao.findByMemberId(memberId);
+    public List<ReservationReadResponseDto> getMemberReservationList(final int memberId) {
+        final List<Reservation> reservationList = reservationDao.findByMemberId(memberId);
 
         return getReservationDtoList(reservationList);
     }
 
-    public List<ReservationReadResponseDto> findPlaceReservationList(final String placeName) {
-        Place place = placeDao.findByPlaceName(placeName).orElseThrow(
-                () -> new IllegalArgumentException("해당하는 장소가 없습니다.")
+    public List<ReservationReadResponseDto> getPlaceReservationList(final String placeName) {
+        final Place place = placeDao.findByPlaceName(placeName).orElseThrow(
+                () -> new PlaceException(PlaceStatus.NOT_EXISTING_PLACE)
         );
 
-        List<Reservation> reservationList = reservationDao.findByPlaceId(place.getId());
+        final List<Reservation> reservationList = reservationDao.findByPlaceId(place.getId());
 
         return getReservationDtoList(reservationList);
     }
@@ -65,12 +61,12 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     private List<ReservationReadResponseDto> getReservationDtoList(final List<Reservation> reservationList) {
-        List<ReservationReadResponseDto> dtoList = new ArrayList<>();
+        final List<ReservationReadResponseDto> dtoList = new ArrayList<>();
 
-        for (Reservation reservation : reservationList) {
-            Place place = placeDao.findByPlaceId(reservation.getPlaceId());
+        for (final Reservation reservation : reservationList) {
+            final Place place = placeDao.findByPlaceId(reservation.getPlaceId()).orElse(null);
 
-            ReservationReadResponseDto responseDto;
+            final ReservationReadResponseDto responseDto;
 
             if (place == null) {
                 responseDto = ReservationReadResponseDto.builder()
@@ -85,7 +81,6 @@ public class ReservationServiceImpl implements ReservationService {
                         .endDate(reservation.getEndDate())
                         .build();
             }
-
 
             dtoList.add(responseDto);
         }

@@ -6,9 +6,9 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @AllArgsConstructor
-@Builder
 public class ReservationReadResponseDto {
     private final String title;
     private final String venue;
