@@ -21,22 +21,22 @@ public class PlaceController {
     private final PlaceService placeService;
 
     @PostMapping("")
-    public ResponseEntity<Void> registPlace(@RequestBody final PlaceRegistRequestDto requestDto) {
+    public ResponseEntity<Void> createPlace(@RequestBody final PlaceRegistRequestDto requestDto) {
         placeService.registPlace(requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{placeName}")
-    public ResponseEntity<PlaceReadResponseDto> readPlaceByName(@PathVariable final String placeName) {
-        final PlaceReadResponseDto responseDto = placeService.readPlaceByName(placeName);
+    public ResponseEntity<PlaceReadResponseDto> getPlaceByName(@PathVariable final String placeName) {
+        final PlaceReadResponseDto responseDto = placeService.getPlaceByName(placeName);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
     @GetMapping("/average/{placeName}")
-    public ResponseEntity<PlaceRateResponseDto> getAverage(@PathVariable final String placeName) {
-        final PlaceRateResponseDto responseDto = placeService.readPlaceRate(placeName);
+    public ResponseEntity<PlaceRateResponseDto> getPlaceAverage(@PathVariable final String placeName) {
+        final PlaceRateResponseDto responseDto = placeService.getPlaceAverage(placeName);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }

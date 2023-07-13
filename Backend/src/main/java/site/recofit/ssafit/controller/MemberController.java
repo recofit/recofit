@@ -160,8 +160,8 @@ public class MemberController {
     }
 
     @GetMapping("")
-    public ResponseEntity<MemberReadResponseDto> findMember(@RequestParam final int memberId) {
-        final MemberReadResponseDto responseDto = memberService.findMember(memberId);
+    public ResponseEntity<MemberReadResponseDto> getMember(@RequestParam final int memberId) {
+        final MemberReadResponseDto responseDto = memberService.getMember(memberId);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }

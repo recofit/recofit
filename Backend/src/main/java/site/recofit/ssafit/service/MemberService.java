@@ -39,7 +39,7 @@ public interface MemberService {
     List<MemberFollowListResponseDto> selectFollowing(final int followerId);
 
     // 회원 확인
-    MemberReadResponseDto findMember(final int memberId);
+    MemberReadResponseDto getMember(final int memberId);
 
     // 회원 수정
     MemberPictureUploadResponseDto uploadPicture(final int id, final MemberPictureUploadRequestDto requestDto);

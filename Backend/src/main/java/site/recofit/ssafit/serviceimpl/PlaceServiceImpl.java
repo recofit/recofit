@@ -39,7 +39,7 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public PlaceVenueReadResponseDto readPlaceById(final int placeId) {
+    public PlaceVenueReadResponseDto getPlaceById(final int placeId) {
         final Place place = placeDao.findByPlaceId(placeId).orElseThrow(
                 () -> new PlaceException(PlaceStatus.NOT_EXISTING_PLACE)
         );
@@ -50,7 +50,7 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public PlaceReadResponseDto readPlaceByName(final String placeName) {
+    public PlaceReadResponseDto getPlaceByName(final String placeName) {
         final Place place = placeDao.findByPlaceName(placeName).orElseThrow(
                 () -> new PlaceException(PlaceStatus.NOT_EXISTING_PLACE)
         );
@@ -67,7 +67,7 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public PlaceRateResponseDto readPlaceRate(final String placeName) {
+    public PlaceRateResponseDto getPlaceAverage(final String placeName) {
         final Place place = placeDao.findByPlaceNameWithReview(placeName).orElseThrow(
                 () -> new PlaceException(PlaceStatus.NOT_EXISTING_PLACE)
         );

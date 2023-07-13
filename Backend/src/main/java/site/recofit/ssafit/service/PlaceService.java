@@ -10,10 +10,10 @@ public interface PlaceService {
     void registPlace(final PlaceRegistRequestDto requestDto);
 
     // 예약 장소 확인
-    PlaceVenueReadResponseDto readPlaceById(final int placeId);
+    PlaceVenueReadResponseDto getPlaceById(final int placeId);
 
     // 장소 상세 확인
-    PlaceReadResponseDto readPlaceByName(final String placeName);
+    PlaceReadResponseDto getPlaceByName(final String placeName);
 
-    PlaceRateResponseDto readPlaceRate(final String placeName);
+    PlaceRateResponseDto getPlaceAverage(final String placeName);
 }

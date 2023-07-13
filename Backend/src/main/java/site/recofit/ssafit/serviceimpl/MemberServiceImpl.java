@@ -234,7 +234,7 @@ public class MemberServiceImpl implements MemberService {
         return dtoList;
     }
 
-    public MemberReadResponseDto findMember(final int id) {
+    public MemberReadResponseDto getMember(final int id) {
         final Member member = memberDao.findById(id).orElseThrow(
                 () -> new MemberException(MemberStatus.NOT_EXISTING_MEMBER)
         );
