@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 @Getter
 public enum ReviewStatus {
-    UNREQUESTED_EMAIL_VERIFICATION(HttpStatus.BAD_REQUEST, "must request email verification"),;
+    NOT_EXISTING_REVIEW(HttpStatus.NOT_FOUND, "존재하지 않는 리뷰입니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
