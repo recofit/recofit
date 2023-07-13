@@ -4,12 +4,13 @@ import org.springframework.stereotype.Repository;
 import site.recofit.ssafit.domain.Video;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface VideoDao {
     void save(final Video video);
 
-    Video findById(final String videoId);
+    Optional<Video> findById(final String videoId);
 
     void subscribe(final String memberName, final String videoId);
 

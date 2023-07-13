@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 @Getter
 public enum VideoStatus {
-    UNREQUESTED_EMAIL_VERIFICATION(HttpStatus.BAD_REQUEST, "must request email verification"),;
+    EXISTING_VIDEO(HttpStatus.CONFLICT, "이미 존재하는 비디오입니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
