@@ -10,7 +10,7 @@
     </insert>
 
     <select id="findByPlaceId" parameterType="Integer" resultType="Place">
-        SELECT id, title, venue
+        SELECT title, venue
         FROM place
         WHERE id = #{placeId}
     </select>
@@ -22,14 +22,9 @@
     </select>
 
     <select id="findByPlaceNameWithReview" parameterType="String" resultType="Place">
-        SELECT place.id as id, place.title, venue, subjectCategory, description, subDescription, reference, source, AVG(rate) AS rate
+        SELECT AVG(rate) AS rate
         FROM place JOIN review on place.title = review.place_name
         WHERE place.title = #{placeName}
     </select>
-
-<!--    <insert id="unsubscribePlace" parameterType="Integer">-->
-<!--        DELETE FROM place_subscribe-->
-<!--        WHERE member_id = #{memberId} AND place_id = #{placeId}-->
-<!--    </insert>-->
 
 </mapper>

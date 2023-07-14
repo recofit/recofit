@@ -4,10 +4,10 @@ import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
-@RequiredArgsConstructor
-@Builder
 @Setter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
+@AllArgsConstructor
 public class MemberPictureUploadRequestDto {
     private final MultipartFile pictureFile;
 }

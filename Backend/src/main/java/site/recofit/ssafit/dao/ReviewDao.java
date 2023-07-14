@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 import site.recofit.ssafit.domain.Review;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ReviewDao {
@@ -17,7 +18,7 @@ public interface ReviewDao {
     List<Review> findThree(final String placeName);
 
     // 리뷰 확인
-    Review findById(final int reviewId);
+    Optional<Review> findById(final int reviewId);
 
     // 리뷰 검색
     List<Review> findByTitle(final String placeName, final String title);

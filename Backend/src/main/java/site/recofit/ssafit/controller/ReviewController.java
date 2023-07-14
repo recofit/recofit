@@ -16,59 +16,68 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin("*")
 public class ReviewController {
-    private final ReviewService service;
+    private final ReviewService reviewService;
 
     @PostMapping("/write")
-    public ResponseEntity<?> registReview(@RequestBody final ReviewRegistRequestDto requestDto) {
-        service.registReview(requestDto);
-        return new ResponseEntity<Void>(HttpStatus.CREATED);
+    public ResponseEntity<Void> registReview(@RequestBody final ReviewRegistRequestDto requestDto) {
+        reviewService.registReview(requestDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/list/{placeName}")
-    public ResponseEntity<?> selectAllReview(@PathVariable final String placeName) {
-        List<ReviewListResponseDto> responseDtos = service.selectAll(placeName);
-        return new ResponseEntity<>(responseDtos, HttpStatus.OK);
+    public ResponseEntity<List<ReviewListResponseDto>> getAllReview(@PathVariable final String placeName) {
+        final List<ReviewListResponseDto> list = reviewService.getAllReview(placeName);
+
+        return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
     @GetMapping("/top/{placeName}")
-    public ResponseEntity<?> selectThreeReview(@PathVariable final String placeName) {
-        List<ReviewListResponseDto> responseDtos = service.selectThree(placeName);
-        return new ResponseEntity<>(responseDtos, HttpStatus.OK);
+    public ResponseEntity<List<ReviewListResponseDto>> getThreeReview(@PathVariable final String placeName) {
+        final List<ReviewListResponseDto> list = reviewService.getThreeReview(placeName);
+
+        return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
     @GetMapping("/search/{placeName}")
-    public ResponseEntity<?> selectByTitle(@PathVariable final String placeName, @RequestParam final String title) {
-        List<ReviewListResponseDto> responseDtos = service.selectByTitle(placeName, title);
-        return new ResponseEntity<>(responseDtos, HttpStatus.OK);
+    public ResponseEntity<List<ReviewListResponseDto>> getReviewByTitle(@PathVariable final String placeName, @RequestParam final String title) {
+        final List<ReviewListResponseDto> list = reviewService.getReviewByTitle(placeName, title);
+
+        return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
     @GetMapping("/{reviewId}") // 리뷰 확인
-    public ResponseEntity<?> selectById(@PathVariable final int reviewId) {
-        ReviewListResponseDto responseDto = service.selectById(reviewId);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    public ResponseEntity<ReviewListResponseDto> getReviewById(@PathVariable final int reviewId) {
+        final ReviewListResponseDto responseDto = reviewService.getReviewById(reviewId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
     @PutMapping("/{reviewId}")
-    public ResponseEntity<?> updateReview(@PathVariable final int reviewId, @RequestBody final ReviewUpdateRequestDto requestDto) {
-        service.updateReview(reviewId, requestDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Void> updateReview(@PathVariable final int reviewId, @RequestBody final ReviewUpdateRequestDto requestDto) {
+        reviewService.updateReview(reviewId, requestDto);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{reviewId}")
-    public ResponseEntity<?> removeReview(@PathVariable final int reviewId) {
-        service.removeReview(reviewId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Void> removeReview(@PathVariable final int reviewId) {
+        reviewService.removeReview(reviewId);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PutMapping("/like/{reviewId}")
-    public ResponseEntity<?> updateReviewLike(@PathVariable final int reviewId, @RequestParam final int memberId) {
-        service.updateReviewLike(reviewId, memberId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Void> updateReviewLike(@PathVariable final int reviewId, @RequestParam final int memberId) {
+        reviewService.updateReviewLike(reviewId, memberId);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PutMapping("/dislike/{reviewId}")
-    public ResponseEntity<?> updateReviewDislike(@PathVariable final int reviewId, @RequestParam final int memberId) {
-        service.updateReviewDislike(reviewId, memberId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Void> updateReviewDislike(@PathVariable final int reviewId, @RequestParam final int memberId) {
+        reviewService.updateReviewDislike(reviewId, memberId);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

@@ -21,22 +21,25 @@ public class VideoController {
 
     private final VideoService videoServiceImpl;
 
-    @PostMapping()
+    @PostMapping("")
     public ResponseEntity<?> subscribeVideo(@RequestBody final VideoSubscribeRequestDto requestDto) {
         videoServiceImpl.registVideo(requestDto);
         videoServiceImpl.subscribeVideo(requestDto);
-        return new ResponseEntity<Void>(HttpStatus.CREATED);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @DeleteMapping()
+    @DeleteMapping("")
     public ResponseEntity<?> unsubscribeVideo(@RequestBody final VideoUnsubscribeRequestDto requestDto) {
         videoServiceImpl.unsubscribeVideo(requestDto);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<VideoListResponseDto>> findSubscribeVideo(@RequestParam final int memberId) {
-        List<VideoListResponseDto> responseDtos = videoServiceImpl.selectSubscribeVideo(memberId);
-        return new ResponseEntity<>(responseDtos, HttpStatus.OK);
+    public ResponseEntity<List<VideoListResponseDto>> getSubscribeVideo(@RequestParam final int memberId) {
+        final List<VideoListResponseDto> list = videoServiceImpl.getSubscribeVideo(memberId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 }

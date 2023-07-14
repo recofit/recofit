@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 public class Member {
     public static final String BASIC_PICTURE = "basic_picture.png";
+    public static final String PROFILE_PICTURE_PATH = "/profile/picture";
 
     private int id;
     private String email;

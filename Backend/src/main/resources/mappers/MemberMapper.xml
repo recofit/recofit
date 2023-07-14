@@ -75,4 +75,5 @@
         SET nickname = #{nickname}
         WHERE email = #{email}
     </update>
+
 </mapper>

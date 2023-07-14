@@ -35,4 +35,5 @@
         DELETE FROM video_subscribe
         WHERE member_name = #{memberName} and video_id = #{videoId}
     </delete>
+
 </mapper>

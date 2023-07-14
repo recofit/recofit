@@ -28,20 +28,21 @@ import java.util.Map;
 public class MemberController {
     private final MemberService memberService;
     private final KakaoService kakaoService;
+
     private final JwtUtil jwtUtil;
 
     @RequestMapping(value = "/emailcheck/{email}", method = RequestMethod.HEAD)
     public ResponseEntity<Void> checkEmailDuplication(@PathVariable final String email) {
         return (!memberService.checkEmailDuplication(email)) ?
-                (ResponseEntity.ok().build()) :
-                (ResponseEntity.notFound().build());
+                (ResponseEntity.status(HttpStatus.OK).build()) :
+                (ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @RequestMapping(value = "/nicknamecheck/{nickname}", method = RequestMethod.HEAD)
     public ResponseEntity<Void> checkNicknameDuplication(@PathVariable final String nickname) {
         return (!memberService.checkNicknameDuplication(nickname)) ?
-                (ResponseEntity.ok().build()) :
-                (ResponseEntity.notFound().build());
+                (ResponseEntity.status(HttpStatus.OK).build()) :
+                (ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @PostMapping("/signup")
@@ -53,18 +54,18 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody final MemberLoginRequestDto requestDto) {
-        Member member = memberService.login(requestDto);
+        MemberLoginResponseDto responseDto = memberService.login(requestDto);
 
         Map<String, Object> result = new HashMap<>();
         HttpStatus status;
 
         try {
-            if (member != null && member.getPassword().equals(requestDto.getPassword())) {
-                result.put("access-token", jwtUtil.createToken("id", member.getId()));
+            if (responseDto != null && responseDto.getPassword().equals(requestDto.getPassword())) {
+                result.put("access-token", jwtUtil.createToken("id", responseDto.getId()));
                 result.put("message", "SUCCESS");
-                result.put("id", member.getId());
-                result.put("nickname", member.getNickname());
-                result.put("picture", member.getPicture());
+                result.put("id", responseDto.getId());
+                result.put("nickname", responseDto.getNickname());
+                result.put("picture", responseDto.getPicture());
                 status = HttpStatus.OK;
             } else {
                 status = HttpStatus.BAD_REQUEST;
@@ -108,77 +109,76 @@ public class MemberController {
     }
 
     @PostMapping("/mailsender/{email}")
-    public ResponseEntity<String> verificationSender(@PathVariable final String email) throws MessagingException {
-        final String code = memberService.verificationSender(email);
+    public ResponseEntity<Void> verificationSender(@PathVariable final String email) throws MessagingException {
+        memberService.verificationSender(email);
 
-        return ResponseEntity.status(HttpStatus.OK).body(code);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping("/mailsender")
     public ResponseEntity<Void> contactMailSender(@RequestBody final MemberContactMailRequestDto requestDto) throws MessagingException {
         memberService.contactMailSender(requestDto);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping("/verification")
     public ResponseEntity<Void> verify(@RequestParam final String code) {
         memberService.verification(code);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping("/follow/{followingName}")
-    public ResponseEntity<Void> follow(@RequestParam int followerId,
-                                       @PathVariable String followingName) {
-
+    public ResponseEntity<Void> follow(@RequestParam final int followerId,
+                                       @PathVariable final String followingName) {
         memberService.follow(followerId, followingName);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/unfollow/{followingId}")
-    public ResponseEntity<Void> unfollow(@RequestParam int followerId,
-                                         @PathVariable int followingId) {
-
+    public ResponseEntity<Void> unfollow(@RequestParam final int followerId,
+                                         @PathVariable final int followingId) {
         memberService.unfollow(followerId, followingId);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/follower")
-    public ResponseEntity<List<MemberFollowListResponseDto>> findFollower(@RequestParam int memberId) {
-        List<MemberFollowListResponseDto> responseDtos = memberService.selectFollower(memberId);
+    public ResponseEntity<List<MemberFollowListResponseDto>> findFollower(@RequestParam final int memberId) {
+        final List<MemberFollowListResponseDto> responseDtos = memberService.selectFollower(memberId);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDtos);
     }
 
     @GetMapping("/following")
-    public ResponseEntity<List<MemberFollowListResponseDto>> findFollowing(@RequestParam int memberId) {
-        List<MemberFollowListResponseDto> responseDtos = memberService.selectFollowing(memberId);
+    public ResponseEntity<List<MemberFollowListResponseDto>> findFollowing(@RequestParam final int memberId) {
+        final List<MemberFollowListResponseDto> responseDtos = memberService.selectFollowing(memberId);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDtos);
     }
 
     @GetMapping("")
-    public ResponseEntity<MemberReadResponseDto> findMember(@RequestParam int memberId) {
-        final MemberReadResponseDto responseDto = memberService.findMember(memberId);
+    public ResponseEntity<MemberReadResponseDto> getMember(@RequestParam final int memberId) {
+        final MemberReadResponseDto responseDto = memberService.getMember(memberId);
 
-        return ResponseEntity.ok().body(responseDto);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
     @PatchMapping(value = "/{memberId}")
-    public ResponseEntity<MemberUpdateResponseDto> updateProfile(@PathVariable int memberId, @RequestBody final MemberUpdateRequestDto requestDto) {
+    public ResponseEntity<MemberUpdateResponseDto> updateProfile(@PathVariable final int memberId,
+                                                                 @RequestBody final MemberUpdateRequestDto requestDto) {
         final MemberUpdateResponseDto responseDto = memberService.updateProfile(memberId, requestDto);
 
-        return ResponseEntity.ok().body(responseDto);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
     @PatchMapping(value = "/picture/{memberId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<MemberPictureUploadResponseDto> uploadPicture(@PathVariable int memberId, @ModelAttribute final MemberPictureUploadRequestDto requestDto) {
-
+    public ResponseEntity<MemberPictureUploadResponseDto> uploadPicture(@PathVariable final int memberId,
+                                                                        @ModelAttribute final MemberPictureUploadRequestDto requestDto) {
         final MemberPictureUploadResponseDto responseDto = memberService.uploadPicture(memberId, requestDto);
 
-        return ResponseEntity.ok().body(responseDto);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 }

@@ -4,9 +4,9 @@ import lombok.*;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @AllArgsConstructor
-@Builder
 public class MemberSignupResponseDto {
-    private String nickname;
+    private final String nickname;
 }

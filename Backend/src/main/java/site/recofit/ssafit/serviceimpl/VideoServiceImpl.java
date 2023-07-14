@@ -10,6 +10,10 @@ import site.recofit.ssafit.domain.Video;
 import site.recofit.ssafit.dto.video.VideoListResponseDto;
 import site.recofit.ssafit.dto.video.VideoSubscribeRequestDto;
 import site.recofit.ssafit.dto.video.VideoUnsubscribeRequestDto;
+import site.recofit.ssafit.exception.MemberException;
+import site.recofit.ssafit.exception.VideoException;
+import site.recofit.ssafit.exception.status.MemberStatus;
+import site.recofit.ssafit.exception.status.VideoStatus;
 import site.recofit.ssafit.service.VideoService;
 
 import java.util.ArrayList;
@@ -23,12 +27,12 @@ public class VideoServiceImpl implements VideoService {
     private final MemberDao memberDao;
 
     @Transactional
-    public void registVideo(VideoSubscribeRequestDto requestDto) {
-        // 해당 동영상이 데이터베이스에 저장되어 있는 경우
-        if (videoDao.findById(requestDto.getVideoId()) != null)
-            return;
+    public void registVideo(final VideoSubscribeRequestDto requestDto) {
+        if (videoDao.findById(requestDto.getVideoId()).isPresent()) {
+            throw new VideoException(VideoStatus.EXISTING_VIDEO);
+        }
 
-        Video video = Video.builder()
+        final Video video = Video.builder()
                 .id(requestDto.getVideoId())
                 .channelName(requestDto.getChannelName())
                 .viewCnt(requestDto.getViewCnt())
@@ -39,38 +43,45 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Transactional
-    public void subscribeVideo(VideoSubscribeRequestDto requestDto) {
+    public void subscribeVideo(final VideoSubscribeRequestDto requestDto) {
+        final int memberId = requestDto.getMemberId();
 
-        int memberId = requestDto.getMemberId();
-        Member member = memberDao.findById(memberId).orElseThrow(
-                () -> new IllegalArgumentException("no member"));
+        final Member member = memberDao.findById(memberId).orElseThrow(
+                () -> new MemberException(MemberStatus.NOT_EXISTING_MEMBER)
+        );
 
-        String videoId = requestDto.getVideoId();
+        final String videoId = requestDto.getVideoId();
 
         videoDao.subscribe(member.getNickname(), videoId);
     }
 
     @Transactional
-    public void unsubscribeVideo(VideoUnsubscribeRequestDto requestDto) {
+    public void unsubscribeVideo(final VideoUnsubscribeRequestDto requestDto) {
+        final int memberId = requestDto.getMemberId();
 
-        int memberId = requestDto.getMemberId();
+        final Member member = memberDao.findById(memberId).orElseThrow(
+                () -> new MemberException(MemberStatus.NOT_EXISTING_MEMBER)
+        );
 
-        Member member = memberDao.findById(memberId).orElseThrow(
-                () -> new IllegalArgumentException("no member"));
-
-        String videoId = requestDto.getVideoId();
+        final String videoId = requestDto.getVideoId();
 
         videoDao.unsubscribe(member.getNickname(), videoId);
     }
 
     @Override
-    public List<VideoListResponseDto> selectSubscribeVideo(int memberId) {
-        String memberName = memberDao.findById(memberId).get().getNickname();
-        List<Video> videoList = videoDao.findByMemberId(memberName);
-        List<VideoListResponseDto> dtoList = new ArrayList<>();
+    public List<VideoListResponseDto> getSubscribeVideo(final int memberId) {
+        final Member member = memberDao.findById(memberId).orElseThrow(
+                () -> new MemberException(MemberStatus.NOT_EXISTING_MEMBER)
+        );
 
-        for (Video video : videoList) {
-            VideoListResponseDto responseDto = VideoListResponseDto.builder()
+        final String memberName = member.getNickname();
+
+        final List<Video> videoList = videoDao.findByMemberId(memberName);
+
+        final List<VideoListResponseDto> dtoList = new ArrayList<>();
+
+        for (final Video video : videoList) {
+            final VideoListResponseDto responseDto = VideoListResponseDto.builder()
                     .id(video.getId())
                     .channelName(video.getChannelName())
                     .viewCnt(video.getViewCnt())

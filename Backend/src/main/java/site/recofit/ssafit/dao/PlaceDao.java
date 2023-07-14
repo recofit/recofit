@@ -11,10 +11,11 @@ public interface PlaceDao {
     void savePlace(final Place place);
 
     // 예약 장소 확인
-    Place findByPlaceId(final int placeId);
+    Optional<Place> findByPlaceId(final int placeId);
 
     // 장소 상세 확인
     Optional<Place> findByPlaceName(final String placeName);
 
+    // 장소 평점 확인
     Optional<Place> findByPlaceNameWithReview(final String placeName);
 }

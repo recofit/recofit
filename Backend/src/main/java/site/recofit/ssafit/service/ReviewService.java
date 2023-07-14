@@ -11,16 +11,16 @@ public interface ReviewService {
     void registReview(final ReviewRegistRequestDto requestDto);
 
     // 리뷰 목록 확인
-    List<ReviewListResponseDto> selectAll(final String placeName);
+    List<ReviewListResponseDto> getAllReview(final String placeName);
 
     // 리뷰 추천 top 3 확인
-    List<ReviewListResponseDto> selectThree(final String placeName);
+    List<ReviewListResponseDto> getThreeReview(final String placeName);
+
+    // 리뷰 검색
+    List<ReviewListResponseDto> getReviewByTitle(final String placeName, final String title);
 
     // 리뷰 확인
-    ReviewListResponseDto selectById(final int reviewId);
-    
-    // 리뷰 검색
-    List<ReviewListResponseDto> selectByTitle(final String placeName, final String title);
+    ReviewListResponseDto getReviewById(final int reviewId);
 
     // 리뷰 수정
     void updateReview(final int reviewId, final ReviewUpdateRequestDto requestDto);

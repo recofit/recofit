@@ -5,6 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import site.recofit.ssafit.domain.Place;
+import site.recofit.ssafit.dto.place.PlaceRateResponseDto;
+import site.recofit.ssafit.dto.place.PlaceReadResponseDto;
+import site.recofit.ssafit.dto.place.PlaceRegistRequestDto;
+import site.recofit.ssafit.dto.place.PlaceVenueReadResponseDto;
 import site.recofit.ssafit.service.PlaceService;
 
 import java.util.Optional;
@@ -14,24 +18,26 @@ import java.util.Optional;
 @RequestMapping("/place")
 @RequiredArgsConstructor
 public class PlaceController {
-
-    private final PlaceService service;
+    private final PlaceService placeService;
 
     @PostMapping("")
-    public ResponseEntity<?> registPlace(@RequestBody final Place place) {
-        service.registPlace(place);
-        return new ResponseEntity<Void>(HttpStatus.CREATED);
+    public ResponseEntity<Void> createPlace(@RequestBody final PlaceRegistRequestDto requestDto) {
+        placeService.registPlace(requestDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{placeName}")
-    public ResponseEntity<?> findByPlaceId(@PathVariable final String placeName) {
-        Optional<Place> place = service.findByPlaceName(placeName);
-        return new ResponseEntity<>(place, HttpStatus.OK);
+    public ResponseEntity<PlaceReadResponseDto> getPlaceByName(@PathVariable final String placeName) {
+        final PlaceReadResponseDto responseDto = placeService.getPlaceByName(placeName);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
     @GetMapping("/average/{placeName}")
-    public ResponseEntity<?> getAverage(@PathVariable final String placeName) {
-        Optional<Place> place = service.findByPlaceNameWithReview(placeName);
-        return new ResponseEntity<>(place, HttpStatus.OK);
+    public ResponseEntity<PlaceRateResponseDto> getPlaceAverage(@PathVariable final String placeName) {
+        final PlaceRateResponseDto responseDto = placeService.getPlaceAverage(placeName);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 }
