@@ -6,20 +6,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import site.recofit.ssafit.domain.Member;
 import site.recofit.ssafit.dto.member.*;
+import site.recofit.ssafit.properties.jwt.AccessTokenProperties;
+import site.recofit.ssafit.properties.jwt.RefreshTokenProperties;
 import site.recofit.ssafit.security.oauth2.kakao.KakaoService;
 import site.recofit.ssafit.service.MemberService;
-import site.recofit.ssafit.utility.jwt.JwtUtil;
+import site.recofit.ssafit.utility.common.CookieUtility;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/member")
@@ -28,8 +25,6 @@ import java.util.Map;
 public class MemberController {
     private final MemberService memberService;
     private final KakaoService kakaoService;
-
-    private final JwtUtil jwtUtil;
 
     @RequestMapping(value = "/emailcheck/{email}", method = RequestMethod.HEAD)
     public ResponseEntity<Void> checkEmailDuplication(@PathVariable final String email) {
@@ -53,59 +48,35 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody final MemberLoginRequestDto requestDto) {
-        MemberLoginResponseDto responseDto = memberService.login(requestDto);
+    public ResponseEntity<MemberLoginResponseDto> login(@RequestBody final MemberLoginRequestDto requestDto,
+                                                        final HttpServletResponse response) {
+        final MemberLoginResponseDto result = memberService.login(requestDto);
 
-        Map<String, Object> result = new HashMap<>();
-        HttpStatus status;
+        CookieUtility.addCookie(response, AccessTokenProperties.COOKIE_NAME, result.getAccessToken());
+        CookieUtility.addCookie(response, RefreshTokenProperties.COOKIE_NAME, result.getRefreshToken(), 6480000);
 
-        try {
-            if (responseDto != null && responseDto.getPassword().equals(requestDto.getPassword())) {
-                result.put("access-token", jwtUtil.createToken("id", responseDto.getId()));
-                result.put("message", "SUCCESS");
-                result.put("id", responseDto.getId());
-                result.put("nickname", responseDto.getNickname());
-                result.put("picture", responseDto.getPicture());
-                status = HttpStatus.OK;
-            } else {
-                status = HttpStatus.BAD_REQUEST;
-            }
-        } catch (UnsupportedEncodingException e) {
-            result.put("message", "FAIL");
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-
-        return new ResponseEntity<>(result, status);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @GetMapping("/kakao/callback")
-    public ResponseEntity<Map<String, Object>> getKakaoRequest(@RequestParam final String code, final HttpServletResponse response) throws JSONException, IOException {
-        Map<String, Object> result = new HashMap<>();
-        HttpStatus status;
+    public ResponseEntity<?> getKakaoRequest(@RequestParam final String code, final HttpServletResponse response) throws JSONException, IOException {
+        final MemberLoginResponseDto result = kakaoService.kakaoLogin(code);
 
-        try {
-            final Member member = kakaoService.kakaoLogin(code);
-            result.put("access-token", jwtUtil.createToken("id", member.getId()));
-            result.put("message", "SUCCESS");
-            result.put("id", member.getId());
-            result.put("nickname", member.getNickname());
-            result.put("picture", member.getPicture());
-            status = HttpStatus.OK;
-        } catch (UnsupportedEncodingException e) {
-            result.put("message", "FAIL");
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
+        CookieUtility.addCookie(response, AccessTokenProperties.COOKIE_NAME, result.getAccessToken());
+        CookieUtility.addCookie(response, RefreshTokenProperties.COOKIE_NAME, result.getRefreshToken(), 6480000);
 
-        response.sendRedirect("http://localhost:8081/");
+        response.sendRedirect("http://localhost:8081");
 
-        return new ResponseEntity<>(result, status);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(final HttpSession session) {
-        session.invalidate();
+    public ResponseEntity<Void> logout(final HttpServletResponse response) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        CookieUtility.deleteCookie(response, AccessTokenProperties.COOKIE_NAME);
+        CookieUtility.deleteCookie(response, RefreshTokenProperties.COOKIE_NAME);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/mailsender/{email}")

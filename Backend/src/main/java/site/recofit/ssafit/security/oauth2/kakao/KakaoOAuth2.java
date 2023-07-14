@@ -16,18 +16,20 @@ public class KakaoOAuth2 {
     public KakaoUserInfo getUserInfo(String authorizedCode) throws JSONException {
         // 1. 인가코드 -> 액세스 토큰
         String accessToken = getAccessToken(authorizedCode);
-        // 2. 액세스 토큰 -> 카카오 사용자 정보
 
+        // 2. 액세스 토큰 -> 카카오 사용자 정보
         return getUserInfoByToken(accessToken);
     }
 
     private String getAccessToken(String authorizedCode) throws JSONException {
         // HttpHeader 오브젝트 생성
         HttpHeaders headers = new HttpHeaders();
+
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
         // HttpBody 오브젝트 생성
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
         params.add("grant_type", "authorization_code");
         params.add("client_id", "7276680ce0f3c0be137b878203962dfa");
         params.add("redirect_uri", "http://localhost:8080/member/kakao/callback");
@@ -35,6 +37,7 @@ public class KakaoOAuth2 {
 
         // HttpHeader와 HttpBody를 하나의 오브젝트에 담기
         RestTemplate rt = new RestTemplate();
+
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest =
                 new HttpEntity<>(params, headers);
 
@@ -56,11 +59,13 @@ public class KakaoOAuth2 {
     private KakaoUserInfo getUserInfoByToken(String accessToken) throws JSONException {
         // HttpHeader 오브젝트 생성
         HttpHeaders headers = new HttpHeaders();
+
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
         // HttpHeader와 HttpBody를 하나의 오브젝트에 담기
         RestTemplate rt = new RestTemplate();
+
         HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(headers);
 
         // Http 요청하기 - Post방식으로 - 그리고 response 변수의 응답 받음.
@@ -72,6 +77,7 @@ public class KakaoOAuth2 {
         );
 
         JSONObject body = new JSONObject(response.getBody());
+
         Long id = body.getLong("id");
         String email = body.getJSONObject("kakao_account").getString("email");
         String nickname = body.getJSONObject("properties").getString("nickname");
